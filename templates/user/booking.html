@@ -33,18 +33,32 @@
                                         </div>
                                     </div>    
                                     <div class="row">
-                                        <div class="col-md-6">
+                                         <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.paket, class="form-control",placeholder="Mobil")}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 {{ render_field(form.mobil, class="form-control",placeholder="Mobil")}}
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 {{ render_field(form.plat, class="form-control",placeholder="Plat")}}
                                             </div>
                                         </div>
                                         
-                                    </div>                                                                 
+                                    </div>    
+                                    {% if current_user.role ==  "user" or current_user.role == "superuser"%}
+                                    <div class="row">
+                                         <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.role, class="form-control",placeholder="Type")}}
+                                            </div>
+                                        </div>
+                                    </div>      
+                                    {% endif %}                                                           
                                     
                                     
                                     <div class="text-center">

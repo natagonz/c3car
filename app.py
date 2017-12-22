@@ -2,11 +2,15 @@ from flask import Flask, request, flash , session, render_template, redirect, ur
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
-from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm
-from datetime import datetime 
+from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm
+from datetime import datetime,timedelta 
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
 from config import secret,databases
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField, SelectField,SubmitField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.validators import InputRequired, EqualTo, Email, Length
 
 
 app = Flask(__name__)
@@ -42,6 +46,7 @@ class User(db.Model):
 	plat = db.Column(db.String(100))
 	status = db.Column(db.String(100))
 	date = db.Column(db.DateTime())
+	renew = db.Column(db.DateTime())
 
 
 	def is_active(self):
@@ -67,8 +72,37 @@ class Book(db.Model):
 	mobil = db.Column(db.String(100))
 	plat = db.Column(db.String(100))
 	status = db.Column(db.String(100))
-	que = db.Column(db.Integer())
+	role = db.Column(db.String(100))
+	paket = db.Column(db.String(200)) 
 	date = db.Column(db.DateTime())
+
+
+class Paket(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	name = db.Column(db.String(100))
+
+	def __repr__(self):
+		return '{}'.format(self.name)
+
+
+def choice_query():
+	return Paket.query.all()
+
+
+
+############## form ################
+class BookingForm(FlaskForm):
+	name = StringField("Nama",validators=[Length(max=100)])
+	email = StringField("Email",validators=[Length(max=100)])
+	phone = StringField("Telepon",validators=[Length(max=100)])
+	mobil = StringField("Mobil",validators=[Length(max=100)])
+	paket = QuerySelectField(query_factory=choice_query)
+	plat =  StringField("Plat",validators=[Length(max=100)])
+	role = SelectField("Type",choices= [("umum","umum"),("vip","vip")])	
+
+##############################################
+
+
 
 
 #user loader
@@ -198,9 +232,9 @@ def UserResetPassword():
 @app.route("/dashboard",methods=["GET","POST"])
 @login_required
 def AdminDashboard():
-	antrean = Book.query.all()
-	user = len(Book.query.all())
-	member = len(User.query.filter_by(role="member").all())
+	antrean = Book.query.order_by(Book.status.desc(),Book.role.desc()).all()
+	user = len(Book.query.filter_by(status="Belum Selesai").all())
+	member = len(User.query.filter_by(role="member").all())	
 	return render_template("user/dashboard.html",antrean=antrean,user=user,member=member)
 
 
@@ -256,8 +290,9 @@ def AddMember():
 	form = AddMemberForm()
 	if form.validate_on_submit():
 		today = datetime.today()
+		renew_date = today + timedelta(days=365)
 		hass = generate_password_hash(form.password.data,method="sha256")
-		user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today)
+		user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew_date)
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("email telah terdaftar","danger")
@@ -304,15 +339,18 @@ def EditMember(id):
 		form.phone.data = member.phone			
 		form.mobil.data = member.mobil
 		form.plat.data = member.plat			
-		form.date.data = member.date	
+		form.date.data = member.date
+		form.renew.data = member.renew	
 		if form.validate_on_submit():
 			date = datetime.strptime(request.form["date"], '%m/%d/%Y').strftime('%Y-%m-%d')	
+			renew_date = datetime.strptime(request.form["renew"], '%m/%d/%Y').strftime('%Y-%m-%d')	
 			member.username = request.form["username"]
 			member.email = request.form["email"]			
 			member.phone = request.form["phone"]			
 		 	member.mobil = request.form["mobil"]
 		 	member.plat	= request.form["plat"]		
 			member.date	= date
+			member.renew = renew_date
 			db.session.commit()
 			flash("Member berhasil di edit","success")
 			return redirect(url_for("AllMember"))		
@@ -338,21 +376,28 @@ def DeleteMember(id):
 def Booking():
 	form = BookingForm()
 	if form.validate_on_submit():
-		today = datetime.today()
-		antrean = Book.query.all()
-		ant = len(antrean) + 1
-		book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,status="Belum Selesai",que=ant)
-		db.session.add(book)
-		db.session.commit()
-		flash("Booking berhasil","success")
-		return redirect(url_for("Antrean"))
+		if current_user.role == "user" or current_user.role  == "superuser":
+			today = datetime.today()			
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=form.role.data)
+			db.session.add(book)
+			db.session.commit()
+			flash("Booking berhasil","success")
+			return redirect(url_for("Antrean"))
+		else :
+			today = datetime.today()			
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="vip")
+			db.session.add(book)
+			db.session.commit()
+			flash("Booking berhasil","success")
+			return redirect(url_for("Antrean"))
+			
 	return render_template("user/booking.html",form=form)	
 
 
 @app.route("/dashboard/antrean",methods=["GET","POST"])
 @login_required
 def Antrean():
-	antrean = Book.query.all()
+	antrean = Book.query.order_by(Book.status.desc(),Book.role.desc()).all()
 	return render_template("user/antrean.html",antrean=antrean)
 
 
@@ -391,10 +436,53 @@ def DeleteAllBooking():
 
 
 
+@app.route("/dashboard/add-package",methods=["GET","POST"])
+@login_required
+def AddPackage():
+	form = AddPackageForm()
+	if form.validate_on_submit():
+		paket = Paket(name=form.name.data)
+		db.session.add(paket)
+		db.session.commit()
+		flash("Paket berhasil di tambahkan","success")
+		return redirect(url_for("AllPackage"))
+	return render_template("user/add_package.html",form=form) 	
+
+
+
+@app.route("/dashboard/edit-package/<string:id>",methods=["GET","POST"])
+@login_required
+def EditPackage(id):
+	form = AddPackageForm()
+	pack = Paket.query.filter_by(id=id).first()
+	form.name.data = pack.name 
+	if form.validate_on_submit():
+		pack.name = request.form["name"]
+		db.session.commit()
+		flash("Paket berhasil di rubah","success")
+		return redirect(url_for("AllPackage"))
+	return render_template("user/edit_package.html",form=form)	
 
 
 
 
+@app.route("/dashboard/delete-package/<string:id>",methods=["GET","POST"])
+@login_required
+def DeletePackage(id):	
+	paket = Paket.query.filter_by(id=id).first()
+	db.session.delete(paket)
+	db.session.commit()
+	flash("Paket berhasil di hapus","success")
+	return redirect(url_for("AllPackage"))
+
+
+
+
+@app.route("/dashboard/package",methods=["GET","POST"])
+@login_required
+def AllPackage():
+	pakets = Paket.query.all()
+	return render_template("user/package.html",pakets=pakets)
 
 
 

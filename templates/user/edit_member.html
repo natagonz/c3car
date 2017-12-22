@@ -33,11 +33,18 @@
                                         </div>
                                     </div>    
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 {{ render_field(form.date, class="form-control dtpick")}}
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                {{ render_field(form.renew, class="form-control dtpick")}}
+                                            </div>
+                                        </div>
+                                    </div>    
+                                    <div class="row">    
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 {{ render_field(form.mobil, class="form-control",placeholder="Mobil")}}

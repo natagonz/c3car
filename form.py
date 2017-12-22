@@ -31,14 +31,7 @@ class EditMemberForm(FlaskForm):
 	mobil = StringField("Mobil",validators=[Length(max=100)])
 	plat =  StringField("Plat",validators=[Length(max=100)])
 	date = DateField("Tanggal",format="%m/%d/%Y")	
-
-
-class BookingForm(FlaskForm):
-	name = StringField("Nama",validators=[Length(max=100)])
-	email = StringField("Email",validators=[Length(max=100)])
-	phone = StringField("Telepon",validators=[Length(max=100)])
-	mobil = StringField("Mobil",validators=[Length(max=100)])
-	plat =  StringField("Plat",validators=[Length(max=100)])
+	renew = DateField("Aktif Sampai",format="%m/%d/%Y")
 
 
 
@@ -56,6 +49,11 @@ class ForgotPasswordForm(FlaskForm):
 
 class ResetPasswordForm(FlaskForm):
 	password = PasswordField("Password",validators=[InputRequired(),Length(min=6,max=100)])
+
+
+
+class AddPackageForm(FlaskForm):
+	name = StringField("Paket",validators=[Length(max=100),InputRequired()]) 	
 	
 	
 
