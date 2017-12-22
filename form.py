@@ -1,6 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField, SelectField,SubmitField
 from wtforms.validators import InputRequired, EqualTo, Email, Length
+from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+
+images = UploadSet("images",IMAGES)
 
 
 class UserRegisterForm(FlaskForm):
@@ -56,7 +60,9 @@ class AddPackageForm(FlaskForm):
 	name = StringField("Paket",validators=[Length(max=100),InputRequired()]) 	
 	
 	
-
+class AddGalleryForm(FlaskForm):
+	image = FileField("Upload Photo",validators=[FileAllowed(images,"Images Only")])
+	description = StringField("Deskripsi",validators=[Length(max=200)])
 
 
 

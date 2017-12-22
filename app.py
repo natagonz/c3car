@@ -2,7 +2,7 @@ from flask import Flask, request, flash , session, render_template, redirect, ur
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
-from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm
+from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm
 from datetime import datetime,timedelta 
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
@@ -11,6 +11,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField, SelectField,SubmitField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, EqualTo, Email, Length
+from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 app = Flask(__name__)
@@ -31,7 +33,12 @@ app.config.from_pyfile("config.py")
 mail = Mail(app)
 s = URLSafeTimedSerializer("secret")
 
-
+#fungsi Upload
+#mengatur image
+images = UploadSet("images",IMAGES)
+app.config["UPLOADED_IMAGES_DEST"] = "static/img/profile/"
+app.config["UPLOADED_IMAGES_URL"] = "http://127.0.0.1:5000/static/img/profile/"
+configure_uploads(app,images)
 
 
 
@@ -90,6 +97,15 @@ def choice_query():
 
 
 
+
+class Gallery(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	image_name = db.Column(db.String(200))
+	description = db.Column(db.String(200)) 
+
+
+
+
 ############## form ################
 class BookingForm(FlaskForm):
 	name = StringField("Nama",validators=[Length(max=100)])
@@ -115,6 +131,12 @@ def user_loader(user_id):
 @app.route("/",methods=["GET","POST"])
 def Index():
 	return render_template("index.html")
+
+
+@app.route("/gallery",methods=["GET","POST"])
+def FrontGallery():
+	gallerys = Gallery.query.all()
+	return render_template("gallery.html",gallerys=gallerys)
 
 
 
@@ -487,10 +509,38 @@ def AllPackage():
 
 
 
+############################### Gallery ############
+
+@app.route("/dashboard/add-gallery",methods=["GET","POST"])
+@login_required
+def AddGallery():
+	form = AddGalleryForm()
+	if form.validate_on_submit():
+		filename = images.save(form.image.data)
+		gallery = Gallery(image_name=filename,description=form.description.data)
+		db.session.add(gallery)
+		db.session.commit()
+		flash("Gambar berhasil di tambah","success")
+		return redirect(url_for("AllGallery"))
+	return render_template("user/add_gallery.html",form=form)	
+
+
+@app.route("/dashboard/gallery",methods=["GET","POST"])
+@login_required
+def AllGallery():
+	gallerys = Gallery.query.all()
+	return render_template("user/gallery.html",gallerys=gallerys)
 
 
 
-
+@app.route("/dashboard/delete-gallery/<string:id>",methods=["GET","POST"])
+@login_required
+def DeleteGallery(id):
+	gall = Gallery.query.filter_by(id=id).first()
+	db.session.delete(gall)
+	db.session.commit()
+	flash("gambar berhasil di hapus","success")
+	return redirect(url_for("AllGallery"))	
 
 
 
