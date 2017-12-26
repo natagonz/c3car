@@ -82,11 +82,14 @@ class Book(db.Model):
 	role = db.Column(db.String(100))
 	paket = db.Column(db.String(200)) 
 	date = db.Column(db.DateTime())
+	price = db.Column(db.Integer())
+	owner = db.Column(db.Integer())
 
 
 class Paket(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
 	name = db.Column(db.String(100))
+	price = db.Column(db.Integer())
 
 	def __repr__(self):
 		return '{}'.format(self.name)
@@ -94,6 +97,8 @@ class Paket(db.Model):
 
 def choice_query():
 	return Paket.query.all()
+
+
 
 
 
@@ -115,6 +120,16 @@ class BookingForm(FlaskForm):
 	paket = QuerySelectField(query_factory=choice_query)
 	plat =  StringField("Plat",validators=[Length(max=100)])
 	role = SelectField("Type",choices= [("umum","umum"),("vip","vip")])	
+
+
+class UserBookingForm(FlaskForm):
+	name = StringField("Nama",validators=[Length(max=100)])
+	email = StringField("Email",validators=[Length(max=100)])
+	phone = StringField("Telepon",validators=[Length(max=100)])
+	mobil = StringField("Mobil",validators=[Length(max=100)])
+	paket = QuerySelectField(query_factory=choice_query)
+	plat =  StringField("Plat",validators=[Length(max=100)])
+
 
 ##############################################
 
@@ -396,25 +411,26 @@ def DeleteMember(id):
 @app.route("/dashboard/booking",methods=["GET","POST"])
 @login_required
 def Booking():
-	form = BookingForm()
-	if form.validate_on_submit():
-		if current_user.role == "user" or current_user.role  == "superuser":
-			today = datetime.today()			
-			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=form.role.data)
+	if current_user.role == "user" or current_user.role  == "superuser":
+		form = BookingForm()
+		if form.validate_on_submit():			
+			today = datetime.today()					
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=form.role.data,owner=current_user.id)
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
 			return redirect(url_for("Antrean"))
-		else :
-			today = datetime.today()			
-			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="vip")
+	else :
+		form = UserBookingForm()
+		if form.validate_on_submit():
+			today = datetime.today()					
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="vip",owner=current_user.id)
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
 			return redirect(url_for("Antrean"))
 			
 	return render_template("user/booking.html",form=form)	
-
 
 @app.route("/dashboard/antrean",methods=["GET","POST"])
 @login_required
@@ -463,7 +479,7 @@ def DeleteAllBooking():
 def AddPackage():
 	form = AddPackageForm()
 	if form.validate_on_submit():
-		paket = Paket(name=form.name.data)
+		paket = Paket(name=form.name.data,price=form.price.data)
 		db.session.add(paket)
 		db.session.commit()
 		flash("Paket berhasil di tambahkan","success")
@@ -478,8 +494,10 @@ def EditPackage(id):
 	form = AddPackageForm()
 	pack = Paket.query.filter_by(id=id).first()
 	form.name.data = pack.name 
+	form.price.data = pack.price
 	if form.validate_on_submit():
 		pack.name = request.form["name"]
+		pack.price = request.form["price"]
 		db.session.commit()
 		flash("Paket berhasil di rubah","success")
 		return redirect(url_for("AllPackage"))
@@ -541,6 +559,33 @@ def DeleteGallery(id):
 	db.session.commit()
 	flash("gambar berhasil di hapus","success")
 	return redirect(url_for("AllGallery"))	
+
+
+
+
+@app.route("/dashboard/invoice/<string:id>",methods=["GET","POST"])
+@login_required
+def UserInvoice(id):
+	invoice = Book.query.filter_by(id=id).first()
+	paket = Paket.query.filter_by(name=invoice.paket).first()
+	harga = "{:,}".format(paket.price).replace(",",".")
+	return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
+
+
+
+
+@app.route("/dashboard/invoice",methods=["GET","POST"])
+@login_required
+def AllInvoice():
+	invoices = Book.query.all()
+	userinvoice = Book.query.filter_by(owner=current_user.id).all()
+	return render_template("user/all_invoice.html",invoices=invoices,userinvoice=userinvoice)	
+
+
+
+
+
+
 
 
 

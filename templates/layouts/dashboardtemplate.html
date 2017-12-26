@@ -71,6 +71,13 @@
                         <i class="ti-book"></i>
                         <p>Booking</p>
                     </a>
+                </li>
+                <li>
+                    <a href="/dashboard/invoice">
+                        <i class="ti-money"></i>
+                        <p>Invoice</p>
+                    </a>
+                    
                 </li>                     
                 
             </ul>
@@ -99,7 +106,14 @@
                         <i class="ti-book"></i>
                         <p>Booking</p>
                     </a>
-                </li>                     
+                </li>   
+                <li>
+                    <a href="/dashboard/invoice">
+                        <i class="ti-money"></i>
+                        <p>Invoice</p>
+                    </a>
+                    
+                </li>                       
                 
             </ul>
             {% else %}
@@ -145,6 +159,13 @@
                         <i class="ti-camera"></i>
                         <p>Gallery</p>
                     </a>
+                </li>     
+                <li>
+                    <a href="/dashboard/invoice">
+                        <i class="ti-money"></i>
+                        <p>Invoice</p>
+                    </a>
+                    
                 </li>                        
                 
             </ul>
@@ -176,6 +197,7 @@
                               <ul class="dropdown-menu">
                                 <li><a href="/logout">Logout</a></li>
                                 <li><a href="/dashboard/reset-password">Reset Password</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=085333333535">Contact</a></li>
                                 {% if current_user.role == "superuser" or current_user.role == "user" %}
                                 <li><a href="/dashboard/delete-antrean">Hapus Antrean</a></li>
                                 

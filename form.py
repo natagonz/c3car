@@ -57,7 +57,8 @@ class ResetPasswordForm(FlaskForm):
 
 
 class AddPackageForm(FlaskForm):
-	name = StringField("Paket",validators=[Length(max=100),InputRequired()]) 	
+	name = StringField("Paket",validators=[Length(max=100),InputRequired()])
+	price = IntegerField("Harga Rp",validators=[InputRequired()]) 	
 	
 	
 class AddGalleryForm(FlaskForm):

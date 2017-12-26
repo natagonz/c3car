@@ -18,6 +18,7 @@
                 <tr>
                     <td>No</td>
                     <td>Paket</td>
+                    <td>Harga</td>
                     <td></td>                    
                     <td></td>
                 </tr>
@@ -28,6 +29,7 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ paket.name }}</td>
+                            <td>{{ paket.price }}</td>
                             <td><a href="/dashboard/edit-package/{{ paket.id }}" class="btn btn-success">Edit</a></td>
                             <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
                             </tr>
