@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 {% extends "layouts/dashboardtemplate.html" %}
+=======
+{% extends "layouts/dashboardtemplate.html" %}q
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 {% block title %} Admin {% endblock %}
 
 
@@ -29,7 +33,11 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ paket.name }}</td>
+<<<<<<< HEAD
                             <td>{{ paket.price }}</td>
+=======
+                            <td>Rp {{ "{:,}".format(paket.price).replace(",",".") }}</td>
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                             <td><a href="/dashboard/edit-package/{{ paket.id }}" class="btn btn-success">Edit</a></td>
                             <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
                             </tr>

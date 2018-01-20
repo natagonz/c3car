@@ -61,7 +61,11 @@
                     </a>
                 </li>                
                 <li>
+<<<<<<< HEAD
                     <a href="/dashboard/antrean">
+=======
+                    <a href="/dashboard/location/antrean">
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                         <i class="ti-car"></i>
                         <p>Antrean</p>
                     </a>
@@ -96,7 +100,11 @@
                     </a>
                 </li> 
                 <li>
+<<<<<<< HEAD
                     <a href="/dashboard/antrean">
+=======
+                    <a href="/dashboard/location/antrean">
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                         <i class="ti-car"></i>
                         <p>Antrean</p>
                     </a>
@@ -106,16 +114,90 @@
                         <i class="ti-book"></i>
                         <p>Booking</p>
                     </a>
+<<<<<<< HEAD
                 </li>   
                 <li>
                     <a href="/dashboard/invoice">
+=======
+                </li>                                     
+                
+            </ul>
+            {% elif current_user.role == "cashier" %}
+             <ul class="nav">
+                <li>
+                    <a href="/dashboard">
+                        <i class="ti-panel"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>              
+                <li>
+                    <a href="/dashboard/location/invoice">
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                         <i class="ti-money"></i>
                         <p>Invoice</p>
                     </a>
                     
+<<<<<<< HEAD
                 </li>                       
                 
             </ul>
+=======
+                </li>  
+                <li>
+                    <a href="/dashboard/add-income">
+                        <i class="ti-arrow-down"></i>
+                        <p>Pemasukan</p>
+                    </a>
+                    
+                </li>    
+                  <li>
+                    <a href="/dashboard/add-expense">
+                        <i class="ti-arrow-up"></i>
+                        <p>Pengeluaran</p>
+                    </a>
+                    
+                </li>        
+
+                    
+                  
+            </ul>
+
+            {% elif current_user.role == "accountant" %}
+             <ul class="nav">
+                <li>
+                    <a href="/dashboard">
+                        <i class="ti-panel"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>              
+                <li>
+                    <a href="/dashboard/location/transaction">
+                        <i class="ti-pulse"></i>
+                        <p>Transaksi</p>
+                    </a>
+                    
+                </li>
+                <li>
+                    <a href="/dashboard/add-income">
+                        <i class="ti-arrow-down"></i>
+                        <p>Pemasukan</p>
+                    </a>
+                    
+                </li>    
+                  <li>
+                    <a href="/dashboard/add-expense">
+                        <i class="ti-arrow-up"></i>
+                        <p>Pengeluaran</p>
+                    </a>
+                    
+                </li>                                
+                  
+            </ul>
+
+
+
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
             {% else %}
              <ul class="nav">
                 <li>
@@ -127,7 +209,29 @@
                 <li>
                     <a href="/dashboard/user">
                         <i class="ti-user"></i>
+<<<<<<< HEAD
                         <p>User</p>
+=======
+                        <p>Admin</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/cashier">
+                        <i class="ti-user"></i>
+                        <p>Kasir</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/accountant">
+                        <i class="ti-user"></i>
+                        <p>Akuntan</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/location/transaction">
+                        <i class="ti-pulse"></i>
+                        <p>Transaksi</p>
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                     </a>
                 </li>
                 <li>
@@ -137,7 +241,11 @@
                     </a>
                 </li> 
                 <li>
+<<<<<<< HEAD
                     <a href="/dashboard/antrean">
+=======
+                    <a href="/dashboard/location/antrean">
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                         <i class="ti-car"></i>
                         <p>Antrean</p>
                     </a>
@@ -161,13 +269,27 @@
                     </a>
                 </li>     
                 <li>
+<<<<<<< HEAD
                     <a href="/dashboard/invoice">
+=======
+                    <a href="/dashboard/location/invoice">
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                         <i class="ti-money"></i>
                         <p>Invoice</p>
                     </a>
                     
                 </li>                        
+<<<<<<< HEAD
                 
+=======
+                 <li>
+                    <a href="/dashboard/all-location">
+                        <i class="ti-location-pin"></i>
+                        <p>Location</p>
+                    </a>
+                    
+                </li>          
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
             </ul>
 
             {% endif %}

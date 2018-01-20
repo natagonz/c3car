@@ -50,15 +50,32 @@
                                         </div>
                                         
                                     </div>    
+<<<<<<< HEAD
                                     {% if current_user.role ==  "user" or current_user.role == "superuser"%}
                                     <div class="row">
+=======
+                                    
+                                    <div class="row">
+                                        {% if current_user.role ==  "user" or current_user.role == "superuser"%}
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                                          <div class="col-md-4">
                                             <div class="form-group">
                                                 {{ render_field(form.role, class="form-control",placeholder="Type")}}
                                             </div>
                                         </div>
+<<<<<<< HEAD
                                     </div>      
                                     {% endif %}                                                           
+=======
+                                        {% endif %} 
+                                          <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.location, class="form-control",placeholder="Lokasi")}}
+                                            </div>
+                                        </div>   
+                                    </div>      
+                                                                                              
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                                     
                                     
                                     <div class="text-center">

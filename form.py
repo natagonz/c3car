@@ -43,8 +43,17 @@ class BookingStatusForm(FlaskForm):
 	status = SelectField("",choices= [("Belum Selesai","Belum Selesai"),("Selesai","Selesai")])	
 
 
+<<<<<<< HEAD
 class DeleteAntreanForm(FlaskForm):
   submit = SubmitField("Hapus Antrean")	
+=======
+class InvoicePaymentForm(FlaskForm):
+	payment = SelectField("",choices= [("Belum Lunas","Belum Lunas"),("Lunas","Lunas")])	
+
+
+class DeleteAntreanForm(FlaskForm):
+	submit = SubmitField("Hapus Antrean")	
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 class ForgotPasswordForm(FlaskForm):

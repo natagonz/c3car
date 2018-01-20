@@ -3,9 +3,16 @@
 {% block title %} Dashboard  {% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 
 				<div class="row">
                   
+=======
+{% if current_user.role == "member" %}
+
+				<div class="row">
+                {% for location in locations %}
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                     <div class="col-md-6">
                         <div class="card">
                             <div class="content">
@@ -17,8 +24,39 @@
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
+<<<<<<< HEAD
                                             <p>Total Antrean </p>
                                             <p>{{ user }}</p>                                            
+=======
+                                            <p>Lihat Antrean di {{ location.location }} </p>
+                                                                                                                                                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-plus"></i> <a href="/dashboard/antrean/{{ location.id }}">Lihat</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                  
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-book"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Booking </p>                                                                                    
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                                         </div>
                                     </div>
                                 </div>
@@ -31,33 +69,76 @@
                             </div>
                         </div>
                     </div>
+<<<<<<< HEAD
                     {% if current_user.role == "member" %}
                     {% else %}
-                    <div class="col-md-6">
+=======
+                </div> 
+{% elif current_user.role == "cashier" %}    
+                <div class="row">
+                       <div class="col-md-6">
                         <div class="card">
                             <div class="content">
                                 <div class="row">
                                     <div class="col-xs-5">
                                         <div class="icon-big icon-success text-center">
-                                            <i class="ti-user"></i>
+                                            <i class="ti-arrow-down"></i>
                                         </div>
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Total Member </p> 
-                                            <p> {{ member }}</p>                                           
+                                            <p>Input Pemasukan </p>                                                                                                                                
                                         </div>
                                     </div>
                                 </div>
                                 <div class="footer">
                                     <hr />
                                     <div class="stats">
-                                        <i class="ti-plus"></i> <a href="/dashboard/add-member">Tambah Member</a>
+                                        <i class="ti-plus"></i> <a href="dashboard/add-income">Tambah</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+<<<<<<< HEAD
+                                            <i class="ti-user"></i>
+=======
+                                            <i class="ti-arrow-up"></i>
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+<<<<<<< HEAD
+                                            <p>Total Member </p> 
+                                            <p> {{ member }}</p>                                           
+=======
+                                            <p>Input Pengeluaran </p>                                                                                                                                
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+<<<<<<< HEAD
+                                        <i class="ti-plus"></i> <a href="/dashboard/add-member">Tambah Member</a>
+=======
+                                        <i class="ti-plus"></i> <a href="dashboard/add-expense">Tambah</a>
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<<<<<<< HEAD
                     {% endif %}     
                 </div>
 
@@ -233,4 +314,100 @@
 
 
 
+=======
+                </div>
+
+{% elif current_user.role == "accountant" %}
+                 <div class="row">
+                {% for location in locations %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-car"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Lihat Transaksi di {{ location.location }} </p>                                                                                                                                
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-plus"></i> <a href="/dashboard/location/transaction/{{ location.id }}">Lihat</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                 </div>   
+                  
+
+                    
+{% else  %}
+
+                <div class="row">
+                {% for location in locations %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-car"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Lihat Antrean di {{ location.location }} </p>                                                                                                                                
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-plus"></i> <a href="/dashboard/antrean/{{ location.id }}">Lihat</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                  
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-book"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Booking </p>                                                                                    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-plus"></i> <a href="/dashboard/booking">Booking</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                   
+
+ 
+
+
+{% endif %}
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 {% endblock %}

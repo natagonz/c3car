@@ -14,8 +14,18 @@
                 <thead>
                 <tr>
                     <td>Mobil</td>
+<<<<<<< HEAD
                     <td>DK</td>
                     <td>Paket</td>                    
+=======
+                    <td>Plat</td>
+                    <td>Paket</td>   
+                    {% if current_user.role == "member" %}
+                    {% else %}
+                    <td>Status</td>
+                    <td></td>  
+                    {% endif %}               
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                     <td></td>
                 </tr>
                 </thead>
@@ -37,7 +47,13 @@
                           <tr>
                               <td>{{ invoice.mobil }}</td>
                               <td>{{ invoice.plat }}</td>
+<<<<<<< HEAD
                               <td>{{ invoice.paket }}</td>                            
+=======
+                              <td>{{ invoice.paket }}</td>
+                              <td>{{ invoice.payment }}</td>  
+                              <td><a href="/dashboard/edit-invoice/{{ invoice.id }}" class="btn btn-primary">Edit</a></td>
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
                               <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Lihat</a></td>
                               </tr>
                        </tbody>           

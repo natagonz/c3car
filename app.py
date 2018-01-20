@@ -2,7 +2,11 @@ from flask import Flask, request, flash , session, render_template, redirect, ur
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
+<<<<<<< HEAD
 from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm
+=======
+from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm,InvoicePaymentForm
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 from datetime import datetime,timedelta 
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
@@ -54,6 +58,10 @@ class User(db.Model):
 	status = db.Column(db.String(100))
 	date = db.Column(db.DateTime())
 	renew = db.Column(db.DateTime())
+<<<<<<< HEAD
+=======
+	location = db.Column(db.String(200))
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 	def is_active(self):
@@ -84,6 +92,11 @@ class Book(db.Model):
 	date = db.Column(db.DateTime())
 	price = db.Column(db.Integer())
 	owner = db.Column(db.Integer())
+<<<<<<< HEAD
+=======
+	location = db.Column(db.String(200))
+	payment = db.Column(db.String(200))
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 class Paket(db.Model):
@@ -101,6 +114,23 @@ def choice_query():
 
 
 
+<<<<<<< HEAD
+=======
+class Location(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	location = db.Column(db.String(200))
+	total = db.Column(db.Integer())
+
+	def __repr__(self):
+		return '{}'.format(self.location)
+
+def location_query():
+	return Location.query.all()			
+
+
+
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 class Gallery(db.Model):
@@ -110,6 +140,20 @@ class Gallery(db.Model):
 
 
 
+<<<<<<< HEAD
+=======
+class Accounting(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	description = db.Column(db.String(300))
+	location = db.Column(db.String(300))
+	amount = db.Column(db.Integer())
+	status = db.Column(db.String(200))
+	date = db.Column(db.DateTime())
+
+
+
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 ############## form ################
 class BookingForm(FlaskForm):
@@ -120,6 +164,11 @@ class BookingForm(FlaskForm):
 	paket = QuerySelectField(query_factory=choice_query)
 	plat =  StringField("Plat",validators=[Length(max=100)])
 	role = SelectField("Type",choices= [("umum","umum"),("vip","vip")])	
+<<<<<<< HEAD
+=======
+	location = QuerySelectField(query_factory=location_query)
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 class UserBookingForm(FlaskForm):
@@ -129,6 +178,42 @@ class UserBookingForm(FlaskForm):
 	mobil = StringField("Mobil",validators=[Length(max=100)])
 	paket = QuerySelectField(query_factory=choice_query)
 	plat =  StringField("Plat",validators=[Length(max=100)])
+<<<<<<< HEAD
+=======
+	location = QuerySelectField(query_factory=location_query)
+
+
+
+class AddAdminForm(FlaskForm):
+	username = StringField("Username",validators=[InputRequired(),Length(max=100)])
+	email = StringField("Email",validators=[InputRequired(),Length(max=100)])
+	password = PasswordField("Password",validators=[InputRequired(),Length(min=6)])
+	location = QuerySelectField(query_factory=location_query)
+
+class AddLocationForm(FlaskForm):
+	location = StringField("Location",validators=[Length(max=200),InputRequired()])
+
+
+
+class AddAccountingForm(FlaskForm):
+	description = StringField("Description",validators=[InputRequired(),Length(max=300)])
+	amount = IntegerField("Jumlah",validators=[InputRequired()])
+	
+
+class SuperUserAddAccountingForm(FlaskForm):
+	description = StringField("Description",validators=[InputRequired(),Length(max=300)])
+	amount = IntegerField("Jumlah",validators=[InputRequired()])
+	location = QuerySelectField(query_factory=location_query)
+
+
+
+class AccountingSearchForm(FlaskForm):
+	start = DateField("Dari",format="%m/%d/%Y")
+	end = DateField("Sampai",format="%m/%d/%Y")
+
+
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 ##############################################
@@ -156,6 +241,116 @@ def FrontGallery():
 
 
 
+<<<<<<< HEAD
+=======
+####################### Accounting ###########################
+
+@app.route("/dashboard/add-income",methods=["GET","POST"])
+@login_required
+def AddIncome():
+	if current_user.role == "superuser" or current_user.role == "accountant" :
+		form = SuperUserAddAccountingForm()
+		if form.validate_on_submit():
+			today = datetime.today()
+			income = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Income")
+			db.session.add(income)
+			db.session.commit()
+			flash("Pendapatan berhasil di input","success")
+			return redirect(url_for("AdminDashboard"))
+	else :
+		form = AddAccountingForm()
+		if form.validate_on_submit():
+			today = datetime.today()
+			income = Accounting(description=form.description.data,location=current_user.location,amount=form.amount.data,date=today,status="Income")
+			db.session.add(income)
+			db.session.commit()
+			flash("Pendapatan berhasil di input","success")
+			return redirect(url_for("AdminDashboard"))			
+	return render_template("user/add_income.html",form=form)	
+
+
+
+@app.route("/dashboard/add-expense",methods=["GET","POST"])
+@login_required
+def AddExpense():
+	if current_user.role == "superuser" or current_user.role == "accountant":
+		form = SuperUserAddAccountingForm()
+		if form.validate_on_submit():
+			today = datetime.today()
+			expense = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Expense")
+			db.session.add(expense)
+			db.session.commit()
+			flash("Pengeluaran berhasil di input","success")
+			return redirect(url_for("AdminDashboard"))
+	else :	
+		form = AddAccountingForm()
+		if form.validate_on_submit():
+			today = datetime.today()
+			expense = Accounting(description=form.description.data,location=current_user.location,amount=form.amount.data,date=today,status="Expense")
+			db.session.add(expense)
+			db.session.commit()
+			flash("Pengeluaran berhasil di input","success")
+			return redirect(url_for("AdminDashboard"))
+	return render_template("user/add_expense.html",form=form)	
+
+
+
+@app.route("/dashboard/location/transaction",methods=["GET","POST"])
+@login_required
+def AllLocationTransaction():
+	locations = Location.query.all()		
+	return render_template("user/all_location_transaction.html",locations=locations) 
+
+
+@app.route("/dashboard/location/transaction/<string:id>",methods=["GET","POST"])
+@login_required
+def Transaction(id):
+	location = Location.query.filter_by(id=id).first()
+	name = location.location
+	transactions = Accounting.query.filter_by(location=name).all()	
+	form = AccountingSearchForm()
+	if form.validate_on_submit():
+		start = form.start.data
+		end = form.end.data
+		transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
+		return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name)
+	return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name)
+
+
+@app.route("/dashboard/delete-transaction/<string:id>",methods=["GET","POST"])
+@login_required
+def DeleteTransaction(id):
+	trans = Accounting.query.filter_by(id=id).first()
+	db.session.delete(trans)
+	db.session.commit()
+	flash("Transaksi berhasil di hapus","success")
+	return redirect(url_for("AllLocationTransaction"))
+
+
+
+
+@app.route("/dashboard/edit-transaction/<string:id>",methods=["GET","POST"])
+@login_required
+def EditTransaction(id):
+	form = AddAccountingForm()
+	trans = Accounting.query.filter_by(id=id).first()
+	form.description.data = trans.description
+	form.amount.data = trans.amount	
+	stats = trans.status	
+	if form.validate_on_submit():		
+		trans.description = request.form["description"]
+		trans.amount = request.form["amount"]		
+		db.session.commit()
+		flash("Data berhasil di edit","success")
+		return redirect(url_for("AllLocationTransaction"))
+	return render_template("user/edit_transaction.html",form=form,stats=stats)	
+
+
+
+
+
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 ############################### User Route & function #################################
 @app.route("/register",methods=["GET","POST"])
 def UserRegister():
@@ -269,10 +464,18 @@ def UserResetPassword():
 @app.route("/dashboard",methods=["GET","POST"])
 @login_required
 def AdminDashboard():
+<<<<<<< HEAD
 	antrean = Book.query.order_by(Book.status.desc(),Book.role.desc()).all()
 	user = len(Book.query.filter_by(status="Belum Selesai").all())
 	member = len(User.query.filter_by(role="member").all())	
 	return render_template("user/dashboard.html",antrean=antrean,user=user,member=member)
+=======
+	antreanx = Book.query.order_by(Book.status.desc(),Book.role.desc()).all()
+	user = len(Book.query.filter_by(status="Belum Selesai").all())
+	member = len(User.query.filter_by(role="member").all())
+	locations = Location.query.all()  	
+	return render_template("user/dashboard.html",antreanx=antreanx,user=user,member=member,locations=locations)
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 
@@ -280,7 +483,11 @@ def AdminDashboard():
 @app.route("/dashboard/user",methods=["GET","POST"])
 @login_required
 def AllUser():
+<<<<<<< HEAD
 	users = User.query.filter_by(status="user").all()
+=======
+	users = User.query.filter_by(role="user").all()
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 	return render_template("user/all_admin.html",users=users)	
 
 
@@ -288,10 +495,17 @@ def AllUser():
 @app.route("/dashboard/add-user",methods=["GET","POST"])
 @login_required
 def AdminAddUser():
+<<<<<<< HEAD
 	form = UserRegisterForm()
 	if form.validate_on_submit():		
 		hass = generate_password_hash(form.password.data,method="sha256")
 		user = User(username=form.username.data,email=form.email.data,password=hass,role="user",status="user")
+=======
+	form = AddAdminForm()
+	if form.validate_on_submit():		
+		hass = generate_password_hash(form.password.data,method="sha256")
+		user = User(username=form.username.data,email=form.email.data,password=hass,role="user",status="user",location=form.location.data)
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("Email telah terdaftar","danger")
@@ -313,9 +527,62 @@ def DeleteUser(id):
 	flash("User telah di hapus","success")	
 	return redirect(url_for("AllUser"))		
 
+<<<<<<< HEAD
 
 
 
+=======
+############################## kasir ######################################
+
+@app.route("/dashboard/cashier",methods=["GET","POST"])
+@login_required
+def AllCashier():
+	cashiers = User.query.filter_by(role="cashier").all()
+	return render_template("user/all_cashier.html",cashiers=cashiers)
+
+
+@app.route("/dashboard/add-cashier",methods=["GET","POST"])
+@login_required
+def AddCashier():
+	form = AddAdminForm()
+	if form.validate_on_submit():
+		hass = generate_password_hash(form.password.data,method="sha256")
+		user = User(username=form.username.data,email=form.email.data,password=hass,role="cashier",status="user",location=form.location.data)
+		check_user = User.query.filter_by(email=form.email.data).all()
+		if len(check_user) > 0 :
+			flash("Email telah terdaftar","danger")
+		else :
+			db.session.add(user)
+			db.session.commit()
+			flash("Kasir berhasil di tambahkan","success")
+			return redirect(url_for("AllCashier"))
+	return render_template("user/add_user.html",form=form)		
+		
+
+#################### akuntan #############
+@app.route("/dashboard/add-accountant",methods=["GET","POST"])
+@login_required
+def AddAccountant():
+	form = AddAdminForm()
+	if form.validate_on_submit():
+		hass = generate_password_hash(form.password.data,method="sha256")
+		user = User(username=form.username.data,email=form.email.data,password=hass,role="accountant",status="user",location=form.location.data)
+		check_user = User.query.filter_by(email=form.email.data).all()
+		if len(check_user) > 0 :
+			flash("Email telah terdaftar","danger")	
+		else :
+			db.session.add(user)
+			db.session.commit()
+			flash("Akuntan berhasil di tambah","success")
+			return redirect(url_for("AllAccountant"))
+	return render_template("user/add_user.html",form=form)			
+
+@app.route("/dashboard/accountant",methods=["GET","POST"])
+@login_required
+def AllAccountant():
+	akuntans = User.query.filter_by(role="accountant").all()
+	return render_template("user/all_accountant.html",akuntans=akuntans)
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 
@@ -415,15 +682,24 @@ def Booking():
 		form = BookingForm()
 		if form.validate_on_submit():			
 			today = datetime.today()					
+<<<<<<< HEAD
 			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=form.role.data,owner=current_user.id)
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
 			return redirect(url_for("Antrean"))
+=======
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=form.role.data,owner=current_user.id,location=form.location.data,payment="Belum Lunas")
+			db.session.add(book)
+			db.session.commit()
+			flash("Booking berhasil","success")
+			return redirect(url_for("AntreanLocation"))
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 	else :
 		form = UserBookingForm()
 		if form.validate_on_submit():
 			today = datetime.today()					
+<<<<<<< HEAD
 			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="vip",owner=current_user.id)
 			db.session.add(book)
 			db.session.commit()
@@ -437,6 +713,40 @@ def Booking():
 def Antrean():
 	antrean = Book.query.order_by(Book.status.desc(),Book.role.desc()).all()
 	return render_template("user/antrean.html",antrean=antrean)
+=======
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="vip",owner=current_user.id,location=form.location.data,payment="Belum Lunas")
+			db.session.add(book)
+			db.session.commit()
+			flash("Booking berhasil","success")
+			return redirect(url_for("AntreanLocation"))
+			
+	return render_template("user/booking.html",form=form)	
+
+
+
+###############################################################
+@app.route("/dashboard/location/antrean",methods=["GET","POST"])
+@login_required
+def AntreanLocation():
+	locations = Location.query.all()
+	userlocations = Location.query.filter_by(location=current_user.location).all() 
+	return render_template("user/antrean_location.html",locations=locations,userlocations=userlocations)
+
+
+
+
+###############################################################
+
+@app.route("/dashboard/antrean/<string:id>",methods=["GET","POST"])
+@login_required
+def Antrean(id):
+	location = Location.query.filter_by(id=id).first()
+	nama = location.location
+	total = len(Book.query.filter_by(status="Belum Selesai",location=nama).all())
+	antrean = Book.query.filter_by(location=nama).order_by(Book.status.desc(),Book.role.desc()).all()
+	return render_template("user/antrean.html",antrean=antrean,total=total)
+
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 
@@ -450,7 +760,11 @@ def EditAntrean(id):
 		antre.status = request.form["status"]
 		db.session.commit()
 		flash("Status berhasil di update","success")
+<<<<<<< HEAD
 		return redirect(url_for("Antrean"))
+=======
+		return redirect(url_for("AntreanLocation"))
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 	return render_template("user/edit_antrean.html",form=form)	
 
 
@@ -467,7 +781,11 @@ def DeleteAllBooking():
 		db.session.query(Book).delete()
 		db.session.commit()
 		flash("Antrean berhasil di hapus","success")
+<<<<<<< HEAD
 		return redirect(url_for("Antrean"))
+=======
+		return redirect(url_for("AntreanLocation"))
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 	return render_template("user/delete_antrean.html",form=form)	
 
 
@@ -527,7 +845,11 @@ def AllPackage():
 
 
 
+<<<<<<< HEAD
 ############################### Gallery ############
+=======
+############################### Gallery ##########################
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 @app.route("/dashboard/add-gallery",methods=["GET","POST"])
 @login_required
@@ -562,7 +884,21 @@ def DeleteGallery(id):
 
 
 
+<<<<<<< HEAD
 
+=======
+################################## Invoice #######
+### Semua Lokasi invoice
+@app.route("/dashboard/location/invoice",methods=["GET","POST"])	
+@login_required
+def InvoiceLocation():
+	locations = Location.query.all()
+	userlocations = Location.query.filter_by(location=current_user.location).all()
+	return render_template("user/all_invoice_location.html",locations=locations,userlocations=userlocations) 
+
+
+#Tiap buah invoice
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 @app.route("/dashboard/invoice/<string:id>",methods=["GET","POST"])
 @login_required
 def UserInvoice(id):
@@ -572,16 +908,121 @@ def UserInvoice(id):
 	return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
 
 
+<<<<<<< HEAD
 
 
 @app.route("/dashboard/invoice",methods=["GET","POST"])
 @login_required
 def AllInvoice():
 	invoices = Book.query.all()
+=======
+#### invoice member ####
+@app.route("/dashboard/invoice",methods=["GET","POST"])
+@login_required
+def AllMemberInvoice():
+	invoices = Book.query.filter_by(owner=current_user.id).all()
+	return render_template("user/member_invoice.html",invoices=invoices)
+
+
+
+##### invoice berdasakan lokasi
+@app.route("/dashboard/location/invoice/<string:id>",methods=["GET","POST"])
+@login_required
+def AllInvoice(id):
+	locations = Location.query.filter_by(id=id).first()
+	locname = locations.location
+	invoices = Book.query.filter_by(location=locname).all()
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 	userinvoice = Book.query.filter_by(owner=current_user.id).all()
 	return render_template("user/all_invoice.html",invoices=invoices,userinvoice=userinvoice)	
 
 
+<<<<<<< HEAD
+=======
+####### edit invoice payment ###########
+@app.route("/dashboard/edit-invoice/<string:id>",methods=["GET","POST"])
+@login_required
+def EditInvoicePayment(id):
+	form = InvoicePaymentForm()
+	invoice = Book.query.filter_by(id=id).first()
+	form.payment.data = invoice.payment
+	if invoice.payment == "Belum Lunas":
+		if form.validate_on_submit():
+			pay = request.form["payment"]
+			paket = Paket.query.filter_by(name=invoice.paket).first()
+			harga = paket.price
+			loc = invoice.location		
+			today = datetime.today()
+			invoice.payment = pay
+			if pay == "Lunas":
+				trans = Accounting(description="Pembayaran customer",amount=harga,date=today,location=loc,status="Income")
+				db.session.add(trans)
+				db.session.commit()
+				flash("Status pembayaran berhasil di rubah","success")
+				return redirect(url_for("InvoiceLocation"))
+	else :
+		if form.validate_on_submit():
+			pay = request.form["payment"]
+			paket = Paket.query.filter_by(name=invoice.paket).first()
+			harga = paket.price
+			loc = invoice.location		
+			today = datetime.today()
+			invoice.payment = pay
+			db.session.commit()
+			flash("Status pembayaran berhasil di rubah","success")
+			return redirect(url_for("InvoiceLocation"))
+
+				
+	return render_template("user/edit_invoice_payment.html",form=form)		
+
+
+
+
+########################### Location ##########################
+
+@app.route("/dashboard/add-location",methods=["GET","POST"])
+@login_required
+def AddLocation():
+	form = AddLocationForm()
+	if form.validate_on_submit():
+		loc = Location(location=form.location.data,total=0)
+		db.session.add(loc)
+		db.session.commit()
+		flash("Lokasi berhasil di tambah","success")
+		return redirect(url_for("AdminDashboard"))
+	return render_template("user/add_location.html",form=form)	
+
+@app.route("/dashboard/all-location",methods=["GET","POST"])
+@login_required
+def AllLocation():
+	locations = Location.query.all()
+	return render_template("user/all_location.html",locations=locations)
+
+
+@app.route("/dashboard/edit-location/<string:id>",methods=["GET","POST"])
+@login_required
+def EditLocation(id):
+	form = AddLocationForm()
+	location = Location.query.filter_by(id=id).first()
+	form.location.data = location.location
+	if form.validate_on_submit():
+		location.location = request.form["location"]
+		db.session.commit()
+		flash("Lokasi berhasil di rubah","success")
+		return redirect(url_for("AllLocation"))
+	return render_template("user/edit_location.html",form=form)	
+
+
+
+@app.route("/dashboard/delete-location/<string:id>",methods=["GET","POST"])
+@login_required
+def DeleteLocation(id):
+	loc = Location.query.filter_by(id=id).first()
+	db.session.delete(loc)
+	db.session.commit()
+	flash("Lokasi berhasil di hapus","success")
+	return redirect(url_for("AllLocation"))	
+>>>>>>> 84f9071cd97c026522e335c98fd4b5a148b84517
 
 
 
