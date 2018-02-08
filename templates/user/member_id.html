@@ -36,6 +36,14 @@
                   <th><strong>Tanggal</strong></th>
                   <td>{{ member.date.strftime("%d-%m-%Y") }}</td>
                 </tr>
+                <tr>
+                  <th><strong>Berakhir</strong></th>
+                  <td>{{ member.renew.strftime("%d-%m-%Y") }}</td>
+                </tr>
+                <tr>
+                  <th><strong>Status</strong></th>
+                  <td>{{ member.status }}</td>
+                </tr>
               
               </tbody>
             </table>

@@ -1,0 +1,20 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Membership {% endblock %}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/member.css')}}" rel="stylesheet"/> 
+
+<div class="row">                
+    <div class="col-lg-11 col-md-10">
+        <div class="card">
+            <div class="content">
+              <h4> Halo {{current_user.username}} masa aktif anda sampai {{ current_user.renew.strftime("%d-%m-%Y") }} Silakan hubungi <a href="https://api.whatsapp.com/send?phone=+6285333333535">085333333535</a> atau ke outlet kami untuk memperpanjang membership </h4>
+            
+            </div>      
+          </div>            
+     </div>       
+</div>
+
+{% endblock %}

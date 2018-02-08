@@ -1,0 +1,36 @@
+app.route("/dashboard/edit-invoice/<string:id>",methods=["GET","POST"])
+@login_required
+def EditInvoicePayment(id):
+	form = InvoicePaymentForm()
+	invoice = Book.query.filter_by(id=id).first()
+	form.payment.data = invoice.payment
+	if invoice.payment == "Belum Lunas":
+		if form.validate_on_submit():
+			pay = request.form["payment"]
+			paket = Paket.query.filter_by(name=invoice.paket).first()
+			harga = paket.price
+			loc = invoice.location		
+			today = datetime.today()
+			invoice.payment = pay
+			if pay == "Lunas":
+				trans = Accounting(description="Pembayaran customer",amount=harga,date=today,location=loc,status="Income")
+				db.session.add(trans)
+				db.session.commit()
+
+				flash("Status pembayaran berhasil di rubah","success")
+				return redirect(url_for("InvoiceLocation"))
+	else :
+		if form.validate_on_submit():
+			pay = request.form["payment"]
+			paket = Paket.query.filter_by(name=invoice.paket).first()
+			harga = paket.price
+			loc = invoice.location		
+			today = datetime.today()
+			invoice.payment = pay
+			db.session.commit()
+			flash("Status pembayaran berhasil di rubah","success")
+			return redirect(url_for("InvoiceLocation"))
+
+				
+	return render_template("user/edit_invoice_payment.html",form=form)		
+

@@ -8,7 +8,7 @@ from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
 from config import secret,databases
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField, SelectField,SubmitField
+from wtforms import StringField, PasswordField ,TextAreaField, IntegerField, DateField, SelectField,SubmitField,SelectMultipleField,FieldList
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import InputRequired, EqualTo, Email, Length
 from flask_uploads import UploadSet, IMAGES, configure_uploads
@@ -55,6 +55,7 @@ class User(db.Model):
 	date = db.Column(db.DateTime())
 	renew = db.Column(db.DateTime())
 	location = db.Column(db.String(200))
+	
 
 
 	def is_active(self):
@@ -145,7 +146,7 @@ class BookingForm(FlaskForm):
 	email = StringField("Email",validators=[Length(max=100)])
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])
-	paket = QuerySelectField(query_factory=choice_query)
+	paket = QuerySelectField(query_factory=choice_query)		
 	plat =  StringField("Plat",validators=[Length(max=100)])
 	role = SelectField("Type",choices= [("umum","umum"),("vip","vip")])	
 	location = QuerySelectField(query_factory=location_query)
@@ -545,17 +546,18 @@ def AddMember():
 	form = AddMemberForm()
 	if form.validate_on_submit():
 		today = datetime.today()
-		renew_date = today + timedelta(days=365)
-		hass = generate_password_hash(form.password.data,method="sha256")
-		user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew_date)
+		renew_date = today + timedelta(days=90)
+		hass = generate_password_hash(form.password.data,method="sha256")		
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("email telah terdaftar","danger")
 		else :			
+			user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew_date)
 			db.session.add(user)
 			db.session.commit()
 			flash("member berhasil di tambah","success")
 			return redirect(url_for("AllMember"))
+			
 	return render_template("user/add_member.html",form=form)	
 
 
@@ -593,19 +595,18 @@ def EditMember(id):
 		form.email.data = member.email			
 		form.phone.data = member.phone			
 		form.mobil.data = member.mobil
-		form.plat.data = member.plat			
-		form.date.data = member.date
+		form.plat.data = member.plat					
 		form.renew.data = member.renew	
-		if form.validate_on_submit():
-			date = datetime.strptime(request.form["date"], '%m/%d/%Y').strftime('%Y-%m-%d')	
+		form.status.data = member.status
+		if form.validate_on_submit():			
 			renew_date = datetime.strptime(request.form["renew"], '%m/%d/%Y').strftime('%Y-%m-%d')	
 			member.username = request.form["username"]
 			member.email = request.form["email"]			
 			member.phone = request.form["phone"]			
 		 	member.mobil = request.form["mobil"]
-		 	member.plat	= request.form["plat"]		
-			member.date	= date
+		 	member.plat	= request.form["plat"]				
 			member.renew = renew_date
+			member.status = request.form["status"]
 			db.session.commit()
 			flash("Member berhasil di edit","success")
 			return redirect(url_for("AllMember"))		
@@ -638,16 +639,18 @@ def Booking():
 			db.session.commit()
 			flash("Booking berhasil","success")
 			return redirect(url_for("AntreanLocation"))
+	if current_user.role == "member" and current_user.status == "pending":
+		return redirect(url_for("PaymentInfo"))		
 	else :
 		form = UserBookingForm()
 		if form.validate_on_submit():
-			today = datetime.today()					
+			today = datetime.today()		 				
 			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="vip",owner=current_user.id,location=form.location.data,payment="Belum Lunas")
 			db.session.add(book)
-			db.session.commit()
+			db.session.commit()		
 			flash("Booking berhasil","success")
-			return redirect(url_for("AntreanLocation"))
-			
+			return redirect(url_for("AntreanLocation"))		
+					
 	return render_template("user/booking.html",form=form)	
 
 
@@ -671,7 +674,7 @@ def Antrean(id):
 	location = Location.query.filter_by(id=id).first()
 	nama = location.location
 	total = len(Book.query.filter_by(status="Belum Selesai",location=nama).all())
-	antrean = Book.query.filter_by(location=nama).order_by(Book.status.desc(),Book.role.desc()).all()
+	antrean = Book.query.filter_by(location=nama,payment="Belum Lunas").order_by(Book.status.desc(),Book.role.desc()).all()
 	return render_template("user/antrean.html",antrean=antrean,total=total)
 
 
@@ -809,25 +812,6 @@ def InvoiceLocation():
 	return render_template("user/all_invoice_location.html",locations=locations,userlocations=userlocations) 
 
 
-#Tiap buah invoice
-@app.route("/dashboard/invoice/<string:id>",methods=["GET","POST"])
-@login_required
-def UserInvoice(id):
-	invoice = Book.query.filter_by(id=id).first()
-	paket = Paket.query.filter_by(name=invoice.paket).first()
-	harga = "{:,}".format(paket.price).replace(",",".")
-	return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
-
-
-#### invoice member ####
-@app.route("/dashboard/invoice",methods=["GET","POST"])
-@login_required
-def AllMemberInvoice():
-	invoices = Book.query.filter_by(owner=current_user.id).all()
-	return render_template("user/member_invoice.html",invoices=invoices)
-
-
-
 ##### invoice berdasakan lokasi
 @app.route("/dashboard/location/invoice/<string:id>",methods=["GET","POST"])
 @login_required
@@ -839,12 +823,40 @@ def AllInvoice(id):
 	return render_template("user/all_invoice.html",invoices=invoices,userinvoice=userinvoice)	
 
 
+
+#Tiap buah invoice untuk admin dan member
+@app.route("/dashboard/invoice/<string:id>",methods=["GET","POST"])
+@login_required
+def UserInvoice(id): 	
+	invoice = Book.query.filter_by(id=id).first()
+	user = User.query.filter_by(id=invoice.owner).first()
+	paket = Paket.query.filter_by(name=invoice.paket).first()	
+	if paket.name == "cuci mobil" and user.role == "member"  :
+		total = paket.price - paket.price 
+		harga = "{:,}".format(total).replace(",",".")
+		return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
+	else :	
+		harga = "{:,}".format(paket.price).replace(",",".")
+		return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
+
+
+#### invoice member ####
+@app.route("/dashboard/invoice",methods=["GET","POST"])
+@login_required
+def AllMemberInvoice():
+	invoices = Book.query.filter_by(owner=current_user.id).all()
+	return render_template("user/member_invoice.html",invoices=invoices)
+
+
+
+
 ####### edit invoice payment ###########
 @app.route("/dashboard/edit-invoice/<string:id>",methods=["GET","POST"])
 @login_required
 def EditInvoicePayment(id):
 	form = InvoicePaymentForm()
 	invoice = Book.query.filter_by(id=id).first()
+	user = User.query.filter_by(id=invoice.owner).first()
 	form.payment.data = invoice.payment
 	if invoice.payment == "Belum Lunas":
 		if form.validate_on_submit():
@@ -855,23 +867,23 @@ def EditInvoicePayment(id):
 			today = datetime.today()
 			invoice.payment = pay
 			if pay == "Lunas":
-				trans = Accounting(description="Pembayaran customer",amount=harga,date=today,location=loc,status="Income")
-				db.session.add(trans)
-				db.session.commit()
-				flash("Status pembayaran berhasil di rubah","success")
-				return redirect(url_for("InvoiceLocation"))
-	else :
-		if form.validate_on_submit():
-			pay = request.form["payment"]
-			paket = Paket.query.filter_by(name=invoice.paket).first()
-			harga = paket.price
-			loc = invoice.location		
-			today = datetime.today()
-			invoice.payment = pay
-			db.session.commit()
-			flash("Status pembayaran berhasil di rubah","success")
-			return redirect(url_for("InvoiceLocation"))
+				if user.role == "member" and paket.name == "cuci mobil" : 
+					trans = Accounting(description="Pembayaran Cuci Mobil Dari Member ( Free )",amount=0,date=today,location=loc,status="Income")
+					db.session.add(trans)
+					db.session.commit()
 
+					flash("Status pembayaran berhasil di rubah","success")
+					return redirect(url_for("InvoiceLocation"))
+				else :
+					trans = Accounting(description="Pembayaran dari customer",amount=harga,date=today,location=loc,status="Income")
+					db.session.add(trans)
+					db.session.commit()
+
+					flash("Status pembayaran berhasil di rubah","success")
+					return redirect(url_for("InvoiceLocation"))	
+	else :
+		if form.validate_on_submit():			
+			flash("Status pembayaran tidak bisa di rubah karena sudah lunas","danger")		
 				
 	return render_template("user/edit_invoice_payment.html",form=form)		
 
@@ -922,6 +934,16 @@ def DeleteLocation(id):
 	db.session.commit()
 	flash("Lokasi berhasil di hapus","success")
 	return redirect(url_for("AllLocation"))	
+
+
+
+############################### Payment info ######################
+@app.route("/dashboard/info-payment")
+def PaymentInfo():
+	return render_template("user/payment_info.html")
+
+
+
 
 
 

@@ -32,30 +32,32 @@
                                             </div>
                                         </div>
                                     </div>    
-                                    <div class="row">
+                                    
+                                    <div class="row">    
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                {{ render_field(form.date, class="form-control dtpick")}}
+                                                {{ render_field(form.mobil, class="form-control",placeholder="Mobil")}}
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                {{ render_field(form.plat, class="form-control",placeholder="Plat Mobil")}}
+                                            </div>
+                                        </div>
+                                    </div>      
+                                    
+                                    <div class="row">    
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 {{ render_field(form.renew, class="form-control dtpick")}}
                                             </div>
                                         </div>
-                                    </div>    
-                                    <div class="row">    
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                                {{ render_field(form.mobil, class="form-control",placeholder="Mobil")}}
+                                                {{ render_field(form.status, class="form-control")}}
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ render_field(form.plat, class="form-control",placeholder="Plat Mobil")}}
-                                            </div>
-                                        </div>
-                                    </div>                                                    
+                                    </div>                              
                                     
                                     
                                     <div class="text-center">

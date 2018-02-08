@@ -25,18 +25,16 @@ class AddMemberForm(FlaskForm):
 	password = PasswordField("Password",validators=[InputRequired(),Length(min=6)])
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])
-	plat =  StringField("Plat",validators=[Length(max=100)])
-	date = DateField("Tanggal",format="%m/%d/%Y")	
+	plat =  StringField("Plat",validators=[Length(max=100)])	
 
 class EditMemberForm(FlaskForm):
 	username = StringField("Username",validators=[InputRequired(),Length(max=100)])
 	email = StringField("Email",validators=[InputRequired(),Length(max=100)])	
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])
-	plat =  StringField("Plat",validators=[Length(max=100)])
-	date = DateField("Tanggal",format="%m/%d/%Y")	
+	plat =  StringField("Plat",validators=[Length(max=100)])	
 	renew = DateField("Aktif Sampai",format="%m/%d/%Y")
-
+	status = SelectField("Status",choices= [("aktif","aktif"),("pending","pending")])	  
 
 
 class BookingStatusForm(FlaskForm):
