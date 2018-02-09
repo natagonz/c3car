@@ -2,7 +2,7 @@ from flask import Flask, request, flash , session, render_template, redirect, ur
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
-from form import UserRegisterForm,UserLoginForm,AddMemberForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm,InvoicePaymentForm
+from form import UserRegisterForm,UserLoginForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm,InvoicePaymentForm
 from datetime import datetime,timedelta 
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
@@ -160,7 +160,20 @@ class UserBookingForm(FlaskForm):
 	mobil = StringField("Mobil",validators=[Length(max=100)])
 	paket = QuerySelectField(query_factory=choice_query)
 	plat =  StringField("Plat",validators=[Length(max=100)])
+	role = StringField("Type",validators=[Length(max=100)])	
 	location = QuerySelectField(query_factory=location_query)
+
+
+class AddMemberForm(FlaskForm):
+	username = StringField("Username",validators=[InputRequired(),Length(max=100)])
+	email = StringField("Email",validators=[InputRequired(),Length(max=100)])
+	password = PasswordField("Password",validators=[InputRequired(),Length(min=6)])
+	phone = StringField("Telepon",validators=[Length(max=100)])
+	mobil = StringField("Mobil",validators=[Length(max=100)])
+	plat =  StringField("Plat",validators=[Length(max=100)])
+	location = QuerySelectField(query_factory=location_query)
+	paket = SelectField("Paket",choices= [("paket1","paket1"),("paket2","paket2")])
+
 
 
 
@@ -191,6 +204,9 @@ class AccountingSearchForm(FlaskForm):
 	start = DateField("Dari",format="%m/%d/%Y")
 	end = DateField("Sampai",format="%m/%d/%Y")
 
+
+class TopUpForm(FlaskForm):
+	paket = SelectField("Paket",choices= [("paket1","paket1"),("paket2","paket2")])
 
 
 
@@ -546,28 +562,73 @@ def AddMember():
 	form = AddMemberForm()
 	if form.validate_on_submit():
 		today = datetime.today()
-		renew_date = today + timedelta(days=90)
+		select = form.paket.data
 		hass = generate_password_hash(form.password.data,method="sha256")		
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("email telah terdaftar","danger")
-		else :			
-			user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew_date)
-			db.session.add(user)
-			db.session.commit()
-			flash("member berhasil di tambah","success")
-			return redirect(url_for("AllMember"))
-			
+		else :	
+			if select == "paket1":
+				renew = today + timedelta(days=90) 
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew,location=form.location.data)
+				db.session.add(user)
+				db.session.commit()
+				flash("member berhasil di tambah","success")
+				return redirect(url_for("AllMember"))
+			else :
+				renew = today + timedelta(days=300) 
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew,location=form.location.data)
+				db.session.add(user)
+				db.session.commit()
+				flash("member berhasil di tambah","success")
+				return redirect(url_for("AllMember"))				
+				
 	return render_template("user/add_member.html",form=form)	
-
 
 
 
 @app.route("/dashboard/member",methods=["GET","POST"])
 @login_required
 def AllMember():
+	locations = Location.query.all()
 	members = User.query.filter_by(role="member").all()
-	return render_template("user/all_member.html",members=members)		
+	return render_template("user/all_member.html",members=members,locations=locations)	
+
+
+### member berdasarkan lokasi
+@app.route("/dashboard/member/location/<string:id>",methods=["GET","POST"])
+@login_required
+def MemberBasedLocation(id):
+	location = Location.query.filter_by(id=id).first()
+	members = User.query.filter_by(location=location.location,role="member").all()
+	total = len(members)
+	return render_template("user/member_based_location.html",members=members,total=total)
+
+
+@app.route("/dashboard/member/top-up/<string:id>",methods=["GET","POST"])
+@login_required
+def TopUpMember(id):
+	form = TopUpForm()
+	member = User.query.filter_by(id=id).first()
+	if form.validate_on_submit():
+		select = form.paket.data 
+		if select == "paket1":
+			member.renew = member.renew + timedelta(days=90)
+			member.status = "aktif"
+			db.session.commit()
+			flash("Top Up Berhasil","success")
+			return redirect(url_for("AllMember"))
+		else :
+			member.renew = member.renew + timedelta(days=300)
+			member.status = "aktif"
+			db.session.commit()
+			flash("Top Up Berhasil","success")
+			return redirect(url_for("AllMember"))
+	return render_template("user/topup_member.html",form=form)		
+			
+
+
+
 
 
 
@@ -639,7 +700,7 @@ def Booking():
 			db.session.commit()
 			flash("Booking berhasil","success")
 			return redirect(url_for("AntreanLocation"))
-	if current_user.role == "member" and current_user.status == "pending":
+	elif current_user.role == "member" and current_user.status == "pending":
 		return redirect(url_for("PaymentInfo"))		
 	else :
 		form = UserBookingForm()

@@ -19,13 +19,6 @@ class UserLoginForm(FlaskForm):
 
 
 
-class AddMemberForm(FlaskForm):
-	username = StringField("Username",validators=[InputRequired(),Length(max=100)])
-	email = StringField("Email",validators=[InputRequired(),Length(max=100)])
-	password = PasswordField("Password",validators=[InputRequired(),Length(min=6)])
-	phone = StringField("Telepon",validators=[Length(max=100)])
-	mobil = StringField("Mobil",validators=[Length(max=100)])
-	plat =  StringField("Plat",validators=[Length(max=100)])	
 
 class EditMemberForm(FlaskForm):
 	username = StringField("Username",validators=[InputRequired(),Length(max=100)])
