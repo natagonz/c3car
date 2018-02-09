@@ -9,7 +9,7 @@
     <div class="col-lg-11 col-md-10">
         <div class="card">
         <div class="header">                              
-                  <h4 class="title">Cari Data Transaksi di Cabang {{ name }}  </h4>
+                  <h4 class="title">Cari Data Transaksi Dari Kasir {{ name }}  </h4>
                             </div>
                             <div class="content">
 
@@ -83,12 +83,15 @@
                                     }    
                             </script>  
                              
-                  {% endfor %}            
+                  {% endfor %}           
+                    <hr>
+                    <p>Total Pemasukan : Rp {{ income | sum(attribute="amount") }}</p> 
 
 
 
 
                       </table>
+                      
                  </div>     
                </div>  
           </div>            

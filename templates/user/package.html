@@ -18,7 +18,10 @@
                 <tr>
                     <td>No</td>
                     <td>Paket</td>
-                    <td>Harga</td>
+                    <td>Regular</td>
+                    <td>Paket 1</td>
+                    <td>Paket 2</td>
+                    <td>Paket 3</td>
                     <td></td>                    
                     <td></td>
                 </tr>
@@ -29,7 +32,10 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ paket.name }}</td>
-                            <td>Rp {{ "{:,}".format(paket.price).replace(",",".") }}</td>
+                            <td>Rp {{ "{:,}".format(paket.regular).replace(",",".") }}</td>
+                            <td>Rp {{ "{:,}".format(paket.paket1).replace(",",".") }}</td>
+                            <td>Rp {{ "{:,}".format(paket.paket2).replace(",",".") }}</td>
+                            <td>Rp {{ "{:,}".format(paket.paket3).replace(",",".") }}</td>
                             <td><a href="/dashboard/edit-package/{{ paket.id }}" class="btn btn-success">Edit</a></td>
                             <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
                             </tr>
