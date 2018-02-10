@@ -7,7 +7,7 @@
 
 {% if current_user.role == "member" %}
 <div class="row">                
-    <div class="col-lg-11 col-md-10">
+    <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="content">
                <h3> Total {{ total }} Antrean </h3> 
@@ -33,17 +33,7 @@
                    
                      {% for antre in antrean %} 
                     <tbody> 
-                       {% if antre.status == "Selesai" %}                      
-                         <tr class="alert alert-danger" role="alert"> 
-                            <td>{{ loop.index }}</td>
-                            <td>{{ antre.mobil }}</td> 
-                            <td>{{ antre.plat }}</td>
-                            <td>{{ antre.paket }}</td>  
-                            <td>{{ antre.status }}</td>
-                            <td>{{ antre.role }}</td>  
-                            <td>{{ antre.location }}</td>
-                         </tr>   
-                        {% else %}  
+                                       
                           <tr> 
                             <td>{{ loop.index }}</td>
                             <td>{{ antre.mobil }}</td> 
@@ -53,12 +43,66 @@
                             <td>{{ antre.role }}</td> 
                             <td>{{ antre.location }}</td>  
                          </tr>  
-                        {% endif %}      
-                            
-                                    
-                           
+                                            
+                                              
+                        
+                         
+                        
+                         
 
-                           
+                     </tbody>  
+                      {% endfor %}
+                    
+
+
+
+
+
+                      </table>
+                 </div>     
+               </div>  
+          </div>            
+     </div>       
+</div>
+<div class="row">                
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="content">
+               <h3> Total  Antrean </h3> 
+
+
+              <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                <tr>
+                    <td>No</td>                    
+                    <td>Mobil</td>
+                    <td>Plat</td>
+                    <td>Paket</td>
+                    <td>Status</td> 
+                    <td>Type</td>
+                    <td>Lokasi</td>                   
+                   
+                </tr>
+                </thead>
+
+               
+                   
+                     {% for nonregular in nonregulars %} 
+                    <tbody> 
+                                       
+                          <tr> 
+                            <td>{{ loop.index }}</td>
+                            <td>{{ nonregular.mobil }}</td> 
+                            <td>{{ nonregular.plat }}</td> 
+                            <td>{{ nonregular.paket }}</td> 
+                            <td>{{ nonregular.status }}</td> 
+                            <td>{{ nonregular.role }}</td> 
+                            <td>{{ nonregular.location }}</td>  
+                         </tr>  
+                                            
+                                              
                         
                          
                         
@@ -94,11 +138,9 @@
                     <td>Plat</td>
                     <td>Paket</td>
                     <td>Status</td>
-                    <td>Nama</td> 
-                    <td>Email</td>
+                    <td>Nama</td>                     
                     <td>Telepon</td> 
-                    <td>Type</td> 
-                    <td>Lokasi</td>
+                    <td>Type</td>                    
                     <td></td> 
                          
                    
@@ -109,41 +151,76 @@
                    
                      {% for antre in antrean %} 
                     <tbody>    
-                        {% if antre.status == "Selesai" %}                
-                         <tr class="alert alert-danger" role="alert"> 
-                            <td> {{ loop.index }}</td>
+                        
+                            <td>{{ loop.index }}</td>
                             <td>{{ antre.mobil }}</td> 
                             <td>{{ antre.plat }}</td>
                             <td>{{ antre.paket }}</td> 
                             <td>{{ antre.status }}</td>
-                            <td>{{ antre.name }}</td>
-                            <td>{{ antre.email }}</td>
+                            <td>{{ antre.name }}</td>                            
                             <td>{{ antre.phone }}</td>  
-                            <td>{{ antre.role }}</td>  
-                            <td>{{ antre.location }}</td>
+                            <td>{{ antre.role }}</td> 
                             <td><a href="/dashboard/edit-antrean/{{ antre.id }}" class="btn btn-success">Edit</a></td>
-                          </tr>
-                        {% else %}
-                           <tr> 
-                            <td> {{ loop.index }}</td>
-                            <td>{{ antre.mobil }}</td> 
-                            <td>{{ antre.plat }}</td>
-                            <td>{{ antre.paket }}</td>  
-                            <td>{{ antre.status }}</td>
-                            <td>{{ antre.name }}</td>
-                            <td>{{ antre.email }}</td>
-                            <td>{{ antre.phone }}</td>  
-                            <td>{{ antre.role }}</td>  
-                            <td>{{ antre.location }}</td>
-                            <td><a href="/dashboard/edit-antrean/{{ antre.id }}" class="btn btn-success">Edit</a></td>
-                          </tr>
-                         {% endif %} 
-                               
-                            
-                                  
-                           
+                          </tr>                                          
+                                           
 
-                           
+                     </tbody>  
+                      {% endfor %}
+                    
+
+
+
+
+
+                      </table>
+                 </div>     
+               </div>  
+          </div>            
+     </div>       
+</div>  
+<div class="row">                
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="content">
+               <h3> Total {{ jumlah }} Antrean </h3> 
+
+
+              <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                <tr>
+                    <td>No</td>                    
+                    <td>Mobil</td>
+                    <td>Plat</td>
+                    <td>Paket</td>
+                    <td>Status</td>
+                    <td>Nama</td>                     
+                    <td>Telepon</td> 
+                    <td>Type</td>                    
+                    <td></td>
+                   
+                </tr>
+                </thead>
+
+               
+                   
+                     {% for nonregular in nonregulars %} 
+                    <tbody> 
+                                       
+                          <tr> 
+                            <td>{{ loop.index }}</td>
+                            <td>{{ nonregular.mobil }}</td> 
+                            <td>{{ nonregular.plat }}</td> 
+                            <td>{{ nonregular.paket }}</td> 
+                            <td>{{ nonregular.status }}</td> 
+                            <td>{{ nonregular.name }}</td> 
+                            <td>{{ nonregular.phone }}</td>  
+                            <td>{{ nonregular.role }}</td> 
+                            <td><a href="/dashboard/edit-antrean/{{ nonregular.id }}" class="btn btn-success">Edit</a></td>
+                         </tr>  
+                                            
+                                              
                         
                          
                         
@@ -162,7 +239,7 @@
                </div>  
           </div>            
      </div>       
-</div>        
+</div>      
 {% endif %}
 
 {% endblock %}

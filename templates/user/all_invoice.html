@@ -31,7 +31,7 @@
                               <td>{{ invoice.mobil }}</td>
                               <td>{{ invoice.plat }}</td>
                               <td>{{ invoice.paket }}</td>                            
-                              <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Lihat</a></td>
+                              <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Print</a></td>
                               </tr>
                        </tbody>           
                              
@@ -43,9 +43,8 @@
                               <td>{{ invoice.mobil }}</td>
                               <td>{{ invoice.plat }}</td>
                               <td>{{ invoice.paket }}</td>
-                              <td>{{ invoice.payment }}</td>  
-                              <td><a href="/dashboard/edit-invoice/{{ invoice.id }}" class="btn btn-primary">Edit</a></td>
-                              <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Lihat</a></td>
+                              <td>{{ invoice.payment }}</td>                             
+                              <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Print</a></td>
                               </tr>
                        </tbody>           
                              
