@@ -14,7 +14,7 @@ from wtforms.validators import InputRequired, EqualTo, Email, Length
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 import pdfkit
-import logging
+
 
 
 
@@ -154,6 +154,20 @@ class Accounting(db.Model):
 
 
 
+class Pdf():
+    def render_pdf(self, name, html):
+        from xhtml2pdf import pisa
+        from StringIO import StringIO
+
+        pdf = StringIO()
+
+        pisa.CreatePDF(StringIO(html), pdf)
+
+        return pdf.getvalue()
+
+
+
+
 
 
 ############## form ################
@@ -173,10 +187,10 @@ class UserBookingForm(FlaskForm):
 	email = StringField("Email",validators=[Length(max=100)])
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])
-	#paket = QuerySelectField(query_factory=choice_query)
+	paket = QuerySelectField(query_factory=choice_query)
 	plat =  StringField("Plat",validators=[Length(max=100)])
 	role = StringField("Type",validators=[Length(max=100)])	
-	#location = QuerySelectField(query_factory=location_query)
+	location = QuerySelectField(query_factory=location_query)
 
 
 class AddMemberForm(FlaskForm):
@@ -968,158 +982,110 @@ def AllInvoice(id):
 
 
 
-#Tiap buah invoice untuk admin dan member
-'''@app.route("/dashboard/invoice/<string:id>",methods=["GET","POST"])
-@login_required
-def UserInvoice(id): 	
-	invoice = Book.query.filter_by(id=id).first()
-	user = User.query.filter_by(id=invoice.owner).first()
-	paket = Paket.query.filter_by(name=invoice.paket).first()	
-	if user.paket == "paket1":
-		total = paket.paket1
-		harga = "{:,}".format(total).replace(",",".")
-		return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
-	elif user.paket == "paket2":
-		total = paket.paket2
-		harga = "{:,}".format(total).replace(",",".")
-		return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
-	elif user.paket == "paket3":
-		total = paket.paket3
-		harga = "{:,}".format(total).replace(",",".")
-		return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)
-	else :		
-		total = paket.regular
-		harga = "{:,}".format(total).replace(",",".")
-		return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga)'''
-
-
 @app.route("/dashboard/invoice/<string:id>",methods=["GET","POST"])
 @login_required
 def UserInvoice(id):
 	invoice = Book.query.filter_by(id=id).first()
 	user = User.query.filter_by(id=invoice.owner).first()
 	paket = Paket.query.filter_by(name=invoice.paket).first()
-	css = "invoice.css"	
-	if invoice.payment == "Belum Lunas":
-		paket = Paket.query.filter_by(name=invoice.paket).first()			
-		loc = invoice.location		
-		today = datetime.today()
-		invoice.payment = "Lunas"
+	if current_user.role == "cashier":			
+		if invoice.payment == "Belum Lunas":
+			paket = Paket.query.filter_by(name=invoice.paket).first()			
+			loc = invoice.location		
+			today = datetime.today()
+			invoice.payment = "Lunas"
+			if user.paket == "paket1":
+				total = paket.paket1
+				harga = "{:,}".format(total).replace(",",".")	
+				membership = user.renew
+				amount = paket.paket1
+				trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
+				db.session.add(trans)
+				db.session.commit()
+				
+				'''rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+				pdf = pdfkit.from_string(rendered, False, css=css)		
+				response = make_response(pdf)
+				response.headers['Content-Type'] = 'application/pdf'
+				response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
+				return response'''
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+			elif user.paket == "paket2":
+				total = paket.paket2
+				harga = "{:,}".format(total).replace(",",".")		
+				membership = user.renew
+				amount = paket.paket2
+				trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
+				db.session.add(trans)
+				db.session.commit()
+
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+			elif user.paket == "paket3":
+				total = paket.paket3
+				harga = "{:,}".format(total).replace(",",".")		
+				membership = user.renew
+				amount = paket.paket3
+				trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
+				db.session.add(trans)
+				db.session.commit()
+
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+			else :		
+				total = paket.regular
+				harga = "{:,}".format(total).replace(",",".")
+				membership = user.renew
+				amount = paket.regular
+				trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
+				db.session.add(trans)
+				db.session.commit()
+
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+		else:	
+			if user.paket == "paket1":
+				total = paket.paket1
+				harga = "{:,}".format(total).replace(",",".")	
+				membership = user.renew
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+			elif user.paket == "paket2":
+				total = paket.paket2
+				harga = "{:,}".format(total).replace(",",".")		
+				membership = user.renew
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+			elif user.paket == "paket3":
+				total = paket.paket3
+				harga = "{:,}".format(total).replace(",",".")		
+				membership = user.renew
+
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+			else :		
+				total = paket.regular
+				harga = "{:,}".format(total).replace(",",".")
+				membership = user.renew
+
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+	else :			
 		if user.paket == "paket1":
 			total = paket.paket1
 			harga = "{:,}".format(total).replace(",",".")	
 			membership = user.renew
-			amount = paket.paket1
-			trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
-			db.session.add(trans)
-			db.session.commit()
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False, css=css)		
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
+			return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
 		elif user.paket == "paket2":
 			total = paket.paket2
 			harga = "{:,}".format(total).replace(",",".")		
 			membership = user.renew
-			amount = paket.paket2
-			trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
-			db.session.add(trans)
-			db.session.commit()
-
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False,css=css)
-
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
+			return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
 		elif user.paket == "paket3":
 			total = paket.paket3
 			harga = "{:,}".format(total).replace(",",".")		
 			membership = user.renew
-			amount = paket.paket3
-			trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
-			db.session.add(trans)
-			db.session.commit()
 
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False ,css=css)
-
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
+			return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
 		else :		
 			total = paket.regular
 			harga = "{:,}".format(total).replace(",",".")
 			membership = user.renew
-			amount = paket.regular
-			trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
-			db.session.add(trans)
-			db.session.commit()
 
-
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False,css=css)
-
-
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
-	else:	
-		if user.paket == "paket1":
-			total = paket.paket1
-			harga = "{:,}".format(total).replace(",",".")	
-			membership = user.renew
-
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False, css=css)		
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
-		elif user.paket == "paket2":
-			total = paket.paket2
-			harga = "{:,}".format(total).replace(",",".")		
-			membership = user.renew
-			
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False,css=css)
-
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
-		elif user.paket == "paket3":
-			total = paket.paket3
-			harga = "{:,}".format(total).replace(",",".")		
-			membership = user.renew
-			
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False ,css=css)
-
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response
-		else :		
-			total = paket.regular
-			harga = "{:,}".format(total).replace(",",".")
-			membership = user.renew
-			
-			rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-			pdf = pdfkit.from_string(rendered, False,css=css)
-
-
-			response = make_response(pdf)
-			response.headers['Content-Type'] = 'application/pdf'
-			response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-			return response	
-
-
+			return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
 
 #### invoice member ####
 @app.route("/dashboard/invoice",methods=["GET","POST"])
@@ -1245,14 +1211,5 @@ def PaymentInfo():
 
 
 
-if __name__ == "__main__":
-	file_handler = FileHandler('output.log')
-        handler = logging.StreamHandler()
-        file_handler.setLevel(logging.DEBUG)
-        handler.setLevel(logging.DEBUG)
-        file_handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s ''[in %(pathname)s:%(lineno)d]' ))
-     	handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s ''[in %(pathname)s:%(lineno)d]' ))
-	app.logger.addHandler(handler)
-        app.logger.addHandler(file_handler)
-        app.logger.error('first test message...')
+if __name__ == "__main__":	
 	app.run(debug=True)

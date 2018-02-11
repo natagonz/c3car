@@ -1,4 +1,4 @@
-i{% extends "layouts/dashboardtemplate.html" %}
+{% extends "layouts/dashboardtemplate.html" %}
 
 {% block title %} Member {% endblock %}
 
@@ -54,7 +54,7 @@ i{% extends "layouts/dashboardtemplate.html" %}
                                   <td>Berakhir</td> 
                                   <td>Status</td>
                                   <td></td> 
-                                  <td></td>                  
+                                           
                               </tr>
                               </thead>
 
@@ -68,7 +68,7 @@ i{% extends "layouts/dashboardtemplate.html" %}
                                           <td>{{ member.renew.strftime("%d-%m-%Y") }}</td>
                                           <td>{{ member.status }}</td>
                                           <td><a href="/dashboard/member/{{ member.id }}" class="btn btn-success">Lihat</a></td>
-                                          <td><a href="/dashboard/member/top-up/{{ member.id }}" class="btn btn-info">Top Up</a></td>
+                                          
                                       </tr>
                                    </tbody>           
                                           

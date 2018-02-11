@@ -1,9 +1,10 @@
-{% block content %}
+
+<link href="{{url_for ('static',filename='css/invoice.css')}}" rel="stylesheet"/> 
 
 <div class="receipt-content">
 	<div class="container bootstrap snippet">
    		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="invoice-wrapper">
 					<div class="intro">
 						Hi <strong>{{ invoice.name }}</strong>, 
@@ -82,4 +83,3 @@
              
 
 
-{% endblock %}

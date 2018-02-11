@@ -1,80 +1,80 @@
-<div class="receipt-content">
-    <div class="container bootstrap snippet">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="invoice-wrapper">
-					<div class="intro">
-						Hi <strong>{{ invoice.name }}</strong>, 
-						<br>
-						Ini adalah invoice untuk layanan dari C3 Carwash
-					</div>
+{% extends "layouts/layout.html" %}
 
-					<div class="payment-info">
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Tanggal Pembayaran</span>
-								<strong>{{ invoice.date.strftime("%d/%m/%Y") }}</strong>
-							</div>
-							
-						</div>
-					</div>
+{% block content %}
 
-					<div class="payment-details">
-						<div class="row">
-							<div class="col-sm-6">
-								<span>Invoiced</span>
-								<strong>
-									{{ invoice.name }}
-								</strong>
-								<p>
-									{{ invoice.mobil }}<br>
-									{{ invoice.plat }}<br>
-											</p>
-							</div>
-							<div class="col-sm-6 text-right">
-								<span>Payment To</span>
-								<strong>
-									C3 Carwash
-								</strong>								
-							</div>
-						</div>
-					</div>
+ <link href="{{url_for ('static',filename='css/invoice_baru.css')}}" rel="stylesheet"/>    
+      <div class="row pad-top-botm ">
+         <div class="col-lg-6 col-md-6 col-sm-6 ">
+            <img src="" style="padding-bottom:20px;" /> 
+         </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            
+               <strong>C3 Carwash </strong>
+              <br />
+                  <i>Alamat :</i>Jalan Batu Bulan Banjar Tegehe
+              <br />
+                  
+              
+         </div>
+     </div>
+     <div  class="row text-center contact-info">
+         <div class="col-lg-12 col-md-12 col-sm-12">
+             <hr />
+             <span>
+                 <strong>Website : </strong>  c3carwash.com 
+             </span>
+             <span>
+                 <strong>Telephone : </strong>  085 333 333 535
+             </span>
 
-					<div class="line-items">
-						<div class="headers clearfix">
-							<div class="row">
-								<div class="col-xs-4">Description</div>								
-								<div class="col-xs-5 text-right">Amount</div>
-							</div>
-						</div>
-						<div class="items">
-							<div class="row item">
-								<div class="col-xs-4 desc">
-									{{ invoice.paket }}
-								</div>								
-								<div class="col-xs-5 amount text-right">
-									Rp {{ harga}}
-								</div>
-							</div>
-							
-						</div>
-						<div class="total text-right">
-							
-							<div class="field grand-total">
-								Total <span>{{ harga }}</span>
-							</div>
-						</div>
-						
-					</div>
-				</div>
+             <hr />
+         </div>
+     </div>
+     <div  class="row pad-top-botm client-info">
+         <div class="col-lg-6 col-md-6 col-sm-6">
+         <h4>  <strong>Customer Information</strong></h4>
+           <strong> {{ invoice.name }} </strong>
+             <br />
+                  <b>Mobil :</b> {{ invoice.mobil }}
+              <br />
+                 {{ invoice.plat }}
+             <br />
+             <b>Phone :</b> {{ invoice.phone }}
+              <br />
+             <b>E-mail :</b> {{ invoice.email}}
+             {% if user.role == "member" %}
+             <br />
+             <b>Membership :</b> {{ user.renew.strftime("%d/%m/%Y") }}
+             {% else %}
+             {% endif %}
+         </div>
+          
+     </div>
+     <div class="row">
+         <div class="col-lg-12 col-md-12 col-sm-12">
+           <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>                                    
+                                    <th>Paket</th>                                    
+                                    <th>Harga</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>                                   
+                                    <td>{{ invoice.paket }}</td>
+                                    <td>{{ harga }}</td>
+                                    
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+               </div>
+             <hr />
+             <div class="ttl-amts">
+                  <h4> <strong>Total : Rp {{ harga }}</strong> </h4>
+             </div>
+         </div>
 
-				<div class="footer">
-					Copyright © 2017. c3carwash.com
-				</div>
-			</div>
-		</div>
-	</div>
-</div>    
-
-             
-
+{% endblock %}    
