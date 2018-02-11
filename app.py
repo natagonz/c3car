@@ -14,13 +14,18 @@ from wtforms.validators import InputRequired, EqualTo, Email, Length
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 import pdfkit
+import logging
+
+
+
 
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = databases
 app.config["SECRET_KEY"] = secret
+app.config["DEBUG"] = True
 db = SQLAlchemy(app)
-app.debug = True
+
 
 
 #login manager
@@ -168,10 +173,10 @@ class UserBookingForm(FlaskForm):
 	email = StringField("Email",validators=[Length(max=100)])
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])
-	paket = QuerySelectField(query_factory=choice_query)
+	#paket = QuerySelectField(query_factory=choice_query)
 	plat =  StringField("Plat",validators=[Length(max=100)])
 	role = StringField("Type",validators=[Length(max=100)])	
-	location = QuerySelectField(query_factory=location_query)
+	#location = QuerySelectField(query_factory=location_query)
 
 
 class AddMemberForm(FlaskForm):
@@ -1241,4 +1246,13 @@ def PaymentInfo():
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0')
+	file_handler = FileHandler('output.log')
+        handler = logging.StreamHandler()
+        file_handler.setLevel(logging.DEBUG)
+        handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s ''[in %(pathname)s:%(lineno)d]' ))
+     	handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s ''[in %(pathname)s:%(lineno)d]' ))
+	app.logger.addHandler(handler)
+        app.logger.addHandler(file_handler)
+        app.logger.error('first test message...')
+	app.run(debug=True)

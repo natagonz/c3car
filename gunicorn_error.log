@@ -1,0 +1,549 @@
+[2018-02-10 21:15:37 +0000] [628] [INFO] Starting gunicorn 19.7.1
+[2018-02-10 21:15:37 +0000] [628] [INFO] Listening at: unix:carwash.sock (628)
+[2018-02-10 21:15:37 +0000] [628] [INFO] Using worker: sync
+[2018-02-10 21:15:37 +0000] [631] [INFO] Booting worker with pid: 631
+[2018-02-10 21:15:38 +0000] [632] [INFO] Booting worker with pid: 632
+[2018-02-10 21:15:38 +0000] [633] [INFO] Booting worker with pid: 633
+[2018-02-10 21:27:21 +0000] [633] [ERROR] Error handling request /dashboard/add-member
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 628, in AddMember
+    return render_template("user/add_member.html",form=form)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    context, ctx.app)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 116, in _render
+    rv = template.render(context)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/c3car/templates/user/add_member.html", line 1, in top-level template code
+    {% extends "layouts/dashboardtemplate.html" %}
+  File "/var/www/html/c3car/templates/layouts/dashboardtemplate.html", line 310, in top-level template code
+    {% block content %}
+  File "/var/www/html/c3car/templates/user/add_member.html", line 55, in block "content"
+    {{ render_field(form.location, class="form-control")}}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/runtime.py", line 579, in _invoke
+    rv = self._func(*arguments)
+  File "/var/www/html/c3car/templates/includes/_formhelpers.html", line 3, in template
+    <dd>{{ field(**kwargs)|safe }}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/fields/core.py", line 153, in __call__
+    return self.meta.render_field(self, kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/meta.py", line 56, in render_field
+    return field.widget(field, **render_kw)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/widgets/core.py", line 287, in __call__
+    for val, label, selected in field.iter_choices():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 107, in iter_choices
+    for pk, obj in self._get_object_list():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in _get_object_list
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in <genexpr>
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 189, in get_pk_from_identity
+    cls, key = identity_key(instance=obj)
+ValueError: too many values to unpack
+[2018-02-10 21:31:56 +0000] [631] [ERROR] Error handling request /dashboard/add-member
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 628, in AddMember
+    return render_template("user/add_member.html",form=form)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    context, ctx.app)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 116, in _render
+    rv = template.render(context)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/c3car/templates/user/add_member.html", line 1, in top-level template code
+    {% extends "layouts/dashboardtemplate.html" %}
+  File "/var/www/html/c3car/templates/layouts/dashboardtemplate.html", line 310, in top-level template code
+    {% block content %}
+  File "/var/www/html/c3car/templates/user/add_member.html", line 55, in block "content"
+    {{ render_field(form.location, class="form-control")}}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/runtime.py", line 579, in _invoke
+    rv = self._func(*arguments)
+  File "/var/www/html/c3car/templates/includes/_formhelpers.html", line 3, in template
+    <dd>{{ field(**kwargs)|safe }}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/fields/core.py", line 153, in __call__
+    return self.meta.render_field(self, kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/meta.py", line 56, in render_field
+    return field.widget(field, **render_kw)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/widgets/core.py", line 287, in __call__
+    for val, label, selected in field.iter_choices():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 107, in iter_choices
+    for pk, obj in self._get_object_list():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in _get_object_list
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in <genexpr>
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 189, in get_pk_from_identity
+    cls, key = identity_key(instance=obj)
+ValueError: too many values to unpack
+[2018-02-10 21:35:45 +0000] [631] [ERROR] Error handling request /dashboard/add-member
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 628, in AddMember
+    return render_template("user/add_member.html",form=form)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    context, ctx.app)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 116, in _render
+    rv = template.render(context)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/c3car/templates/user/add_member.html", line 1, in top-level template code
+    {% extends "layouts/dashboardtemplate.html" %}
+  File "/var/www/html/c3car/templates/layouts/dashboardtemplate.html", line 310, in top-level template code
+    {% block content %}
+  File "/var/www/html/c3car/templates/user/add_member.html", line 55, in block "content"
+    {{ render_field(form.location, class="form-control")}}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/runtime.py", line 579, in _invoke
+    rv = self._func(*arguments)
+  File "/var/www/html/c3car/templates/includes/_formhelpers.html", line 3, in template
+    <dd>{{ field(**kwargs)|safe }}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/fields/core.py", line 153, in __call__
+    return self.meta.render_field(self, kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/meta.py", line 56, in render_field
+    return field.widget(field, **render_kw)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/widgets/core.py", line 287, in __call__
+    for val, label, selected in field.iter_choices():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 107, in iter_choices
+    for pk, obj in self._get_object_list():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in _get_object_list
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in <genexpr>
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 189, in get_pk_from_identity
+    cls, key = identity_key(instance=obj)
+ValueError: too many values to unpack
+[2018-02-10 21:51:53 +0000] [633] [ERROR] Error handling request /dashboard/add-member
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 628, in AddMember
+    return render_template("user/add_member.html",form=form)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    context, ctx.app)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 116, in _render
+    rv = template.render(context)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/c3car/templates/user/add_member.html", line 1, in top-level template code
+    {% extends "layouts/dashboardtemplate.html" %}
+  File "/var/www/html/c3car/templates/layouts/dashboardtemplate.html", line 310, in top-level template code
+    {% block content %}
+  File "/var/www/html/c3car/templates/user/add_member.html", line 55, in block "content"
+    {{ render_field(form.location, class="form-control")}}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/runtime.py", line 579, in _invoke
+    rv = self._func(*arguments)
+  File "/var/www/html/c3car/templates/includes/_formhelpers.html", line 3, in template
+    <dd>{{ field(**kwargs)|safe }}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/fields/core.py", line 153, in __call__
+    return self.meta.render_field(self, kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/meta.py", line 56, in render_field
+    return field.widget(field, **render_kw)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/widgets/core.py", line 287, in __call__
+    for val, label, selected in field.iter_choices():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 107, in iter_choices
+    for pk, obj in self._get_object_list():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in _get_object_list
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in <genexpr>
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 189, in get_pk_from_identity
+    cls, key = identity_key(instance=obj)
+ValueError: too many values to unpack
+[2018-02-10 21:51:58 +0000] [631] [ERROR] Error handling request /dashboard/add-member
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 628, in AddMember
+    return render_template("user/add_member.html",form=form)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    context, ctx.app)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 116, in _render
+    rv = template.render(context)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/c3car/templates/user/add_member.html", line 1, in top-level template code
+    {% extends "layouts/dashboardtemplate.html" %}
+  File "/var/www/html/c3car/templates/layouts/dashboardtemplate.html", line 310, in top-level template code
+    {% block content %}
+  File "/var/www/html/c3car/templates/user/add_member.html", line 55, in block "content"
+    {{ render_field(form.location, class="form-control")}}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/runtime.py", line 579, in _invoke
+    rv = self._func(*arguments)
+  File "/var/www/html/c3car/templates/includes/_formhelpers.html", line 3, in template
+    <dd>{{ field(**kwargs)|safe }}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/fields/core.py", line 153, in __call__
+    return self.meta.render_field(self, kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/meta.py", line 56, in render_field
+    return field.widget(field, **render_kw)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/widgets/core.py", line 287, in __call__
+    for val, label, selected in field.iter_choices():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 107, in iter_choices
+    for pk, obj in self._get_object_list():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in _get_object_list
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in <genexpr>
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 189, in get_pk_from_identity
+    cls, key = identity_key(instance=obj)
+ValueError: too many values to unpack
+[2018-02-10 21:52:10 +0000] [631] [ERROR] Error handling request /dashboard/admin-booking/regular
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 749, in AdminBookingRegular
+    return render_template("user/booking.html",form=form)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 134, in render_template
+    context, ctx.app)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/templating.py", line 116, in _render
+    rv = template.render(context)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/c3car/templates/user/booking.html", line 1, in top-level template code
+    {% extends "layouts/dashboardtemplate.html" %}
+  File "/var/www/html/c3car/templates/layouts/dashboardtemplate.html", line 310, in top-level template code
+    {% block content %}
+  File "/var/www/html/c3car/templates/user/booking.html", line 38, in block "content"
+    {{ render_field(form.paket, class="form-control")}}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/jinja2/runtime.py", line 579, in _invoke
+    rv = self._func(*arguments)
+  File "/var/www/html/c3car/templates/includes/_formhelpers.html", line 3, in template
+    <dd>{{ field(**kwargs)|safe }}
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/fields/core.py", line 153, in __call__
+    return self.meta.render_field(self, kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/meta.py", line 56, in render_field
+    return field.widget(field, **render_kw)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/widgets/core.py", line 287, in __call__
+    for val, label, selected in field.iter_choices():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 107, in iter_choices
+    for pk, obj in self._get_object_list():
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in _get_object_list
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 100, in <genexpr>
+    self._object_list = list((text_type(get_pk(obj)), obj) for obj in query)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/wtforms/ext/sqlalchemy/fields.py", line 189, in get_pk_from_identity
+    cls, key = identity_key(instance=obj)
+ValueError: too many values to unpack
+[2018-02-10 21:57:28 +0000] [633] [INFO] Worker exiting (pid: 633)
+[2018-02-10 21:57:28 +0000] [632] [INFO] Worker exiting (pid: 632)
+[2018-02-10 21:57:28 +0000] [631] [INFO] Worker exiting (pid: 631)
+[2018-02-10 21:57:28 +0000] [628] [INFO] Handling signal: term
+[2018-02-10 21:57:28 +0000] [628] [INFO] Shutting down: Master
+[2018-02-10 21:58:00 +0000] [299] [INFO] Starting gunicorn 19.7.1
+[2018-02-10 21:58:00 +0000] [299] [INFO] Listening at: unix:carwash.sock (299)
+[2018-02-10 21:58:00 +0000] [299] [INFO] Using worker: sync
+[2018-02-10 21:58:00 +0000] [401] [INFO] Booting worker with pid: 401
+[2018-02-10 21:58:00 +0000] [403] [INFO] Booting worker with pid: 403
+[2018-02-10 21:58:00 +0000] [404] [INFO] Booting worker with pid: 404
+[2018-02-10 22:02:11 +0000] [404] [ERROR] Socket error processing request.
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 191, in handle_request
+    six.reraise(*sys.exc_info())
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 1065, in UserInvoice
+    pdf = pdfkit.from_string(rendered, False,css=css)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/api.py", line 70, in from_string
+    configuration=configuration, cover_first=cover_first)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/configuration.py", line 18, in __init__
+    ['which', 'wkhtmltopdf'], stdout=subprocess.PIPE).communicate()[0].strip()
+  File "/usr/lib/python2.7/subprocess.py", line 711, in __init__
+    errread, errwrite)
+  File "/usr/lib/python2.7/subprocess.py", line 1343, in _execute_child
+    raise child_exception
+OSError: [Errno 2] No such file or directory
+[2018-02-10 22:10:39 +0000] [404] [ERROR] Socket error processing request.
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 191, in handle_request
+    six.reraise(*sys.exc_info())
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 1114, in UserInvoice
+    pdf = pdfkit.from_string(rendered, False,css=css)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/api.py", line 70, in from_string
+    configuration=configuration, cover_first=cover_first)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/configuration.py", line 18, in __init__
+    ['which', 'wkhtmltopdf'], stdout=subprocess.PIPE).communicate()[0].strip()
+  File "/usr/lib/python2.7/subprocess.py", line 711, in __init__
+    errread, errwrite)
+  File "/usr/lib/python2.7/subprocess.py", line 1343, in _execute_child
+    raise child_exception
+OSError: [Errno 2] No such file or directory
+[2018-02-10 22:42:58 +0000] [403] [INFO] Worker exiting (pid: 403)
+[2018-02-10 22:42:58 +0000] [404] [INFO] Worker exiting (pid: 404)
+[2018-02-10 22:42:58 +0000] [401] [INFO] Worker exiting (pid: 401)
+[2018-02-10 22:42:58 +0000] [299] [INFO] Handling signal: term
+[2018-02-10 22:42:58 +0000] [299] [INFO] Shutting down: Master
+[2018-02-10 22:43:32 +0000] [312] [INFO] Starting gunicorn 19.7.1
+[2018-02-10 22:43:32 +0000] [312] [INFO] Listening at: unix:carwash.sock (312)
+[2018-02-10 22:43:32 +0000] [312] [INFO] Using worker: sync
+[2018-02-10 22:43:32 +0000] [401] [INFO] Booting worker with pid: 401
+[2018-02-10 22:43:32 +0000] [402] [INFO] Booting worker with pid: 402
+[2018-02-10 22:43:32 +0000] [404] [INFO] Booting worker with pid: 404
+[2018-02-10 23:04:10 +0000] [401] [INFO] Worker exiting (pid: 401)
+[2018-02-10 23:04:10 +0000] [402] [INFO] Worker exiting (pid: 402)
+[2018-02-10 23:04:10 +0000] [404] [INFO] Worker exiting (pid: 404)
+[2018-02-10 23:04:10 +0000] [312] [INFO] Handling signal: term
+[2018-02-10 23:04:10 +0000] [312] [INFO] Shutting down: Master
+[2018-02-10 23:04:42 +0000] [306] [INFO] Starting gunicorn 19.7.1
+[2018-02-10 23:04:42 +0000] [306] [INFO] Listening at: unix:carwash.sock (306)
+[2018-02-10 23:04:42 +0000] [306] [INFO] Using worker: sync
+[2018-02-10 23:04:43 +0000] [410] [INFO] Booting worker with pid: 410
+[2018-02-10 23:04:43 +0000] [409] [INFO] Booting worker with pid: 409
+[2018-02-10 23:04:43 +0000] [412] [INFO] Booting worker with pid: 412
+[2018-02-10 23:05:16 +0000] [410] [ERROR] Socket error processing request.
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 191, in handle_request
+    six.reraise(*sys.exc_info())
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 1114, in UserInvoice
+    pdf = pdfkit.from_string(rendered, False,css=css)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/api.py", line 70, in from_string
+    configuration=configuration, cover_first=cover_first)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/configuration.py", line 18, in __init__
+    ['which', 'wkhtmltopdf'], stdout=subprocess.PIPE).communicate()[0].strip()
+  File "/usr/lib/python2.7/subprocess.py", line 711, in __init__
+    errread, errwrite)
+  File "/usr/lib/python2.7/subprocess.py", line 1343, in _execute_child
+    raise child_exception
+OSError: [Errno 2] No such file or directory
+[2018-02-10 23:09:16 +0000] [409] [ERROR] Socket error processing request.
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 191, in handle_request
+    six.reraise(*sys.exc_info())
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 1114, in UserInvoice
+    pdf = pdfkit.from_string(rendered, False,css=css)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/api.py", line 70, in from_string
+    configuration=configuration, cover_first=cover_first)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/pdfkit.py", line 42, in __init__
+    self.configuration = (Configuration() if configuration is None
+  File "/var/www/html/env/local/lib/python2.7/site-packages/pdfkit/configuration.py", line 18, in __init__
+    ['which', 'wkhtmltopdf'], stdout=subprocess.PIPE).communicate()[0].strip()
+  File "/usr/lib/python2.7/subprocess.py", line 711, in __init__
+    errread, errwrite)
+  File "/usr/lib/python2.7/subprocess.py", line 1343, in _execute_child
+    raise child_exception
+OSError: [Errno 2] No such file or directory
