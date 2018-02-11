@@ -769,7 +769,7 @@ def AdminBookingMember():
 	form = BookingForm()
 	if form.validate_on_submit():
 		member = User.query.filter_by(email=form.email.data).first()
-		members = User.query.filter_by(email=form.email.data).all()
+		members = User.query.filter_by(email=form.email.data,role="member").all()
 		today = datetime.today()
 		check_user = len(members)	
 
