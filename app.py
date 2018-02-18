@@ -62,7 +62,8 @@ class User(db.Model):
 	renew = db.Column(db.DateTime())
 	location = db.Column(db.String(200))
 	member = db.Column(db.String(200))
-	paket = db.Column(db.String(200))		
+	paket = db.Column(db.String(200))	
+	marketing = db.Column(db.String(200))	
 
 
 	def is_active(self):
@@ -98,6 +99,7 @@ class Book(db.Model):
 	owner = db.Column(db.Integer())
 	location = db.Column(db.String(200))
 	payment = db.Column(db.String(200))
+	
 
 
 class Paket(db.Model):
@@ -153,19 +155,11 @@ class Accounting(db.Model):
 	cashier = db.Column(db.String(200))
 
 
-
-class Pdf():
-    def render_pdf(self, name, html):
-        from xhtml2pdf import pisa
-        from StringIO import StringIO
-
-        pdf = StringIO()
-
-        pisa.CreatePDF(StringIO(html), pdf)
-
-        return pdf.getvalue()
-
-
+class MemberPayment(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	amount = db.Column(db.Integer())
+	owner = db.Column(db.String(200))
+	date = db.Column(db.DateTime())
 
 
 
@@ -237,7 +231,8 @@ class AccountingSearchForm(FlaskForm):
 class TopUpForm(FlaskForm):
 	paket = SelectField("Paket",choices= [("paket1","paket1"),("paket2","paket2")])
 
-
+class DateFilter(FlaskForm):
+	date = DateField("Dari",format="%m/%d/%Y") 
 
 
 ##############################################
@@ -602,6 +597,58 @@ def AllAccountant():
 	return render_template("user/all_accountant.html",akuntans=akuntans)
 
 
+################################# Marketing #####################
+@app.route("/dashboard/add-marketing",methods=["GET","POST"])
+@login_required
+def AddMarketing():
+	form = AddAdminForm()
+	if form.validate_on_submit():
+		hass = generate_password_hash(form.password.data,method="sha256")
+		marketing = User(username=form.username.data,email=form.email.data,password=hass,role="marketing",status="user",location=form.location.data) 
+		check_user = User.query.filter_by(email=form.email.data).all()
+		if len(check_user) > 0 :
+			flash("Email telah terdaftar","danger")
+		else :
+			db.session.add(marketing)
+			db.session.commit()
+			flash("Marketing berhasil di tambahkan","success")
+			return redirect(url_for("AllMarketing"))
+	return render_template("user/add_user.html",form=form)			
+
+
+@app.route("/dashboard/marketing",methods=["GET","POST"])
+@login_required
+def AllMarketing():
+	marketings = User.query.filter_by(role="marketing").all()
+	return render_template("user/all_marketing.html",marketings=marketings)
+
+
+
+@app.route("/dashboard/marketing/member",methods=["GET","POST"])
+@login_required
+def MarketingMember():
+	members = User.query.filter_by(marketing=current_user.username).all()
+	return render_template("user/marketing_members.html",members=members)
+
+
+
+
+@app.route("/dashboard/marketing/stats/<string:id>",methods=["GET","POST"])
+@login_required
+def MarketingStats(id):
+	user = User.query.filter_by(id=id).first()
+	name =  user.username
+	transaction = MemberPayment.query.filter_by(owner=name).all()	
+	form = DateFilter()
+	if form.validate_on_submit():
+		start = form.date.data	
+		end = start + timedelta(days=1)		
+		transaction = MemberPayment.query.filter(MemberPayment.date.between(start,end)).filter(MemberPayment.owner == name).all()	
+		return render_template("user/marketing_stats.html",transaction=transaction,user=user,form=form)	
+	return render_template("user/marketing_stats.html",transaction=transaction,user=user,form=form)
+
+
+
 
 
 ############################## Member Function ###############################
@@ -619,27 +666,57 @@ def AddMember():
 		else :	
 			if select == "paket1":
 				renew = today + timedelta(days=180) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew,location=form.location.data,member="nonregular",paket="paket1")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="nonregular",paket="paket1",marketing=current_user.username)
 				db.session.add(user)
 				db.session.commit()
-				flash("member berhasil di tambah","success")
-				return redirect(url_for("AllMember"))
+
+				#input si transaksi marketing 
+				marketing = MemberPayment(amount=1000000,date=today,owner=current_user.username)
+				db.session.add(marketing)
+				db.session.commit()
+				if current_user.role == "marketing":					
+					flash("member berhasil di tambah","success")
+					return redirect(url_for("MarketingMember"))
+				else :
+					flash("member berhasil di tambah","success")
+					return redirect(url_for("AllMember"))
 			elif select == "paket2":
 				renew = today + timedelta(days=90) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew,location=form.location.data,member="regular",paket="paket2")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="regular",paket="paket2",marketing=current_user.username)
 				db.session.add(user)
 				db.session.commit()
-				flash("member berhasil di tambah","success")
-				return redirect(url_for("AllMember"))					
+
+				#input si transaksi marketing 
+				marketing = MemberPayment(amount=1500000,date=today,owner=current_user.username)
+				db.session.add(marketing)
+				db.session.commit()
+
+				if current_user.role == "marketing":					
+					flash("member berhasil di tambah","success")
+					return redirect(url_for("MarketingMember"))
+				else :
+					flash("member berhasil di tambah","success")
+					return redirect(url_for("AllMember"))				
 			else :
 				renew = today + timedelta(days=300) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="aktif",date=today,renew=renew,location=form.location.data,member="vip",paket="paket3")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="vip",paket="paket3",marketing=current_user.username)
 				db.session.add(user)
 				db.session.commit()
-				flash("member berhasil di tambah","success")
-				return redirect(url_for("AllMember"))				
+
+				#input si transaksi marketing 
+				marketing = MemberPayment(amount=3500000,date=today,owner=current_user.username)
+				db.session.add(marketing)
+				db.session.commit()
+
+				if current_user.role == "marketing":					
+					flash("member berhasil di tambah","success")
+					return redirect(url_for("MarketingMember"))
+				else :
+					flash("member berhasil di tambah","success")
+					return redirect(url_for("AllMember"))
 				
 	return render_template("user/add_member.html",form=form)	
+
 
 
 
@@ -682,9 +759,6 @@ def TopUpMember(id):
 			return redirect(url_for("AllMember"))
 	return render_template("user/topup_member.html",form=form)		
 			
-
-
-
 
 
 
@@ -755,7 +829,7 @@ def AdminBookingRegular():
 	form = BookingForm()
 	if form.validate_on_submit():			
 		today = datetime.today()					
-		book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role="regular",owner=current_user.id,location=form.location.data,payment="Belum Lunas")
+		book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role="regular",owner=current_user.id,location=form.location.data,payment="Belum Lunas")
 		db.session.add(book)
 		db.session.commit()
 		flash("Booking berhasil","success")
@@ -778,7 +852,7 @@ def AdminBookingMember():
 		elif member.renew == today or today > member.renew :
 			flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
 		else :									
-			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas")
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas")
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
@@ -801,7 +875,7 @@ def Booking():
 		form = UserBookingForm()
 		if form.validate_on_submit():
 			today = datetime.today()		 				
-			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Selesai",role=current_user.member,owner=current_user.id,location=form.location.data,payment="Belum Lunas")
+			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role=current_user.member,owner=current_user.id,location=form.location.data,payment="Belum Lunas")
 			db.session.add(book)
 			db.session.commit()		
 			flash("Booking berhasil","success")
@@ -829,8 +903,8 @@ def AntreanLocation():
 def Antrean(id):
 	location = Location.query.filter_by(id=id).first()
 	nama = location.location	
-	antrean = Book.query.filter(Book.location == nama,Book.status =="Belum Selesai",Book.role != "nonregular").order_by(Book.status.desc(),Book.role.desc()).all()
-	nonregulars = Book.query.filter(Book.location == nama, Book.status == "Belum Selesai", Book.role == "nonregular").all()
+	antrean = Book.query.filter(Book.location == nama,Book.status != "Selesai",Book.role != "nonregular").order_by(Book.status.desc(),Book.role.desc()).all()
+	nonregulars = Book.query.filter(Book.location == nama, Book.status != "Selesai", Book.role == "nonregular").all()
 	total = len(antrean)
 	jumlah = len(nonregulars)
 	return render_template("user/antrean.html",antrean=antrean,total=total,nonregulars=nonregulars,jumlah=jumlah)
@@ -843,13 +917,27 @@ def Antrean(id):
 def EditAntrean(id):
 	form = BookingStatusForm()
 	antre = Book.query.filter_by(id=id).first()
-	form.status.data = antre.status
+	form.status.data = antre.status	
 	if form.validate_on_submit():
 		antre.status = request.form["status"]
 		db.session.commit()
 		flash("Status berhasil di update","success")
 		return redirect(url_for("AntreanLocation"))
 	return render_template("user/edit_antrean.html",form=form)	
+
+'''@app.route("/dashboard/edit-progress/<string:id>",methods=["GET","POST"])
+@login_required
+def EditProgress(id):
+	form = EditProcessForm()
+	antre = Book.query.filter_by(id=id).first()
+	form.process.data = antre.process	
+	if form.validate_on_submit():
+		antre.process = request.form["process"]
+		db.session.commit()
+		flash("Progress berhasil di update","success")
+		return redirect(url_for("AntreanLocation"))
+	return render_template("user/edit_progress.html",form=form)	'''
+
 
 
 
@@ -1001,14 +1089,8 @@ def UserInvoice(id):
 				amount = paket.paket1
 				trans = Accounting(description="Pembayaran dari customer",amount=amount,date=today,location=loc,status="Income",cashier=current_user.username)
 				db.session.add(trans)
-				db.session.commit()
+				db.session.commit()				
 				
-				'''rendered = render_template("user/invois.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-				pdf = pdfkit.from_string(rendered, False, css=css)		
-				response = make_response(pdf)
-				response.headers['Content-Type'] = 'application/pdf'
-				response.headers['Content-Disposition'] = 'inline; filename=output.pdf'
-				return response'''
 				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
 			elif user.paket == "paket2":
 				total = paket.paket2

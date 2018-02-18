@@ -111,13 +111,7 @@
                         <i class="ti-panel"></i>
                         <p>Dashboard</p>
                     </a>
-                </li>  
-                <li>
-                    <a href="/dashboard/member">
-                        <i class="ti-archive"></i>
-                        <p>Member</p>
-                    </a>
-                </li>    
+                </li>                
                 <li>
                     <a href="/dashboard/location/invoice">
                         <i class="ti-money"></i>
@@ -159,25 +153,30 @@
                     </a>
                     
                 </li>
-                <li>
-                    <a href="/dashboard/add-income">
-                        <i class="ti-arrow-down"></i>
-                        <p>Pemasukan</p>
-                    </a>
-                    
-                </li>    
-                  <li>
-                    <a href="/dashboard/add-expense">
-                        <i class="ti-arrow-up"></i>
-                        <p>Pengeluaran</p>
-                    </a>
-                    
-                </li>                                
-                  
+               
             </ul>
-
-
-
+            {% elif current_user.role == "marketing" %}
+            <ul class="nav">
+                <li>
+                    <a href="/dashboard">
+                        <i class="ti-panel"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>            
+                <li>
+                    <a href="/dashboard/add-member">
+                        <i class="ti-archive"></i>
+                        <p>Tambah Member</p>
+                    </a>
+                </li>  
+                <li>
+                    <a href="/dashboard/marketing/member">
+                        <i class="ti-archive"></i>
+                        <p>Member Anda</p>
+                    </a>
+                    
+                </li>
+            </ul>    
 
             {% else %}
              <ul class="nav">
@@ -191,6 +190,12 @@
                     <a href="/dashboard/user">
                         <i class="ti-user"></i>
                         <p>Admin</p>
+                    </a>
+                </li>
+                 <li>
+                    <a href="/dashboard/marketing">
+                        <i class="ti-user"></i>
+                        <p>marketing</p>
                     </a>
                 </li>
                 <li>

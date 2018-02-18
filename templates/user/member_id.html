@@ -44,11 +44,18 @@
                   <th><strong>Status</strong></th>
                   <td>{{ member.status }}</td>
                 </tr>
+                <tr>
+                  <th><strong>Marketing</strong></th>
+                  <td>{{ member.marketing }}</td>
+                </tr>
               
               </tbody>
             </table>
+            {% if current_user.role == "superuser" %}
             <a class="btn btn-primary" href=/dashboard/edit-member/{{ member.id }}>Edit</a></button>
             <button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button>
+            {% else %}
+            {% endif %}
          
         </div>
         </div>

@@ -1,0 +1,75 @@
+{% extends "layouts/dashboardtemplate.html" %}
+{% block title %} Trasaction {% endblock %}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/member.css')}}" rel="stylesheet"/> 
+<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/> 
+<div class="row">                
+    <div class="col-lg-11 col-md-10">
+        <div class="card">
+        <div class="header">                              
+                  <h4 class="title">Cari Data Transaksi Dari Marketing {{ user.username }}  </h4>
+                            </div>
+                            <div class="content">
+
+                            {% from "includes/_formhelpers.html" import render_field %}
+                               <form method="POST" enctype="multipart/form-data">
+                         {{ form.hidden_tag() }}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.date, class="form-control dtpick",placeholder="Tanggal")}}
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="col-md-4">
+                                            <div class="form-group">                                       
+                                                <button type="submit" class="btn btn-info btn-fill btn-wd sub">Search</button>
+                                            </div>
+                                        </div>                                               
+                                    </div>    
+                                    
+                                    
+                                </form>
+                            </div>
+            <div class="content">
+              <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>Jumlah</td>                   
+                                      
+                </tr>
+                </thead>
+                
+                  {% for trans in transaction  %}                  
+                      <tbody>
+                          <tr>
+                              <td>{{ trans.date.strftime("%d-%m-%Y") }}</td>
+                              <td>Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>                            
+                                                 
+                       </tbody>        
+                                                   
+                  {% endfor %}           
+                    <hr>
+                    <p>Total Pemasukan : Rp {{ "{:,}".format(transaction | sum(attribute="amount")).replace(",",".") }}</p> 
+
+
+
+
+                      </table>
+                      
+                 </div>     
+               </div>  
+          </div>            
+     </div>       
+</div>
+
+{% endblock %}
+
+
+
+
