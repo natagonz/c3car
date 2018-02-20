@@ -161,7 +161,10 @@
                             <td>{{ antre.name }}</td>                            
                             <td>{{ antre.phone }}</td>  
                             <td>{{ antre.role }}</td> 
+                            {% if current_user.location == antre.location or current_user.role == "superuser" %}
                             <td><a href="/dashboard/edit-antrean/{{ antre.id }}" class="btn btn-success">Edit</a></td>
+                            {% else %}
+                            {% endif %}
                           </tr>                                          
                                            
 
@@ -220,7 +223,11 @@
                             <td>{{ nonregular.name }}</td> 
                             <td>{{ nonregular.phone }}</td>  
                             <td>{{ nonregular.role }}</td> 
+                            {% if current_user.location == nonregular.location or current_user.role == "superuser" %}
                             <td><a href="/dashboard/edit-antrean/{{ nonregular.id }}" class="btn btn-success">Edit</a></td>
+                            {% else %}
+                            {% endif %}
+                            
                          </tr>  
                                             
                                               

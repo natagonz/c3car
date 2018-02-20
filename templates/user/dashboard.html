@@ -3,6 +3,37 @@
 {% block title %} Dashboard  {% endblock %}
 
 {% block content %}
+<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/> 
+
+<!-- form search -->
+{% if current_user.role == "member" or current_user.role == "superuser" %}
+<div class="row">
+      {% from "includes/_formhelpers.html" import render_field %}
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-md-8">
+                       <div class="form-group">
+                          {{ render_field(form.search, class="form-control",placeholder="Lokasi")}}
+                        </div>
+                    </div>
+                 <div class="col-md-4">
+                   <div class="form-group">                                       
+                       <button type="submit" class="btn btn-info btn-fill btn-wd sub">Search</button>
+                    </div>
+                </div>                                               
+               </div>                                    
+                                    
+          </form>
+</div>          
+
+{% else %}
+{% endif %}
+
+
+
+
+
 {% if current_user.role == "member" %}
 
 				<div class="row">
@@ -185,7 +216,7 @@
                                 <div class="footer">
                                     <hr />
                                     <div class="stats">
-                                        <i class="ti-plus"></i> <a href="/dashboard/marketing/member">Lihat</a>
+                                        <i class="ti-arrow"></i> <a href="/dashboard/marketing/member/{{current_user.id}}">Lihat</a>
                                     </div>
                                 </div>
                             </div>
@@ -193,8 +224,64 @@
                     </div>
                 </div>                   
 
-                  
+{% elif current_user.role == "user" %}  
+                 <div class="row">
+                {% for location in locations %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-car"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Lihat Antrean di {{ location.location }} </p>                                                                                                                                
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-plus"></i> <a href="/dashboard/antrean/{{ location.id }}">Lihat</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                  </div> 
 
+{% elif current_user.role == "sa" %} 
+            <div class="row">
+                <div class="col-md-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-book"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Booking </p>                                                                                    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-plus"></i> <a href="/dashboard/admin-booking">Booking</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>        
+                
                     
 {% else  %}
 

@@ -24,6 +24,7 @@
                     <td>Paket 3</td>
                     <td></td>                    
                     <td></td>
+                    <td></td>
                 </tr>
                 </thead>
 
@@ -38,6 +39,7 @@
                             <td>Rp {{ "{:,}".format(paket.paket3).replace(",",".") }}</td>
                             <td><a href="/dashboard/edit-package/{{ paket.id }}" class="btn btn-success">Edit</a></td>
                             <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
+                            <td><a href="/dashboard/history-package/{{ paket.id }}" class="btn btn-success">History</a></td>
                             </tr>
                      </tbody>           
                             <script>

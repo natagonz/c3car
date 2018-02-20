@@ -9,55 +9,31 @@
                         <div class="card">
                             <div class="header">                            	
 							    <h4 class="title">Booking</h4>
+                                <br>
+                                <h5>Mobil : {{ current_user.mobil }} // Plat : {{ current_user.plat }}</h5>
                             </div>
                             <div class="content">
 
                            	{% from "includes/_formhelpers.html" import render_field %}
                                <form method="POST" enctype="multipart/form-data">
-               				   {{ form.hidden_tag() }}
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ render_field(form.name, class="form-control",placeholder="Nama")}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ render_field(form.email, class="form-control",placeholder="Email")}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ render_field(form.phone, class="form-control",placeholder="Telepon")}}
-                                            </div>
-                                        </div>
-                                    </div>    
+               				   {{ form.hidden_tag() }}                                    
                                     <div class="row">
                                          <div class="col-md-4">
                                             <div class="form-group">
                                                {{ render_field(form.paket, class="form-control")}}
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                {{ render_field(form.mobil, class="form-control",placeholder="Mobil")}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ render_field(form.plat, class="form-control",placeholder="Plat")}}
-                                            </div>
-                                        </div>
+                                                {{ render_field(form.location, class="form-control muted")}}
+                                           </div>
+                                        </div>                                         
                                         
                                     </div>    
                                     
                                     <div class="row">
                                         
-                                          <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ render_field(form.location, class="form-control")}}
-                                           </div>
-                                        </div>  
+                                         
                                     </div>      
                                                                                               
                                     

@@ -176,14 +176,8 @@ class BookingForm(FlaskForm):
 
 
 
-class UserBookingForm(FlaskForm):
-	name = StringField("Nama",validators=[Length(max=100)])
-	email = StringField("Email",validators=[Length(max=100)])
-	phone = StringField("Telepon",validators=[Length(max=100)])
-	mobil = StringField("Mobil",validators=[Length(max=100)])
-	paket = QuerySelectField(query_factory=choice_query)
-	plat =  StringField("Plat",validators=[Length(max=100)])
-	role = StringField("Type",validators=[Length(max=100)])	
+class UserBookingForm(FlaskForm):	
+	paket = QuerySelectField(query_factory=choice_query)	
 	location = QuerySelectField(query_factory=location_query)
 
 
@@ -234,6 +228,13 @@ class TopUpForm(FlaskForm):
 class DateFilter(FlaskForm):
 	date = DateField("Dari",format="%m/%d/%Y") 
 
+class EditMarketingStatusForm(FlaskForm):
+	status = SelectField("Status",choices= [("aktif","aktif"),("pending","pending")]) 	
+
+
+class LocationSearchForm(FlaskForm):
+	search = StringField("Nama Lokasi",validators=[InputRequired(),Length(max=200)])	
+
 
 ##############################################
 
@@ -269,7 +270,7 @@ def AddIncome():
 		form = SuperUserAddAccountingForm()
 		if form.validate_on_submit():
 			today = datetime.today()
-			income = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Income")
+			income = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Income",cashier=current_user.username)
 			db.session.add(income)
 			db.session.commit()
 			flash("Pendapatan berhasil di input","success")
@@ -278,7 +279,7 @@ def AddIncome():
 		form = AddAccountingForm()
 		if form.validate_on_submit():
 			today = datetime.today()
-			income = Accounting(description=form.description.data,location=current_user.location,amount=form.amount.data,date=today,status="Income")
+			income = Accounting(description=form.description.data,location=current_user.location,amount=form.amount.data,date=today,status="Income",cashier=current_user.username)
 			db.session.add(income)
 			db.session.commit()
 			flash("Pendapatan berhasil di input","success")
@@ -294,7 +295,7 @@ def AddExpense():
 		form = SuperUserAddAccountingForm()
 		if form.validate_on_submit():
 			today = datetime.today()
-			expense = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Expense")
+			expense = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Expense",cashier=current_user.username)
 			db.session.add(expense)
 			db.session.commit()
 			flash("Pengeluaran berhasil di input","success")
@@ -303,7 +304,7 @@ def AddExpense():
 		form = AddAccountingForm()
 		if form.validate_on_submit():
 			today = datetime.today()
-			expense = Accounting(description=form.description.data,location=current_user.location,amount=form.amount.data,date=today,status="Expense")
+			expense = Accounting(description=form.description.data,location=current_user.location,amount=form.amount.data,date=today,status="Expense",cashier=current_user.username)
 			db.session.add(expense)
 			db.session.commit()
 			flash("Pengeluaran berhasil di input","success")
@@ -343,14 +344,16 @@ def CashierTransaction(id):
 	name = cashier.username
 	transactions = Accounting.query.filter_by(cashier=name).all()
 	income = Accounting.query.filter_by(cashier=name,status="Income").all()
+	expense = Accounting.query.filter_by(cashier=name,status="Expense").all()
 	form = AccountingSearchForm()
 	if form.validate_on_submit():
 		start = form.start.data
 		end = form.end.data
 		transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.cashier == name).all()
 		income = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.cashier == name,Accounting.status == "Income").all()
-		return render_template("user/cashier_transaction.html",transactions=transactions,form=form,name=name,income=income)
-	return render_template("user/cashier_transaction.html",transactions=transactions,form=form,name=name,income=income)	
+		expense = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.cashier == name,Accounting.status == "Expense").all()
+		return render_template("user/cashier_transaction.html",transactions=transactions,form=form,name=name,income=income,expense=expense)
+	return render_template("user/cashier_transaction.html",transactions=transactions,form=form,name=name,income=income,expense=expense)	
 
 
 
@@ -409,10 +412,13 @@ def UserLogin():
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
 		if user :
-			if check_password_hash(user.password,form.password.data):
-				login_user(user)
-				flash("Anda berhasil masuk","success")
-				return redirect(url_for("AdminDashboard"))
+			if user.status == "pending":
+				flash("Akun anda telah pending","danger")
+			else :	
+				if check_password_hash(user.password,form.password.data):
+					login_user(user)
+					flash("Anda berhasil masuk","success")
+					return redirect(url_for("AdminDashboard"))
 		flash("Email atau Password salah","danger")
 	
 	return render_template("user/login.html",form=form)		
@@ -504,7 +510,12 @@ def AdminDashboard():
 	user = len(Book.query.filter_by(status="Belum Selesai").all())
 	member = len(User.query.filter_by(role="member").all())
 	locations = Location.query.all()  	
-	return render_template("user/dashboard.html",antreanx=antreanx,user=user,member=member,locations=locations)
+	form = LocationSearchForm()
+	if form.validate_on_submit():
+		loc = form.search.data
+		locations = Location.query.filter_by(location=loc).all()
+		return render_template("user/dashboard.html",antreanx=antreanx,user=user,member=member,locations=locations,form=form)
+	return render_template("user/dashboard.html",antreanx=antreanx,user=user,member=member,locations=locations,form=form)
 
 
 
@@ -545,6 +556,42 @@ def DeleteUser(id):
 	flash("User telah di hapus","success")	
 	return redirect(url_for("AllUser"))		
 
+
+######################### SA #########################
+@app.route("/dashboard/add-sa",methods=["GET","POST"])
+@login_required
+def AddSa():
+	form = AddAdminForm()
+	if form.validate_on_submit():
+		hass = generate_password_hash(form.password.data,method="sha256")
+		user = User(username=form.username.data,email=form.email.data,password=hass,role="sa",status="user",location=form.location.data)
+		check_user = User.query.filter_by(email=form.email.data).all()
+		if len(check_user) > 0 :
+			flash("Email telah terdaftar","danger")
+		else :
+			db.session.add(user)
+			db.session.commit()
+			flash("SA berhasil ditambahkan","success")
+			return redirect(url_for("AllSa"))
+	return render_template("user/add_user.html",form=form)
+
+@app.route("/dashboard/sa",methods=["GET","POST"])
+@login_required
+def AllSa():
+	users = User.query.filter_by(role="sa").all()
+	return render_template("user/all_sa.html",users=users)
+
+@app.route("/dashboard/delete-sa/<string:id>",methods=["GET","POST"])
+@login_required
+def DeleteSa(id):
+	user = User.query.filter_by(id=id).first()
+	db.session.delete(user)
+	db.session.commit()
+	flash("User telah di hapus","success")	
+	return redirect(url_for("AllSa"))			
+
+
+
 ############################## kasir ######################################
 
 @app.route("/dashboard/cashier",methods=["GET","POST"])
@@ -560,7 +607,7 @@ def AddCashier():
 	form = AddAdminForm()
 	if form.validate_on_submit():
 		hass = generate_password_hash(form.password.data,method="sha256")
-		user = User(username=form.username.data,email=form.email.data,password=hass,role="cashier",status="user",location=form.location.data)
+		user = User(username=form.username.data,email=form.email.data,password=hass,role="cashier",status="aktif",location=form.location.data)
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("Email telah terdaftar","danger")
@@ -604,7 +651,7 @@ def AddMarketing():
 	form = AddAdminForm()
 	if form.validate_on_submit():
 		hass = generate_password_hash(form.password.data,method="sha256")
-		marketing = User(username=form.username.data,email=form.email.data,password=hass,role="marketing",status="user",location=form.location.data) 
+		marketing = User(username=form.username.data,email=form.email.data,password=hass,role="marketing",location=form.location.data,status="aktif") 
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("Email telah terdaftar","danger")
@@ -619,16 +666,48 @@ def AddMarketing():
 @app.route("/dashboard/marketing",methods=["GET","POST"])
 @login_required
 def AllMarketing():
-	marketings = User.query.filter_by(role="marketing").all()
+	marketings = User.query.all()
 	return render_template("user/all_marketing.html",marketings=marketings)
 
 
 
-@app.route("/dashboard/marketing/member",methods=["GET","POST"])
+@app.route("/dashboard/edit-marketing/<string:id>",methods=["GET","POST"])
 @login_required
-def MarketingMember():
-	members = User.query.filter_by(marketing=current_user.username).all()
-	return render_template("user/marketing_members.html",members=members)
+def EditMarketingStatus(id):
+	marketing = User.query.filter_by(id=id).first()
+	form = EditMarketingStatusForm()
+	form.status.data = marketing.status
+	if form.validate_on_submit():
+		marketing.status = request.form["status"]
+		db.session.commit()
+		flash("Status Berhasil di perbaharui","success")
+		return redirect(url_for("AllMarketing"))
+	return render_template("user/edit_marketing_status.html",form=form)	
+
+
+
+
+@app.route("/dashboard/marketing/member/<string:id>",methods=["GET","POST"])
+@login_required
+def MarketingMember(id):
+	if current_user.role == "marketing": 		
+		members = User.query.filter_by(marketing=current_user.username).order_by(User.date.desc()).all()	
+		total = len(members)	
+		return render_template("user/marketing_members.html",members=members,total=total)
+	else :
+		marketing = User.query.filter_by(id=id).first()
+		name = marketing.username
+		members = User.query.filter_by(marketing=marketing.username).order_by(User.date.desc()).all()
+		total = len(members)
+		form = AccountingSearchForm()
+		if form.validate_on_submit():
+			start = form.start.data
+			end = form.end.data 
+			members = User.query.filter(User.date.between(start,end)).filter(User.marketing == name).order_by(User.date.desc()).all()
+			total = len(members)
+			return render_template("user/marketing_members.html",members=members,form=form,name=name,total=total)
+		return render_template("user/marketing_members.html",members=members,form=form,name=name,total=total)
+
 
 
 
@@ -638,11 +717,11 @@ def MarketingMember():
 def MarketingStats(id):
 	user = User.query.filter_by(id=id).first()
 	name =  user.username
-	transaction = MemberPayment.query.filter_by(owner=name).all()	
-	form = DateFilter()
+	transaction = MemberPayment.query.filter_by(owner=name).order_by(MemberPayment.date.desc()).all()	
+	form = AccountingSearchForm()
 	if form.validate_on_submit():
-		start = form.date.data	
-		end = start + timedelta(days=1)		
+		start = form.start.data	
+		end = form.end.data	
 		transaction = MemberPayment.query.filter(MemberPayment.date.between(start,end)).filter(MemberPayment.owner == name).all()	
 		return render_template("user/marketing_stats.html",transaction=transaction,user=user,form=form)	
 	return render_template("user/marketing_stats.html",transaction=transaction,user=user,form=form)
@@ -676,10 +755,10 @@ def AddMember():
 				db.session.commit()
 				if current_user.role == "marketing":					
 					flash("member berhasil di tambah","success")
-					return redirect(url_for("MarketingMember"))
+					return redirect(url_for("AdminDashboard"))
 				else :
 					flash("member berhasil di tambah","success")
-					return redirect(url_for("AllMember"))
+					return redirect(url_for("AdminDashboard"))
 			elif select == "paket2":
 				renew = today + timedelta(days=90) 
 				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="regular",paket="paket2",marketing=current_user.username)
@@ -693,10 +772,10 @@ def AddMember():
 
 				if current_user.role == "marketing":					
 					flash("member berhasil di tambah","success")
-					return redirect(url_for("MarketingMember"))
+					return redirect(url_for("AdminDashboard"))
 				else :
 					flash("member berhasil di tambah","success")
-					return redirect(url_for("AllMember"))				
+					return redirect(url_for("AdminDashboard"))				
 			else :
 				renew = today + timedelta(days=300) 
 				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="vip",paket="paket3",marketing=current_user.username)
@@ -710,22 +789,20 @@ def AddMember():
 
 				if current_user.role == "marketing":					
 					flash("member berhasil di tambah","success")
-					return redirect(url_for("MarketingMember"))
+					return redirect(url_for("AdminDashboard"))
 				else :
 					flash("member berhasil di tambah","success")
-					return redirect(url_for("AllMember"))
+					return redirect(url_for("AdminDashboard"))
 				
 	return render_template("user/add_member.html",form=form)	
 
 
-
-
+'''
 @app.route("/dashboard/member",methods=["GET","POST"])
 @login_required
-def AllMember():
-	locations = Location.query.all()
+def AllMember():	
 	members = User.query.filter_by(role="member").all()
-	return render_template("user/all_member.html",members=members,locations=locations)	
+	return render_template("user/all_member.html",members=members)	'''
 
 
 ### member berdasarkan lokasi
@@ -800,7 +877,7 @@ def EditMember(id):
 			member.status = request.form["status"]
 			db.session.commit()
 			flash("Member berhasil di edit","success")
-			return redirect(url_for("AllMember"))		
+			return redirect(url_for("AllMarketing"))		
 	return render_template("user/edit_member.html",form=form)	
 
 @app.route("/dashboard/delete-member/<string:id>",methods=["GET","POST"])
@@ -833,8 +910,8 @@ def AdminBookingRegular():
 		db.session.add(book)
 		db.session.commit()
 		flash("Booking berhasil","success")
-		return redirect(url_for("AntreanLocation"))
-	return render_template("user/booking.html",form=form)	
+		return redirect(url_for("AdminDashboard"))
+	return render_template("user/admin_booking_form.html",form=form)	
 
 
 @app.route("/dashboard/admin-booking/member",methods=["GET","POST"])
@@ -856,8 +933,8 @@ def AdminBookingMember():
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
-			return redirect(url_for("AntreanLocation"))
-	return render_template("user/booking.html",form=form)	
+			return redirect(url_for("AdminDashboard"))
+	return render_template("user/admin_booking_form.html",form=form)	
 
 
 
@@ -874,8 +951,9 @@ def Booking():
 	else :
 		form = UserBookingForm()
 		if form.validate_on_submit():
-			today = datetime.today()		 				
-			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role=current_user.member,owner=current_user.id,location=form.location.data,payment="Belum Lunas")
+			today = datetime.today()
+			user = current_user	 				
+			book = Book(name=user.username,email=user.email,phone=user.phone,date=today,mobil=user.mobil,plat=user.plat,paket=form.paket.data,status="Belum Cuci",role=user.member,owner=user.id,location=form.location.data,payment="Belum Lunas")
 			db.session.add(book)
 			db.session.commit()		
 			flash("Booking berhasil","success")
@@ -903,8 +981,8 @@ def AntreanLocation():
 def Antrean(id):
 	location = Location.query.filter_by(id=id).first()
 	nama = location.location	
-	antrean = Book.query.filter(Book.location == nama,Book.status != "Selesai",Book.role != "nonregular").order_by(Book.status.desc(),Book.role.desc()).all()
-	nonregulars = Book.query.filter(Book.location == nama, Book.status != "Selesai", Book.role == "nonregular").all()
+	antrean = Book.query.filter(Book.location == nama,Book.status != "Out",Book.role != "nonregular").order_by(Book.status.desc(),Book.role.desc()).all()
+	nonregulars = Book.query.filter(Book.location == nama, Book.status != "Out", Book.role == "nonregular").all()
 	total = len(antrean)
 	jumlah = len(nonregulars)
 	return render_template("user/antrean.html",antrean=antrean,total=total,nonregulars=nonregulars,jumlah=jumlah)
@@ -937,9 +1015,6 @@ def EditProgress(id):
 		flash("Progress berhasil di update","success")
 		return redirect(url_for("AntreanLocation"))
 	return render_template("user/edit_progress.html",form=form)	'''
-
-
-
 
 
 
@@ -1012,6 +1087,24 @@ def AllPackage():
 
 
 
+@app.route("/dashboard/history-package/<string:id>",methods=["GET","POST"])
+@login_required
+def PackageHistory(id):
+	package = Paket.query.filter_by(id=id).first()
+	bookings = Book.query.filter_by(paket=package.name).all()
+	total = len(bookings)
+	form = AccountingSearchForm()
+	if form.validate_on_submit():
+		start = form.start.data 
+		end = form.end.data
+		bookings = Book.query
+		bookings = Book.query.filter(Book.date.between(start,end)).filter(Book.paket == package.name).order_by(Book.date.desc()).all()
+		total = len(bookings)
+		return render_template("user/history_package.html",bookings=bookings,total=total,form=form) 	
+	return render_template("user/history_package.html",bookings=bookings,total=total,form=form) 	
+
+
+
 
 ############################### Gallery ##########################
 
@@ -1064,7 +1157,7 @@ def InvoiceLocation():
 def AllInvoice(id):
 	locations = Location.query.filter_by(id=id).first()
 	locname = locations.location
-	invoices = Book.query.filter_by(location=locname).all()
+	invoices = Book.query.filter_by(location=locname).order_by(Book.date.desc()).all()
 	userinvoice = Book.query.filter_by(owner=current_user.id).all()
 	return render_template("user/all_invoice.html",invoices=invoices,userinvoice=userinvoice)	
 

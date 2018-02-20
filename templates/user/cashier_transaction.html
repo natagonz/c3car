@@ -86,6 +86,7 @@
                   {% endfor %}           
                     <hr>
                     <p>Total Pemasukan : Rp {{ income | sum(attribute="amount") }}</p> 
+                    <p>Total Pengeluaran : Rp {{ expense | sum(attribute="amount") }}</p> 
 
 
 

@@ -50,8 +50,11 @@
                     <td>Kasir</td>
                     <td>Debet</td>                    
                     <td>Kredit</td>
+                    {% if current_user.role == "superuser" %}
                     <td></td>
                     <td></td>
+                    {% else %}
+                    {% endif %}
                 </tr>
                 </thead>
                 
@@ -68,8 +71,11 @@
                               <td> </td>
                               <td>Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>  
                               {% endif %}  
+                              {% if current_user.role == "superuser" %}
                               <td><i class="ti-close" onclick="myFunction()"></i></td> 
-                              <td><a href="/dashboard/edit-transaction/{{trans.id}}"><i class="ti-pencil"></i></a></td>                   
+                              <td><a href="/dashboard/edit-transaction/{{trans.id}}"><i class="ti-pencil"></i></a></td>
+                              {% else %}
+                              {% endif %}                   
                        </tbody>         
                        <script>
                             function myFunction() {

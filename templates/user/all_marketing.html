@@ -17,33 +17,30 @@
                 <thead>
                 <tr>
                     <td>username</td>
-                    <td>email</td>                  
-                    <td>member</td>                                      
+                    <td>email</td>                                    
+                    <td>status</td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                 </tr>
                 </thead>
 
                 {% for marketing in marketings  %}
+
+                 {% if marketing.role == "superuser" or marketing.role == "marketing" or marketing.role == "cashier" %}
                     <tbody>
                         <tr>
                             <td>{{ marketing.username }}</td>
-                            <td>{{ marketing.email }}</td>
-                            <td></td>                            
-                            <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
+                            <td>{{ marketing.email }}</td>  
+                            <td>{{ marketing.status }}</td>                                                   
+                            <td><a href="/dashboard/edit-marketing/{{marketing.id}}" class="btn btn-info">Edit</a></td>
+                            <td><a href="/dashboard/marketing/member/{{marketing.id}}" class="btn btn-info">Member</a></td>
                             <td><a href="/dashboard/marketing/stats/{{marketing.id}}" class="btn btn-info">Transaksi</a></td>
                         </tr>
-                     </tbody>           
-                            <script>
-                            function myFunction() {
-                                 var x = window.confirm("Are You Sure ?");
-                                    if(x){
-                                           window.location = '/dashboard/delete-user/{{ marketing.id}}' ;
-                                            }
-                                     else {
-                                           return false;
-                                          }
-                                    }    
-                            </script>
+                     </tbody>         
+                 {% else %}
+                 {% endif %}
+                           
 
 
 

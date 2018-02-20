@@ -13,6 +13,8 @@
             <table class="table"> 
                 <thead>
                 <tr>
+                    <td>No</td>
+                    <td>Tanggal</td>
                     <td>Mobil</td>
                     <td>Plat</td>
                     <td>Paket</td>   
@@ -28,6 +30,8 @@
                   {% for invoice in userinvoice  %}
                       <tbody>
                           <tr>
+                              <td>{{ loop.index }}</td>
+                              <td>{{ invoice.date.strftime("%d-%m-%Y") }}</td>
                               <td>{{ invoice.mobil }}</td>
                               <td>{{ invoice.plat }}</td>
                               <td>{{ invoice.paket }}</td>                            
@@ -40,6 +44,8 @@
                   {% for invoice in invoices  %}
                       <tbody>
                           <tr>
+                              <td>{{ loop.index }}</td>
+                              <td>{{ invoice.date.strftime("%d-%m-%Y") }}</td>
                               <td>{{ invoice.mobil }}</td>
                               <td>{{ invoice.plat }}</td>
                               <td>{{ invoice.paket }}</td>
