@@ -7,6 +7,10 @@
 
 <!-- form search -->
 {% if current_user.role == "member" or current_user.role == "superuser" %}
+<ul id="social_side_links">
+  <li><a href="/dashboard/add-package" class="btn btn-success">Booking</a></li>
+</ul>
+
 <div class="row">
       {% from "includes/_formhelpers.html" import render_field %}
         <form method="POST" enctype="multipart/form-data">

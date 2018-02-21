@@ -1055,10 +1055,16 @@ def EditPackage(id):
 	form = AddPackageForm()
 	pack = Paket.query.filter_by(id=id).first()
 	form.name.data = pack.name 
-	form.price.data = pack.price
+	form.regular.data = pack.regular
+	form.paket1.data = pack.paket1
+	form.paket2.data = pack.paket2
+	form.paket3.data = pack.paket3
 	if form.validate_on_submit():
 		pack.name = request.form["name"]
-		pack.price = request.form["price"]
+		pack.regular = request.form["regular"]
+		pack.paket1 = request.form["paket1"]
+		pack.paket2 = request.form["paket2"]
+		pack.paket3 = request.form["paket3"]
 		db.session.commit()
 		flash("Paket berhasil di rubah","success")
 		return redirect(url_for("AllPackage"))
