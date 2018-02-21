@@ -8,7 +8,7 @@
 <!-- form search -->
 {% if current_user.role == "member" or current_user.role == "superuser" %}
 <ul id="social_side_links">
-  <li><a href="/dashboard/add-package" class="btn btn-success">Booking</a></li>
+  <li><a href="/dashboard/add-package"><img class="icon-float" src="http://www.bookingcounts.com/shared/buttons/Book-Now/144/Book-Now-button-dkblue-0203-lg.png" alt="" /></a></li>
 </ul>
 
 <div class="row">
@@ -67,32 +67,8 @@
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
-                  
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="content">
-                                <div class="row">
-                                    <div class="col-xs-5">
-                                        <div class="icon-big icon-success text-center">
-                                            <i class="ti-book"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-7">
-                                        <div class="numbers">
-                                            <p>Booking </p>                                                                                    
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="footer">
-                                    <hr />
-                                    <div class="stats">
-                                        <i class="ti-plus"></i> <a href="/dashboard/booking">Booking</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}                  
+                    
                 </div> 
 {% elif current_user.role == "cashier" %}    
                 <div class="row">
@@ -317,30 +293,7 @@
                     </div>
                     {% endfor %}
                   
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="content">
-                                <div class="row">
-                                    <div class="col-xs-5">
-                                        <div class="icon-big icon-success text-center">
-                                            <i class="ti-book"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-7">
-                                        <div class="numbers">
-                                            <p>Booking </p>                                                                                    
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="footer">
-                                    <hr />
-                                    <div class="stats">
-                                        <i class="ti-plus"></i> <a href="/dashboard/booking">Booking</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>                   
 
  
