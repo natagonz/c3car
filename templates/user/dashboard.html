@@ -7,10 +7,6 @@
 
 <!-- form search -->
 {% if current_user.role == "member" or current_user.role == "superuser" %}
-<ul id="social_side_links">
-  <li><a href="/dashboard/add-package"><img class="icon-float" src="http://www.bookingcounts.com/shared/buttons/Book-Now/144/Book-Now-button-dkblue-0203-lg.png" alt="" /></a></li>
-</ul>
-
 <div class="row">
       {% from "includes/_formhelpers.html" import render_field %}
         <form method="POST" enctype="multipart/form-data">
