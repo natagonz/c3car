@@ -203,6 +203,7 @@
 {% elif current_user.role == "user" %}  
                  <div class="row">
                 {% for location in locations %}
+                        {% if location.location == current_user.location %}
                     <div class="col-md-6">
                         <div class="card">
                             <div class="content">
@@ -227,6 +228,8 @@
                             </div>
                         </div>
                     </div>
+                           {% else %}
+                           {% endif %}         
                     {% endfor %}
                   </div> 
 
