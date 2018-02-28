@@ -3,7 +3,19 @@
 {% block title %} Dashboard  {% endblock %}
 
 {% block content %}
-<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/> 
+<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/>
+{% if current_user.role == "member"%}
+<ul id="social_side_links">
+  <li><a href="/dashboard/booking"><img class="icon-float" src="http://pluspng.com/img-png/logo-booking-com-png-booking-com-hotels-vacation-rentals-300.png" alt="" /></a></li>
+</ul>
+{% elif current_user.role == "superuser" or current_user.role == "sa" %}
+<ul id="social_side_links">
+  <li><a href="/dashboard/admin-booking"><img class="icon-float" src="http://pluspng.com/img-png/logo-booking-com-png-booking-com-hotels-vacation-rentals-300.png" alt="" /></a></li>
+</ul>
+{% else %}
+{% endif %}
+
+
 
 <!-- form search -->
 {% if current_user.role == "member" or current_user.role == "superuser" %}

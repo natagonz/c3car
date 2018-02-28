@@ -31,7 +31,7 @@ class EditMemberForm(FlaskForm):
 
 
 class BookingStatusForm(FlaskForm):
-	status = SelectField("",choices= [("Belum Cuci","Belum Cuci"),("Sedang Cuci","Sedang Cuci"),("Finish","Finish"),("Out","Out")])	
+	status = SelectField("",choices= [("Dalam Perjalanan","Dalam Perjalanan"),("Belum Cuci","Belum Cuci"),("Sedang Cuci","Sedang Cuci"),("Finish","Finish"),("Out","Out")])	
 
 
 class InvoicePaymentForm(FlaskForm):

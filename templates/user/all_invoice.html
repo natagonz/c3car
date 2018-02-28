@@ -9,9 +9,11 @@
         <div class="card">
             <div class="content">
               <div class="table-responsive"> 
+             
 
             <table class="table"> 
                 <thead>
+                <button onclick="myFunction()" class="btn btn-success">Refresh</button>
                 <tr>
                     <td>No</td>
                     <td>Tanggal</td>
@@ -40,6 +42,23 @@
                        </tbody>           
                              
                   {% endfor %}
+                 {% elif current_user.role == "superuser" %} 
+                    {% for invoice in invoices  %}
+                      <tbody>
+                          <tr>
+                              <td>{{ loop.index }}</td>
+                              <td>{{ invoice.date.strftime("%d-%m-%Y") }}</td>
+                              <td>{{ invoice.mobil }}</td>
+                              <td>{{ invoice.plat }}</td>
+                              <td>{{ invoice.paket }}</td>
+                              <td>{{ invoice.payment }}</td>                             
+                              <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Print</a></td>
+                              <td><a href="/dashboard/admin/delete-invoice/{{ invoice.id }}" class="btn btn-danger">Delete</a></td>
+                              </tr>
+                       </tbody>                       
+       
+                             
+                    {% endfor %}
                  {% else %}
                   {% for invoice in invoices  %}
                       <tbody>
@@ -66,5 +85,10 @@
           </div>            
      </div>       
 </div>
+<script>
+function myFunction() {
+    location.reload();
+}
+</script>
 
 {% endblock %}

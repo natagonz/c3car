@@ -1,0 +1,39 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Booking {% endblock %}
+
+
+{% block content %}
+<div class="row">                
+                  <div class="col-lg-11 col-md-10">
+                        <div class="card">
+                            <div class="header">                            	
+							                <h4 class="title">Detail Booking</h4>
+                            </div>
+                            <div class="content">                            
+                            <p>Nama : {{ member.username }}</p>
+                            <p>Email : {{ member.email  }}</p>
+                            <p>Mobil : {{ member.mobil }}</p>
+                            <p>Plat : {{ member.plat }}</p>
+                            <p>Phone : {{ member.phone }}</p>
+                            <p>Lokasi : {{ member.location }} </p>
+                            <hr>
+                            <a href="/dashboard/admin-booking" class="btn btn-info">Kembali</a>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+			
+          </div>
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -33,22 +33,28 @@
                    
                      {% for antre in antrean %} 
                     <tbody> 
-                                       
-                          <tr> 
-                            <td>{{ loop.index }}</td>
-                            <td>{{ antre.mobil }}</td> 
-                            <td>{{ antre.plat }}</td> 
-                            <td>{{ antre.paket }}</td> 
-                            <td>{{ antre.status }}</td>                             
-                            <td>{{ antre.role }}</td>  
-                         </tr>  
-                                            
-                                              
-                        
-                         
-                        
-                         
+                            {% if antre.owner == current_user.id %}           
+                              <tr> 
+                                <td>{{ loop.index }}</td>
+                                <td>{{ antre.mobil }}</td> 
+                                <td>{{ antre.plat }}</td> 
+                                <td>{{ antre.paket }}</td> 
+                                <td>{{ antre.status }}</td>                             
+                                <td>{{ antre.role }}</td> 
+                                <td><a href="/dashboard/member/cancel-booking/{{antre.id}}" class="btn btn-danger">Cancel</a></td> 
+                             </tr>  
+                             {% else %}
+                              <tr> 
+                                <td>{{ loop.index }}</td>
+                                <td>{{ antre.mobil }}</td> 
+                                <td>{{ antre.plat }}</td> 
+                                <td>{{ antre.paket }}</td> 
+                                <td>{{ antre.status }}</td>                             
+                                <td>{{ antre.role }}</td> 
 
+                             </tr>  
+                             {% endif %}                                   
+                      
                      </tbody>  
                       {% endfor %}
                     
@@ -92,7 +98,7 @@
                    
                      {% for nonregular in nonregulars %} 
                     <tbody> 
-                                       
+                         {% if nonregular.owner == current_user.id %}               
                           <tr> 
                             <td>{{ loop.index }}</td>
                             <td>{{ nonregular.mobil }}</td> 
@@ -100,7 +106,18 @@
                             <td>{{ nonregular.paket }}</td> 
                             <td>{{ nonregular.status }}</td>                             
                             <td>{{ nonregular.role }}</td>  
+                            <td><a href="/dashboard/member/cancel-booking/{{nonregular.id}}" class="btn btn-danger">Cancel</a></td>
                          </tr>  
+                         {% else %}
+                         <tr> 
+                            <td>{{ loop.index }}</td>
+                            <td>{{ nonregular.mobil }}</td> 
+                            <td>{{ nonregular.plat }}</td> 
+                            <td>{{ nonregular.paket }}</td> 
+                            <td>{{ nonregular.status }}</td>                             
+                            <td>{{ nonregular.role }}</td>  
+                         </tr>  
+                         {% endif %}
                                             
                                               
                         

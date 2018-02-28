@@ -165,6 +165,11 @@ class MemberPayment(db.Model):
 
 
 ############## form ################
+class BookingMemberForm(FlaskForm):
+	email = StringField("Email",validators=[Length(max=100)])
+	paket = QuerySelectField(query_factory=choice_query)
+
+
 class BookingForm(FlaskForm):
 	name = StringField("Nama",validators=[Length(max=100)])
 	email = StringField("Email",validators=[Length(max=100)])
@@ -172,7 +177,7 @@ class BookingForm(FlaskForm):
 	mobil = StringField("Mobil",validators=[Length(max=100)])
 	paket = QuerySelectField(query_factory=choice_query)		
 	plat =  StringField("Plat",validators=[Length(max=100)])	
-	location = QuerySelectField(query_factory=location_query)
+	
 
 
 
@@ -906,21 +911,23 @@ def AdminBookingRegular():
 	form = BookingForm()
 	if form.validate_on_submit():			
 		today = datetime.today()					
-		book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role="regular",owner=current_user.id,location=form.location.data,payment="Belum Lunas")
+		book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role="regular",owner=current_user.id,location=current_user.location,payment="Belum Lunas")
 		db.session.add(book)
 		db.session.commit()
 		flash("Booking berhasil","success")
 		return redirect(url_for("AdminDashboard"))
-	return render_template("user/admin_booking_form.html",form=form)	
+	return render_template("user/admin_booking_regular.html",form=form)	
+
 
 
 @app.route("/dashboard/admin-booking/member",methods=["GET","POST"])
 @login_required
 def AdminBookingMember():
-	form = BookingForm()
+	form = BookingMemberForm()
 	if form.validate_on_submit():
 		member = User.query.filter_by(email=form.email.data).first()
 		members = User.query.filter_by(email=form.email.data,role="member").all()
+		book = Book.query.filter(Book.owner == member.id,Book.status != "out").all()
 		today = datetime.today()
 		check_user = len(members)	
 
@@ -928,14 +935,15 @@ def AdminBookingMember():
 			flash("Tidak ada member yang terdaftar atas email tersebut","danger")	
 		elif member.renew == today or today > member.renew :
 			flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
+		elif len(book) > 0 :	
+			flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
 		else :									
-			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,paket=form.paket.data,status="Belum Cuci",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas")
+			book = Book(name=member.username,email=form.email.data,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket=form.paket.data,status="Belum Cuci",role=member.member,owner=member.id,location=current_user.location,payment="Belum Lunas")
 			db.session.add(book)
 			db.session.commit()
-			flash("Booking berhasil","success")
-			return redirect(url_for("AdminDashboard"))
+			flash("Booking berhasil","success")			
+			return render_template("user/after_booking.html",member=member)
 	return render_template("user/admin_booking_form.html",form=form)	
-
 
 
 			
@@ -946,20 +954,53 @@ def AdminBookingMember():
 @login_required
 def Booking():	
 	today = datetime.today()
+	check_book = Book.query.filter(Book.owner == current_user.id,Book.status != "out").all()
 	if today > current_user.renew and current_user.status == "pending":
-		return redirect(url_for("PaymentInfo"))		
+		return redirect(url_for("PaymentInfo"))			
 	else :
 		form = UserBookingForm()
 		if form.validate_on_submit():
 			today = datetime.today()
-			user = current_user	 				
-			book = Book(name=user.username,email=user.email,phone=user.phone,date=today,mobil=user.mobil,plat=user.plat,paket=form.paket.data,status="Belum Cuci",role=user.member,owner=user.id,location=form.location.data,payment="Belum Lunas")
-			db.session.add(book)
-			db.session.commit()		
-			flash("Booking berhasil","success")
-			return redirect(url_for("AntreanLocation"))		
+			user = current_user	 
+			if len(check_book) > 0 :
+				flash("Anda tidak bisa booking lebih dari satu sekaligus","danger")	
+			else :	
+				book = Book(name=user.username,email=user.email,phone=user.phone,date=today,mobil=user.mobil,plat=user.plat,paket=form.paket.data,status="Dalam Perjalanan",role=user.member,owner=user.id,location=form.location.data,payment="Belum Lunas")
+				db.session.add(book)
+				db.session.commit()		
+				flash("Booking berhasil","success")
+				return redirect(url_for("AntreanLocation"))		
 					
 	return render_template("user/booking.html",form=form)	
+
+
+@app.route("/dashboard/member/cancel-booking/<string:id>",methods=["GET","POST"])
+@login_required
+def MemberCancelBooking(id):
+	book = Book.query.filter_by(id=id).first()
+	if book.status == "Dalam Perjalanan" or book.status == "Belum Cuci":
+		db.session.delete(book)
+		db.session.commit()
+		flash("Anda berhasil membatalkan pesanan","success")
+		return redirect(url_for("AdminDashboard"))
+	else :
+		flash("Anda tidak dapat membatalkan pesanan anda","danger")
+		return redirect(url_for("AdminDashboard"))	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -981,7 +1022,7 @@ def AntreanLocation():
 def Antrean(id):
 	location = Location.query.filter_by(id=id).first()
 	nama = location.location	
-	antrean = Book.query.filter(Book.location == nama,Book.status != "Out",Book.role != "nonregular").order_by(Book.status.desc(),Book.role.desc()).all()
+	antrean = Book.query.filter(Book.location == nama,Book.status != "Out",Book.role != "nonregular").order_by(Book.role.desc()).all()
 	nonregulars = Book.query.filter(Book.location == nama, Book.status != "Out", Book.role == "nonregular").all()
 	total = len(antrean)
 	jumlah = len(nonregulars)
@@ -1272,62 +1313,22 @@ def UserInvoice(id):
 @app.route("/dashboard/invoice",methods=["GET","POST"])
 @login_required
 def AllMemberInvoice():
-	invoices = Book.query.filter_by(owner=current_user.id).all()
+	invoices = Book.query.filter_by(owner=current_user.id,payment="Belum Lunas").all()
 	return render_template("user/member_invoice.html",invoices=invoices)
 
 
-
-
-####### edit invoice payment ###########
-'''@app.route("/dashboard/edit-invoice/<string:id>",methods=["GET","POST"])
+@app.route("/dashboard/admin/delete-invoice/<string:id>",methods=["GET","POST"])
 @login_required
-def EditInvoicePayment(id):
-	form = InvoicePaymentForm()
-	invoice = Book.query.filter_by(id=id).first()
-	user = User.query.filter_by(id=invoice.owner).first()
-	form.payment.data = invoice.payment
-	if invoice.payment == "Belum Lunas":
-		if form.validate_on_submit():
-			pay = request.form["payment"]
-			paket = Paket.query.filter_by(name=invoice.paket).first()			
-			loc = invoice.location		
-			today = datetime.today()
-			invoice.payment = pay
-			if pay == "Lunas":
-				if user.paket == "paket1":
-					harga = paket.paket1
-					trans = Accounting(description="Pembayaran dari customer",amount=harga,date=today,location=loc,status="Income",cashier=current_user.username)
-					db.session.add(trans)
-					db.session.commit()
-					flash("Status pembayaran berhasil di rubah","success")
-					return redirect(url_for("InvoiceLocation"))	
-				elif user.paket == "paket2":
-					harga = paket.paket2
-					trans = Accounting(description="Pembayaran dari customer",amount=harga,date=today,location=loc,status="Income",cashier=current_user.username)
-					db.session.add(trans)
-					db.session.commit()
-					flash("Status pembayaran berhasil di rubah","success")
-					return redirect(url_for("InvoiceLocation"))
-				elif user.paket == "paket3":
-					harga = paket.paket3
-					trans = Accounting(description="Pembayaran dari customer",amount=harga,date=today,location=loc,status="Income",cashier=current_user.username)
-					db.session.add(trans)
-					db.session.commit()
-					flash("Status pembayaran berhasil di rubah","success")
-					return redirect(url_for("InvoiceLocation"))	
-				else:
-					harga = paket.regular
-					trans = Accounting(description="Pembayaran dari customer",amount=harga,date=today,location=loc,status="Income",cashier=current_user.username)
-					db.session.add(trans)
-					db.session.commit()
-					flash("Status pembayaran berhasil di rubah","success")
-					return redirect(url_for("InvoiceLocation"))								
+def DeleteInvoiceByYudi(id):
+	if current_user.role == "superuser":
+		book = Book.query.filter_by(id=id).first()
+		db.session.delete(book)
+		db.session.commit()
+		flash("Invoice berhasil di hapus","success")
+		return redirect(url_for("InvoiceLocation"))
 	else :
-		if form.validate_on_submit():			
-			flash("Status pembayaran tidak bisa di rubah karena sudah lunas","danger")		
-				
-	return render_template("user/edit_invoice_payment.html",form=form)		
-'''
+		return "no access"	
+
 
 
 
