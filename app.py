@@ -935,6 +935,8 @@ def AdminBookingMember():
 			flash("Tidak ada member yang terdaftar atas email tersebut","danger")	
 		elif member.renew == today or today > member.renew :
 			flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
+		elif member.status == "pending" :
+			flash("Akun dalam masa pending","danger")				
 		elif len(book) > 0 :	
 			flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
 		else :									
@@ -1023,7 +1025,7 @@ def Antrean(id):
 	location = Location.query.filter_by(id=id).first()
 	nama = location.location	
 	antrean = Book.query.filter(Book.location == nama,Book.status != "Out",Book.role != "nonregular").order_by(Book.role.desc()).all()
-	nonregulars = Book.query.filter(Book.location == nama, Book.status != "Out", Book.role == "nonregular").all()
+	nonregulars = Book.query.filter(Book.location == nama, Book.status != "Out", Book.role == "nonregular").order_by(Book.role.desc()).all()
 	total = len(antrean)
 	jumlah = len(nonregulars)
 	return render_template("user/antrean.html",antrean=antrean,total=total,nonregulars=nonregulars,jumlah=jumlah)
