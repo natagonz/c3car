@@ -16,31 +16,17 @@
                                <form method="POST" enctype="multipart/form-data">
                				   {{ form.hidden_tag() }}
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-9">
                                             <div class="form-group">
                                                 {{ render_field(form.name, class="form-control",placeholder="Paket")}}
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                {{ render_field(form.regular, class="form-control",placeholder="Harga")}}
+                                                {{ render_field(form.price, class="form-control",placeholder="Harga")}}
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {{ render_field(form.paket1, class="form-control",placeholder="Harga")}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {{ render_field(form.paket2, class="form-control",placeholder="Harga")}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {{ render_field(form.paket3, class="form-control",placeholder="Harga")}}
-                                            </div>
-                                        </div>
+                                        
                                        
                                     </div>                                                    
                                                                         

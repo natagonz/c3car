@@ -31,7 +31,7 @@ class EditMemberForm(FlaskForm):
 
 
 class BookingStatusForm(FlaskForm):
-	status = SelectField("",choices= [("Dalam Perjalanan","Dalam Perjalanan"),("Belum Cuci","Belum Cuci"),("Sedang Cuci","Sedang Cuci"),("Finish","Finish"),("Out","Out")])	
+	status = SelectField("",choices= [("Dalam Perjalanan","Dalam Perjalanan"),("Belum Cuci","Belum Cuci"),("Proses Cuci","Proses Cuci"),("Proses Poles","Proses Poles"),("Proses Finishing","Proses Finishing"),("Siap Keluar","Siap Keluar"),("Out","Out")])	
 
 
 class InvoicePaymentForm(FlaskForm):
@@ -53,10 +53,7 @@ class ResetPasswordForm(FlaskForm):
 
 class AddPackageForm(FlaskForm):
 	name = StringField("Paket",validators=[Length(max=100),InputRequired()])
-	regular = IntegerField("Regular",validators=[InputRequired()]) 	
-	paket1 = IntegerField("Paket 1 ",validators=[InputRequired()]) 	
-	paket2 = IntegerField("Paket 2",validators=[InputRequired()]) 	
-	paket3 = IntegerField("Paket 3",validators=[InputRequired()]) 	
+	price = IntegerField("Harga",validators=[InputRequired()]) 		
 	
 	
 class AddGalleryForm(FlaskForm):

@@ -1,0 +1,90 @@
+{% extends "layouts/dashboardtemplate.html" %}
+{% block title %} History Bookingan {% endblock %}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/member.css')}}" rel="stylesheet"/> 
+<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/> 
+<div class="row">                
+    <div class="col-lg-11 col-md-10">
+        <div class="card">   
+                <div class="header">                              
+                  <h4 class="title">Cari Data </h4>
+                            </div>
+                            <div class="content">
+
+                            {% from "includes/_formhelpers.html" import render_field %}
+                               <form method="POST" enctype="multipart/form-data">
+                         {{ form.hidden_tag() }}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.start, class="form-control dtpick",placeholder="Tanggal")}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.end, class="form-control dtpick",placeholder="Tanggal")}}
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="col-md-4">
+                                            <div class="form-group">                                       
+                                                <button type="submit" class="btn btn-info btn-fill btn-wd sub">Search</button>
+                                            </div>
+                                        </div>                                               
+                                    </div>    
+                                    
+                                    
+                                </form>
+                            </div>    
+            <div class="content">
+            <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                <tr>
+                    <td>No</td>
+                    <td>Tanggal</td>
+                    <td>Nama</td>
+                    <td>Phone</td>
+                    <td>Mobil</td>
+                    <td>Plat</td>
+                    <td></td>                   
+                                      
+                </tr>
+                </thead>
+                
+                  {% for book in bookings  %}                  
+                      <tbody>
+                          <tr>
+                              <td>{{ loop.index }}</td>
+                              <td>{{ book.date.strftime("%d-%m-%Y") }}</td>
+                              <td>{{ book.name }}</td> 
+                              <td>{{ book.phone}} </td>
+                              <td>{{ book.mobil }}</td>
+                              <td>{{ book.plat }}</td> 
+                              <td></td>                          
+                                                 
+                       </tbody>        
+                                                   
+                  {% endfor %}           
+                    <hr>
+                    <p>Total :  {{ total }}</p> 
+
+
+
+
+                      </table>
+                      
+                 </div>     
+               </div>  
+          </div>            
+     </div>       
+</div>
+
+{% endblock %}
+
+
+
+

@@ -16,9 +16,9 @@
                                <form method="POST" enctype="multipart/form-data">
                				   {{ form.hidden_tag() }}
                                     <div class="row">                                       
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <div class="form-group">
-                                                {{ render_field(form.email, class="form-control",placeholder="Email")}}
+                                                {{ render_field(form.plat, class="form-control",placeholder="Plat")}}
                                             </div>
                                         </div>
                                          <div class="col-md-6">
@@ -26,7 +26,17 @@
                                                 {{ render_field(form.paket, class="form-control",placeholder="Paket")}}
                                             </div>
                                         </div>
-                                        
+                                        {% if current_user.role == "superuser" %}                                    
+                                       
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ render_field(form.location, class="form-control",placeholder="Location")}}
+                                                </div>
+                                            </div>
+                                      
+                                       {% else %}
+                                       {% endif %}
+                                          
                                     </div> 
                                     
                                                                                               

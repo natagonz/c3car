@@ -10,7 +10,8 @@
                             <div class="header">                            	
 							    <h4 class="title">Booking</h4>
                                 <br>
-                                <h5>Mobil : {{ current_user.mobil }} // Plat : {{ current_user.plat }}</h5>
+                                <h5>Mobil : {{ current_user.mobil }} // Plat : {{ current_user.plat }} // Treatment : {{ current_user.treatment }}</h5>
+                                
                             </div>
                             <div class="content">
 
@@ -18,12 +19,12 @@
                                <form method="POST" enctype="multipart/form-data">
                				   {{ form.hidden_tag() }}                                    
                                     <div class="row">
-                                         <div class="col-md-4">
+                                         <div class="col-md-6">
                                             <div class="form-group">
                                                {{ render_field(form.paket, class="form-control")}}
                                             </div>
                                         </div>
-                                         <div class="col-md-4">
+                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 {{ render_field(form.location, class="form-control muted")}}
                                            </div>

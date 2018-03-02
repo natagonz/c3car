@@ -24,7 +24,7 @@
                  <strong>Website : </strong>  c3carwash.com 
              </span>
              <span>
-                 <strong>Telephone : </strong> 087 850 133 679
+                 <strong>Telephone : </strong> 085 737 214 999
              </span>
 
              <hr />
@@ -44,7 +44,7 @@
              <b>E-mail :</b> {{ invoice.email}}
              {% if user.role == "member" %}
              <br />
-             <b>Membership :</b> {{ user.renew.strftime("%d/%m/%Y") }}
+             <b>Membership Berlaku Sampai :</b> {{ user.renew.strftime("%d/%m/%Y") }}
              {% else %}
              {% endif %}
          </div>
@@ -62,11 +62,24 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% if invoice.paket != "Tidak Ada" %}
                                 <tr>                                   
                                     <td>{{ invoice.paket }}</td>
                                     <td>{{ harga }}</td>
                                     
                                 </tr>
+                                {% else %}
+                                {% endif %}
+
+
+                                {% if user.treatment != None %}
+                                <tr>                                   
+                                    <td>{{ user.treatment }}</td>
+                                    <td>0</td>
+                                    
+                                </tr>
+                                {% else %}
+                                {% endif %}
                                 
                             </tbody>
                         </table>
