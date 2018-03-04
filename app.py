@@ -177,7 +177,11 @@ class MemberPayment(db.Model):
 ############## form ################
 class BookingMemberForm(FlaskForm):
 	plat = StringField("Plat",validators=[Length(max=100)])
+	
+
+class PaketTambahanFormMember(FlaskForm):
 	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=choice_query)	
+
 
 
 class BookingForm(FlaskForm):
@@ -198,14 +202,12 @@ class YudiBookingRegularForm(FlaskForm):
 	location = QuerySelectField("Lokasi",query_factory=location_query)
 
 class YudiBookingMemberForm(FlaskForm):
-	plat = StringField("Plat",validators=[Length(max=100)])
-	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=choice_query)
+	plat = StringField("Plat",validators=[Length(max=100)])	
 	location = QuerySelectField("Lokasi",query_factory=location_query)					
 
 
 
-class UserBookingForm(FlaskForm):	
-	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=choice_query)	
+class UserBookingForm(FlaskForm):		
 	location = QuerySelectField(query_factory=location_query)
 
 
@@ -767,9 +769,9 @@ def AddMember():
 		today = datetime.today()
 		select = form.paket.data
 		hass = generate_password_hash(form.password.data,method="sha256")		
-		check_user = User.query.filter_by(email=form.email.data).all()
+		check_user = User.query.filter_by(plat=form.plat.data).all()
 		if len(check_user) > 0 :
-			flash("email telah terdaftar","danger")
+			flash("Plat telah terdaftar","danger")
 		else :	
 			if select == "paket1":
 				renew = today + timedelta(days=180) 
@@ -789,7 +791,7 @@ def AddMember():
 					return redirect(url_for("AdminDashboard"))
 			elif select == "paket2":
 				renew = today + timedelta(days=90) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="regular",paket="paket2",marketing=current_user.username,treatment="Cuci lift")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="regular",paket="paket2",marketing=current_user.username,treatment="Cuci + lift + Vacum")
 				db.session.add(user)
 				db.session.commit()
 
@@ -806,7 +808,7 @@ def AddMember():
 					return redirect(url_for("AdminDashboard"))				
 			else :
 				renew = today + timedelta(days=300) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="vip",paket="paket3",marketing=current_user.username,treatment="Cuci lift")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="vip",paket="paket3",marketing=current_user.username,treatment="Cuci + lift + Vacum")
 				db.session.add(user)
 				db.session.commit()
 
@@ -918,7 +920,7 @@ def DeleteMember(id):
 		db.session.delete(member)
 		db.session.commit()
 		flash("Member berhasil di hapus","success")
-		return redirect(url_for("AllMember"))		
+		return redirect(url_for("AdminDashboard"))		
 
 ############################# Booking Dari Admin ########################
 @app.route("/dashboard/admin-booking",methods=["GET","POST"])
@@ -958,57 +960,69 @@ def AdminBookingRegular():
 def AdminBookingMember():
 	if current_user.role == "superuser":
 		form = YudiBookingMemberForm()
-		if form.validate_on_submit():		
-			member = User.query.filter_by(plat=form.plat.data).first()
-			members = User.query.filter_by(plat=form.plat.data,role="member").all()
-			book = Book.query.filter(Book.owner == member.id,Book.status != "out").all()
-			today = datetime.today()
-			check_user = len(members)	
-
-			if check_user == 0 :
-				flash("Tidak ada member yang terdaftar atas DK tersebut","danger")	
-			elif member.renew == today or today > member.renew :
-				flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
-			elif member.status == "pending" :
-				flash("Akun dalam masa pending","danger")				
-			elif len(book) > 0 :	
-				flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
-			else :	
-				paket = form.paket.data								
-				book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket=form.paket.data,status="Belum Cuci",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas",treatment=member.treatment)
-				db.session.add(book)
-				db.session.commit()
-				flash("Booking berhasil","success")	
-				return render_template("user/after_booking.html",member=member,paket=paket)
+		if form.validate_on_submit():	
+			member = User.query.filter_by(plat=form.plat.data).first()			
+			if member :
+				book = Book.query.filter(Book.owner == member.id,Book.status != "out").all()
+				today = datetime.today()
+				if member.renew == today or today > member.renew :
+					flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
+				elif member.status == "pending" :
+					flash("Akun dalam masa pending","danger")
+				elif len(book) > 0 :	
+					flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
+				else :																		
+					book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket="Tidak Ada",status="Belum Cuci",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas",treatment=member.treatment)
+					db.session.add(book)
+					db.session.commit()
+					flash("Booking berhasil","success")	
+					return render_template("user/after_booking.html",member=member) 		
+			flash("Tidak ada member yang terdaftar atas Plat tersebut","danger")				
+			
 	else :
 		form = BookingMemberForm()
 		if form.validate_on_submit():		
-			member = User.query.filter_by(plat=form.plat.data).first()
-			members = User.query.filter_by(plat=form.plat.data,role="member").all()
-			book = Book.query.filter(Book.owner == member.id,Book.status != "out").all()
-			today = datetime.today()
-			check_user = len(members)	
-
-			if check_user == 0 :
-				flash("Tidak ada member yang terdaftar atas DK tersebut","danger")	
-			elif member.renew == today or today > member.renew :
-				flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
-			elif member.status == "pending" :
-				flash("Akun dalam masa pending","danger")				
-			elif len(book) > 0 :	
-				flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
-			else :	
-				paket = form.paket.data								
-				book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket=form.paket.data,status="Belum Cuci",role=member.member,owner=member.id,location=current_user.location,payment="Belum Lunas",treatment=member.treatment)
-				db.session.add(book)
-				db.session.commit()
-				flash("Booking berhasil","success")	
-				return render_template("user/after_booking.html",member=member,paket=paket)
+			member = User.query.filter_by(plat=form.plat.data).first()			
+			if member :
+				book = Book.query.filter(Book.owner == member.id,Book.status != "out").all()
+				today = datetime.today()
+				if member.renew == today or today > member.renew :
+					flash("Masa berlaku membership telah habis,silakan di perpanjang","danger")	
+				elif member.status == "pending" :
+					flash("Akun dalam masa pending","danger")
+				elif len(book) > 0 :	
+					flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
+				else :																		
+					book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket="Tidak Ada",status="Belum Cuci",role=member.member,owner=member.id,location=current_user.location,payment="Belum Lunas",treatment=member.treatment)
+					db.session.add(book)
+					db.session.commit()
+					flash("Booking berhasil","success")	
+					return render_template("user/after_booking.html",member=member) 		
+			flash("Tidak ada member yang terdaftar atas Plat tersebut","danger")			
+		
 					
 	return render_template("user/admin_booking_form.html",form=form)	
 
 
 			
+#menambah treatment
+@app.route("/dashboard/booking/add-treatment/<string:id>",methods=["GET","POST"])
+@login_required
+def BookingAddTreatment(id):
+	member = User.query.filter_by(id=id).first()
+	book = Book.query.filter_by(owner=member.id).first()
+	form = PaketTambahanFormMember()
+	if form.validate_on_submit():
+		book.paket = form.paket.data 
+		db.session.commit()
+		flash("Paket Tambahan Berhasil Ditambah","success")
+		return render_template("user/after_tambahan_treatment.html",member=member,book=book) 
+	return render_template("user/tambahan_treatment.html",form=form,book=book)	
+
+
+
+
+
 			
 
 ###################################### Member route ############################
@@ -1026,12 +1040,13 @@ def Booking():
 			user = current_user	 
 			if len(check_book) > 0 :
 				flash("Anda tidak bisa booking lebih dari satu sekaligus","danger")	
-			else :	
-				book = Book(name=user.username,email=user.email,phone=user.phone,date=today,mobil=user.mobil,plat=user.plat,paket=form.paket.data,status="Dalam Perjalanan",role=user.member,owner=user.id,location=form.location.data,payment="Belum Lunas",treatment=user.treatment)
+			else :				
+				book = Book(name=user.username,email=user.email,phone=user.phone,date=today,mobil=user.mobil,plat=user.plat,paket="Tidak Ada",status="Dalam Perjalanan",role=user.member,owner=user.id,location=form.location.data,payment="Belum Lunas",treatment=user.treatment)
 				db.session.add(book)
 				db.session.commit()		
 				flash("Booking berhasil","success")
-				return redirect(url_for("AntreanLocation"))		
+				member = current_user
+				return render_template("user/after_booking.html",member=member,)	
 					
 	return render_template("user/booking.html",form=form)	
 
