@@ -65,6 +65,7 @@ class User(db.Model):
 	paket = db.Column(db.String(200))	
 	marketing = db.Column(db.String(200))	
 	treatment = db.Column(db.String(200))
+	birth = db.Column(db.DateTime())
 
 
 	def is_active(self):
@@ -129,6 +130,21 @@ def regular_query():
 
 
 
+class PaketVip(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	name = db.Column(db.String(100))
+	price = db.Column(db.Integer())	
+	def __repr__(self):
+		return '{}'.format(self.name)
+
+
+def vip_query():
+	return PaketVip.query.all() 		
+
+
+
+
+
 
 class Location(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
@@ -180,7 +196,12 @@ class BookingMemberForm(FlaskForm):
 	
 
 class PaketTambahanFormMember(FlaskForm):
-	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=choice_query)	
+	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=choice_query)
+
+
+class PaketTambahanFormMemberVip(FlaskForm):
+	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=vip_query)
+
 
 
 
@@ -218,7 +239,7 @@ class AddMemberForm(FlaskForm):
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])
 	plat =  StringField("Plat",validators=[Length(max=100)])
-	location = QuerySelectField(query_factory=location_query)
+	birth = DateField("Tanggal Lahir",format="%m/%d/%Y")
 	paket = SelectField("Paket",choices= [("paket1","paket1"),("paket2","paket2"),("paket3","paket3")])
 
 
@@ -229,6 +250,13 @@ class AddAdminForm(FlaskForm):
 	email = StringField("Email",validators=[InputRequired(),Length(max=100)])
 	password = PasswordField("Password",validators=[InputRequired(),Length(min=6)])
 	location = QuerySelectField(query_factory=location_query)
+
+
+class AddMarketingForm(FlaskForm):
+	username = StringField("Username",validators=[InputRequired(),Length(max=100)])
+	email = StringField("Email",validators=[InputRequired(),Length(max=100)])
+	password = PasswordField("Password",validators=[InputRequired(),Length(min=6)])
+
 
 class AddLocationForm(FlaskForm):
 	location = StringField("Location",validators=[Length(max=200),InputRequired()])
@@ -678,10 +706,10 @@ def AllAccountant():
 @app.route("/dashboard/add-marketing",methods=["GET","POST"])
 @login_required
 def AddMarketing():
-	form = AddAdminForm()
+	form = AddMarketingForm()
 	if form.validate_on_submit():
 		hass = generate_password_hash(form.password.data,method="sha256")
-		marketing = User(username=form.username.data,email=form.email.data,password=hass,role="marketing",location=form.location.data,status="aktif") 
+		marketing = User(username=form.username.data,email=form.email.data,password=hass,role="marketing",status="aktif") 
 		check_user = User.query.filter_by(email=form.email.data).all()
 		if len(check_user) > 0 :
 			flash("Email telah terdaftar","danger")
@@ -690,7 +718,7 @@ def AddMarketing():
 			db.session.commit()
 			flash("Marketing berhasil di tambahkan","success")
 			return redirect(url_for("AllMarketing"))
-	return render_template("user/add_user.html",form=form)			
+	return render_template("user/add_marketing.html",form=form)			
 
 
 @app.route("/dashboard/marketing",methods=["GET","POST"])
@@ -775,7 +803,7 @@ def AddMember():
 		else :	
 			if select == "paket1":
 				renew = today + timedelta(days=180) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="nonregular",paket="paket1",marketing=current_user.username,treatment="Cuci Non Lift")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,birth=form.birth.data,member="nonregular",paket="paket1",marketing=current_user.username,treatment="Cuci Non Lift")
 				db.session.add(user)
 				db.session.commit()
 
@@ -791,7 +819,7 @@ def AddMember():
 					return redirect(url_for("AdminDashboard"))
 			elif select == "paket2":
 				renew = today + timedelta(days=90) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="regular",paket="paket2",marketing=current_user.username,treatment="Cuci + lift + Vacum")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,birth=form.birth.data,member="regular",paket="paket2",marketing=current_user.username,treatment="Cuci + lift + Vacum")
 				db.session.add(user)
 				db.session.commit()
 
@@ -808,7 +836,7 @@ def AddMember():
 					return redirect(url_for("AdminDashboard"))				
 			else :
 				renew = today + timedelta(days=300) 
-				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,location=form.location.data,member="vip",paket="paket3",marketing=current_user.username,treatment="Cuci + lift + Vacum")
+				user = User(username=form.username.data,email=form.email.data,password=hass,role="member",phone=form.phone.data,mobil=form.mobil.data,plat=form.plat.data,status="pending",date=today,renew=renew,birth=form.birth.data,member="vip",paket="paket3",marketing=current_user.username,treatment="Cuci + lift + Vacum")
 				db.session.add(user)
 				db.session.commit()
 
@@ -826,13 +854,6 @@ def AddMember():
 				
 	return render_template("user/add_member.html",form=form)	
 
-
-'''
-@app.route("/dashboard/member",methods=["GET","POST"])
-@login_required
-def AllMember():	
-	members = User.query.filter_by(role="member").all()
-	return render_template("user/all_member.html",members=members)	'''
 
 
 ### member berdasarkan lokasi
@@ -1010,13 +1031,23 @@ def AdminBookingMember():
 @login_required
 def BookingAddTreatment(id):
 	member = User.query.filter_by(id=id).first()
-	book = Book.query.filter_by(owner=member.id).first()
-	form = PaketTambahanFormMember()
-	if form.validate_on_submit():
-		book.paket = form.paket.data 
-		db.session.commit()
-		flash("Paket Tambahan Berhasil Ditambah","success")
-		return render_template("user/after_tambahan_treatment.html",member=member,book=book) 
+	book = Book.query.filter(Book.owner == member.id,Book.status != "out").first()	
+	location = Location.query.filter_by(location=book.location).first()
+	if member.paket == "paket3":
+		form = PaketTambahanFormMemberVip()
+		if form.validate_on_submit():
+			book.paket = form.paket.data 
+			db.session.commit()
+			flash("Paket Tambahan Berhasil Ditambah","success")
+			return render_template("user/after_tambahan_treatment.html",member=member,book=book,location=location) 
+	else :
+		form = PaketTambahanFormMember()
+		if form.validate_on_submit():
+			book.paket = form.paket.data 
+			db.session.commit()
+			flash("Paket Tambahan Berhasil Ditambah","success")
+			return render_template("user/after_tambahan_treatment.html",member=member,book=book,location=location) 
+					
 	return render_template("user/tambahan_treatment.html",form=form,book=book)	
 
 
@@ -1187,7 +1218,23 @@ def AddPackageRegular():
 		db.session.commit()
 		flash("Paket berhasil di tambahkan","success")
 		return redirect(url_for("AllPackageRegular"))
-	return render_template("user/add_package.html",form=form) 	
+	return render_template("user/add_package.html",form=form) 
+
+
+#untuk VIP
+@app.route("/dashboard/add-package-vip",methods=["GET","POST"])
+@login_required
+def AddPackageVip():
+	form = AddPackageForm()
+	if form.validate_on_submit():
+		paket = PaketVip(name=form.name.data,price=form.price.data)
+		db.session.add(paket)
+		db.session.commit()
+		flash("Paket berhasil di tambahkan","success")
+		return redirect(url_for("AllPackageVip"))
+	return render_template("user/add_package.html",form=form) 
+
+
 
 
 
@@ -1223,6 +1270,22 @@ def EditPackageRegular(id):
 
 
 
+@app.route("/dashboard/edit-package-vip/<string:id>",methods=["GET","POST"])
+@login_required
+def EditPackageVip(id):
+	form = AddPackageForm()
+	pack = PaketVip.query.filter_by(id=id).first()
+	form.name.data = pack.name 
+	form.price.data = pack.price	
+	if form.validate_on_submit():
+		pack.name = request.form["name"]
+		pack.price = request.form["price"]		
+		db.session.commit()
+		flash("Paket berhasil di rubah","success")
+		return redirect(url_for("AllPackageVip"))
+	return render_template("user/edit_package.html",form=form)	
+
+
 
 
 #untuk member
@@ -1245,6 +1308,17 @@ def DeletePackageRegular(id):
 	flash("Paket berhasil di hapus","success")
 	return redirect(url_for("AllPackageRegular"))
 
+#Vip
+@app.route("/dashboard/delete-package-vip/<string:id>",methods=["GET","POST"])
+@login_required
+def DeletePackageVip(id):	
+	paket = PaketVip.query.filter_by(id=id).first()
+	db.session.delete(paket)
+	db.session.commit()
+	flash("Paket berhasil di hapus","success")
+	return redirect(url_for("AllPackageVip"))
+
+
 
 
 
@@ -1261,6 +1335,16 @@ def AllPackage():
 def AllPackageRegular():
 	pakets = Paketregular.query.all()
 	return render_template("user/package_regular.html",pakets=pakets)
+
+
+#Vip
+@app.route("/dashboard/package-vip",methods=["GET","POST"])
+@login_required
+def AllPackageVip():
+	pakets = PaketVip.query.all()
+	return render_template("user/package_vip.html",pakets=pakets)
+
+
 
 
 
@@ -1365,23 +1449,36 @@ def UserInvoice(id):
 	invoice = Book.query.filter_by(id=id).first()
 	user = User.query.filter_by(id=invoice.owner).first()
 	paket = Paket.query.filter_by(name=invoice.paket).first()
-	paket_regular = Paketregular.query.filter_by(name=invoice.paket).first() 	
+	paket_regular = Paketregular.query.filter_by(name=invoice.paket).first()
+	paket_vip = PaketVip.query.filter_by(name=invoice.paket).first() 	
 	if current_user.role == "cashier":			
 		if invoice.payment == "Belum Lunas":
 			paket = Paket.query.filter_by(name=invoice.paket).first()
-			paket_regular = Paketregular.query.filter_by(name=invoice.paket).first() 			
+			paket_regular = Paketregular.query.filter_by(name=invoice.paket).first() 
+			paket_vip = PaketVip.query.filter_by(name=invoice.paket).first()			
 			loc = invoice.location		
 			today = datetime.today()
 			invoice.payment = "Lunas"
 			if user.role == "member":
-				total = paket.price 
-				harga = "{:,}".format(total).replace(",",".") 
-				membership = user.renew
-				trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
-				db.session.add(trans)
-				db.session.commit()				
+				if user.paket == "paket1" or user.paket == "paket2":
+					total = paket.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew
+					trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+					db.session.add(trans)
+					db.session.commit()				
 				
-				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+				else :
+					total = paket_vip.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew
+					trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+					db.session.add(trans)
+					db.session.commit()				
+				
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+						
 			else : 			
 				total = paket_regular.price 
 				harga = "{:,}".format(total).replace(",",".")							
@@ -1392,11 +1489,19 @@ def UserInvoice(id):
 				return render_template("user/invoice.html",invoice=invoice,paket_regular=paket_regular,harga=harga,user=user)
 		else:	
 			if user.role == "member":
-				total = paket.price 
-				harga = "{:,}".format(total).replace(",",".") 
-				membership = user.renew						
+				if user.paket == "paket1" or user.paket =="paket2":
+					total = paket.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew						
 				
-				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+				else :
+					total = paket_vip.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew						
+				
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+						
 			else : 			
 				total = paket_regular.price 
 				harga = "{:,}".format(total).replace(",",".")										
@@ -1404,14 +1509,23 @@ def UserInvoice(id):
 				return render_template("user/invoice.html",invoice=invoice,paket_regular=paket_regular,harga=harga,user=user)
 	else :			
 		if user.role == "member":
-			total = paket.price 
-			harga = "{:,}".format(total).replace(",",".") 
-			membership = user.renew						
+			if user.paket == "paket1" or user.paket =="paket2":
+				total = paket.price 
+				harga = "{:,}".format(total).replace(",",".") 
+				membership = user.renew						
 				
-			return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
+			else :
+				total = paket_vip.price 
+				harga = "{:,}".format(total).replace(",",".") 
+				membership = user.renew						
+			
+				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+						
 		else : 			
 			total = paket_regular.price 
 			harga = "{:,}".format(total).replace(",",".")										
+
 			return render_template("user/invoice.html",invoice=invoice,paket_regular=paket_regular,harga=harga,user=user)
 
 #### invoice member ####
