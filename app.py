@@ -95,13 +95,14 @@ class Book(db.Model):
 	plat = db.Column(db.String(100))
 	status = db.Column(db.String(100))
 	role = db.Column(db.String(100))
-	paket = db.Column(db.String(200)) 	
+	paket = db.Column(db.String(200)) 
+	tambahan = db.Column(db.String(200))	
 	date = db.Column(db.DateTime())
 	price = db.Column(db.Integer())
 	owner = db.Column(db.Integer())
 	location = db.Column(db.String(200))
 	payment = db.Column(db.String(200))
-	treatment =db.Column(db.String(200))
+	treatment = db.Column(db.String(200))
 	
 
 
@@ -194,6 +195,11 @@ class MemberPayment(db.Model):
 class BookingMemberForm(FlaskForm):
 	plat = StringField("Plat",validators=[Length(max=100)])
 	
+
+class PaketTambahanFormRegular(FlaskForm):
+	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=regular_query)
+
+
 
 class PaketTambahanFormMember(FlaskForm):
 	paket = QuerySelectField("Apakah Anda Ingin Treatment Tambahan ?",query_factory=choice_query)
@@ -962,7 +968,7 @@ def AdminBookingRegular():
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
-			return redirect(url_for("AdminDashboard"))
+			return render_template("user/after_booking_regular.html",book=book)
 	else:		
 		form = BookingForm()
 		if form.validate_on_submit():			
@@ -971,7 +977,7 @@ def AdminBookingRegular():
 			db.session.add(book)
 			db.session.commit()
 			flash("Booking berhasil","success")
-			return redirect(url_for("AdminDashboard"))
+			return render_template("user/after_booking_regular.html",book=book)
 	return render_template("user/admin_booking_regular.html",form=form)	
 
 
@@ -993,7 +999,7 @@ def AdminBookingMember():
 				elif len(book) > 0 :	
 					flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
 				else :																		
-					book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket="Tidak Ada",status="Belum Cuci",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas",treatment=member.treatment)
+					book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket="Tidak Ada",status="Belum Cuci",role=member.member,owner=member.id,location=form.location.data,payment="Belum Lunas",treatment=member.treatment,tambahan="")
 					db.session.add(book)
 					db.session.commit()
 					flash("Booking berhasil","success")	
@@ -1014,7 +1020,7 @@ def AdminBookingMember():
 				elif len(book) > 0 :	
 					flash("Member telah melakukan booking,tidak bisa booking lebih dari satu","danger")	
 				else :																		
-					book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket="Tidak Ada",status="Belum Cuci",role=member.member,owner=member.id,location=current_user.location,payment="Belum Lunas",treatment=member.treatment)
+					book = Book(name=member.username,email=member.email,phone=member.phone,date=today,mobil=member.mobil,plat=member.plat,paket="Tidak Ada",status="Belum Cuci",role=member.member,owner=member.id,location=current_user.location,payment="Belum Lunas",treatment=member.treatment,tambahan="")
 					db.session.add(book)
 					db.session.commit()
 					flash("Booking berhasil","success")	
@@ -1049,6 +1055,46 @@ def BookingAddTreatment(id):
 			return render_template("user/after_tambahan_treatment.html",member=member,book=book,location=location) 
 					
 	return render_template("user/tambahan_treatment.html",form=form,book=book)	
+
+
+@app.route("/dashboard/booking/add-tambahan/<string:id>",methods=["GET","POST"])
+@login_required
+def BookingAddTambahan(id):
+	member = User.query.filter_by(id=id).first()
+	book = Book.query.filter(Book.owner == member.id,Book.status != "out").first()	
+	location = Location.query.filter_by(location=book.location).first()
+	if member.paket == "paket3":
+		form = PaketTambahanFormMemberVip()
+		if form.validate_on_submit():
+			book.tambahan = form.paket.data 
+			db.session.commit()
+			flash("Paket Tambahan Berhasil Ditambah","success")
+			return render_template("user/after_tambahan_tambahan.html",member=member,book=book,location=location)
+	else :
+		form = PaketTambahanFormMember()
+		if form.validate_on_submit():
+			book.tambahan = form.paket.data 
+			db.session.commit()
+			flash("Paket Tambahan Berhasil Ditambah","success")
+			return render_template("user/after_tambahan_tambahan.html",member=member,book=book,location=location) 
+					
+	return render_template("user/tambahan_treatment.html",form=form,book=book)	
+			 
+
+@app.route("/dashboard/booking/add-tambahan-regular/<string:id>",methods=["GET","POST"])
+@login_required
+def BookingAddTambahanRegular(id):	
+	book = Book.query.filter_by(id=id).first()	
+	location = Location.query.filter_by(location=book.location).first()		
+	form = PaketTambahanFormRegular()
+	if form.validate_on_submit():
+		book.tambahan = form.paket.data 
+		db.session.commit()
+		flash("Paket Tambahan Berhasil Ditambah","success")
+		return render_template("user/after_tambahan_regular.html",book=book,location=location) 
+					
+	return render_template("user/tambahan_treatment.html",form=form,book=book)	
+
 
 
 
@@ -1451,82 +1497,228 @@ def UserInvoice(id):
 	paket = Paket.query.filter_by(name=invoice.paket).first()
 	paket_regular = Paketregular.query.filter_by(name=invoice.paket).first()
 	paket_vip = PaketVip.query.filter_by(name=invoice.paket).first() 	
+	tambahan = Paket.query.filter_by(name=invoice.tambahan).first()
+	tambahan_regular =  Paketregular.query.filter_by(name=invoice.tambahan).first()
+	tambahan_vip = PaketVip.query.filter_by(name=invoice.tambahan).first() 	
 	if current_user.role == "cashier":			
-		if invoice.payment == "Belum Lunas":
-			paket = Paket.query.filter_by(name=invoice.paket).first()
-			paket_regular = Paketregular.query.filter_by(name=invoice.paket).first() 
-			paket_vip = PaketVip.query.filter_by(name=invoice.paket).first()			
+		if invoice.payment == "Belum Lunas":					
 			loc = invoice.location		
 			today = datetime.today()
 			invoice.payment = "Lunas"
-			if user.role == "member":
+			if user.role == "member": #jika member (belum lunas)
 				if user.paket == "paket1" or user.paket == "paket2":
-					total = paket.price 
-					harga = "{:,}".format(total).replace(",",".") 
-					membership = user.renew
-					trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
-					db.session.add(trans)
-					db.session.commit()				
-				
-					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
-				else :
-					total = paket_vip.price 
-					harga = "{:,}".format(total).replace(",",".") 
-					membership = user.renew
-					trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
-					db.session.add(trans)
-					db.session.commit()				
-				
-					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-						
-			else : 			
-				total = paket_regular.price 
-				harga = "{:,}".format(total).replace(",",".")							
-				trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
-				db.session.add(trans)
-				db.session.commit()
+					#jika ada tambahan treatment
+					if tambahan :
+						total = paket.price + tambahan.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew
+						trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+						db.session.add(trans)
+						db.session.commit()				
+					
+						return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)
+							
+					elif paket:											
+						total = paket.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew
+						trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+						db.session.add(trans)
+						db.session.commit()				
+					
+						return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)	
+					
+					else :
+						total = 0 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew						
+						return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)	
+							
+				else : #jika paket 3					
+					if tambahan_vip :
+						total = paket_vip.price + tambahan_vip.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew
+						trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+						db.session.add(trans)
+						db.session.commit()				
+					
+						return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)
+					
+					elif paket_vip:						
+						total = paket_vip.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew
+						trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+						db.session.add(trans)
+						db.session.commit()				
+					
+						return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)	
 
-				return render_template("user/invoice.html",invoice=invoice,paket_regular=paket_regular,harga=harga,user=user)
+					else :
+						total = 0 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew						
+						return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)	
+						
+			else : #bukan member							
+				if tambahan_regular :
+					total = paket_regular.price + tambahan_regular.price 
+					harga = "{:,}".format(total).replace(",",".") 		
+					membership = user.renew				
+					trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+					db.session.add(trans)
+					db.session.commit()				
+					
+					return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,tambahan=tambahan)
+				
+				elif paket_regular:						
+					total = paket_regular.price 
+					harga = "{:,}".format(total).replace(",",".")
+					membership = user.renew					
+					trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=loc,status="Income",cashier=current_user.username)
+					db.session.add(trans)
+					db.session.commit()				
+					
+					return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,tambahan=tambahan)	
+
+				else :
+					total = 0 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew
+											
+					return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,tambahan=tambahan)
+
+
+		
+		#jika sudah lunas				
 		else:	
 			if user.role == "member":
-				if user.paket == "paket1" or user.paket =="paket2":
+				if user.paket == "paket1" or user.paket == "paket2":
+				#jika ada tambahan treatment					
+					if tambahan :
+						total = paket.price + tambahan.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew
+						
+						return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)
+					
+					elif paket:						
+						total = paket.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew	
+
+						return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)			
+
+					else :
+						total = 0 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew						
+						return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)	
+							
+				else : #jika paket 3					
+					if tambahan_vip :
+						total = paket_vip.price + tambahan_vip.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew		
+					
+						return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)
+					
+					elif paket_vip:						
+						total = paket_vip.price 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew		
+					
+						return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)	
+
+					else :
+						total = 0 
+						harga = "{:,}".format(total).replace(",",".") 
+						membership = user.renew						
+						return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)	
+						
+			else : #bukan member 						
+				if tambahan_regular :
+					total = paket_regular.price + tambahan_regular.price 
+					harga = "{:,}".format(total).replace(",",".") 						
+					membership = user.renew				
+					
+					return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,membership=membership,tambahan=tambahan)
+				elif paket_regular:						
+					total = paket_regular.price 
+					harga = "{:,}".format(total).replace(",",".")					
+					membership = user.renew			
+					
+					return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,membership=membership,tambahan=tambahan)				
+				else :
+					total = 0 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew						
+					return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,membership=membership,tambahan=tambahan)
+
+											
+	else:	
+		if user.role == "member":
+			if user.paket == "paket1" or user.paket == "paket2":
+			#jika ada tambahan treatment
+				if tambahan :
+					total = paket.price + tambahan.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew
+						
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)
+						
+				elif paket:						
 					total = paket.price 
 					harga = "{:,}".format(total).replace(",",".") 
-					membership = user.renew						
+					membership = user.renew	
+
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)	
 				
-					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
 				else :
-					total = paket_vip.price 
+					total = 0 
 					harga = "{:,}".format(total).replace(",",".") 
 					membership = user.renew						
-				
-					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
+					return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership,tambahan=tambahan)	
 						
-			else : 			
-				total = paket_regular.price 
-				harga = "{:,}".format(total).replace(",",".")										
-
-				return render_template("user/invoice.html",invoice=invoice,paket_regular=paket_regular,harga=harga,user=user)
-	else :			
-		if user.role == "member":
-			if user.paket == "paket1" or user.paket =="paket2":
-				total = paket.price 
-				harga = "{:,}".format(total).replace(",",".") 
-				membership = user.renew						
+			else : #jika paket 3					
+				if  tambahan_vip :
+					total = paket_vip.price + tambahan_vip.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew				
+					
+					return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)
 				
-				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)	
-			else :
-				total = paket_vip.price 
-				harga = "{:,}".format(total).replace(",",".") 
-				membership = user.renew						
+				elif paket_vip:						
+					total = paket_vip.price 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew				
+					
+					return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)			
+				else :
+					total = 0 
+					harga = "{:,}".format(total).replace(",",".") 
+					membership = user.renew						
+					return render_template("user/invoice_vip.html",invoice=invoice,paket_vip=paket_vip,harga=harga,user=user,membership=membership,tambahan_vip=tambahan_vip)	
+						
+		else : #bukan member 						
+			if tambahan_regular :
+				total = paket_regular.price + tambahan_regular.price 
+				harga = "{:,}".format(total).replace(",",".") 															
+				membership = user.renew	
+				return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user,membership=membership,tambahan=tambahan)
 			
-				return render_template("user/invoice.html",invoice=invoice,paket=paket,harga=harga,user=user,membership=membership)
-						
-		else : 			
-			total = paket_regular.price 
-			harga = "{:,}".format(total).replace(",",".")										
+			elif paket_regular:						
+				total = paket_regular.price 
+				harga = "{:,}".format(total).replace(",",".")					
+				membership = user.renew					
+				return render_template("user/invoice_regular.html",invoice=invoice,paket_regular=paket_regular,tambahan_regular=tambahan_regular,harga=harga,user=user)
 
-			return render_template("user/invoice.html",invoice=invoice,paket_regular=paket_regular,harga=harga,user=user)
+			else :
+				total = 0 
+				harga = "{:,}".format(total).replace(",",".") 
+				membership = user.renew						
+				return render_template("user/invoice_regular.html",invoice=invoice,harga=harga,user=user,membership=membership,tambahan_regular=tambahan_regular,paket_regular=paket_regular)
 
 #### invoice member ####
 @app.route("/dashboard/invoice",methods=["GET","POST"])

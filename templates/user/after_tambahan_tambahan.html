@@ -17,11 +17,10 @@
                             <p>Plat : {{ member.plat }}</p>
                             <p>Phone : {{ member.phone }}</p>                            
                             <p>Paket : {{ member.treatment }} </p>
-                            <p>Tambahan Treatment : {{ book.paket }} </p>
+                            <p>Tambahan Treatment : {{ book.paket }} {{book.tambahan}} </p>
                             <hr>                            
                             <a href="/dashboard/admin-booking" class="btn btn-info">Kembali</a> 
-                            <a href="/dashboard/antrean/{{ location.id }}" class="btn btn-success">Lihat Antrean</a>
-                            <a href="/dashboard/booking/add-tambahan/{{ member.id }}" class="btn btn-success">Saya Ingin Menambah Treatment</a>                             
+                            <a href="/dashboard/antrean/{{ location.id }}" class="btn btn-success">Lihat Antrean</a>                                                   
 
 
 

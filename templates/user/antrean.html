@@ -42,8 +42,12 @@
                                 <td>{{ loop.index }}</td>
                                 <td>{{ antre.mobil }}</td> 
                                 <td>{{ antre.plat }}</td> 
-                                <td>{{ antre.treatment }}</td>
-                                <td>{{ antre.paket }}</td> 
+                                <td>{{ antre.treatment }} </td>                                
+                                <td>{{ antre.paket }}
+                                {% if antre.tambahan != ""%}
+                                ,{{antre.tambahan}}
+                                {% else %}
+                                {% endif %}</td>
                                 <td>{{ antre.status }}</td>                             
                                 <td>{{ antre.role }}</td> 
                                 <td><a href="/dashboard/member/cancel-booking/{{antre.id}}" class="btn btn-danger">Cancel</a></td> 
@@ -53,8 +57,14 @@
                                 <td>{{ loop.index }}</td>
                                 <td>{{ antre.mobil }}</td> 
                                 <td>{{ antre.plat }}</td> 
-                                <td>{{ antre.treatment }}</td>
-                                <td>{{ antre.paket }}</td> 
+                                <td>{{ antre.treatment }} </td>                               
+                                <td>{{ antre.paket }}
+                                 {% if antre.tambahan != ""%}
+                                ,{{antre.tambahan}}
+                                {% else %}
+                                {% endif %}
+                                </td>
+                                
                                 <td>{{ antre.status }}</td>                             
                                 <td>{{ antre.role }}</td> 
 
@@ -111,8 +121,12 @@
                             <td>{{ loop.index }}</td>
                             <td>{{ nonregular.mobil }}</td> 
                             <td>{{ nonregular.plat }}</td> 
-                            <td>{{ nonregular.treatment }}</td> 
-                            <td>{{ nonregular.paket }}</td> 
+                            <td>{{ nonregular.treatment }}</td>                              
+                            <td>{{ nonregular.paket }}
+                            {% if nonregular.tambahan != ""%}
+                              ,{{nonregular.tambahan}}
+                              {% else %}
+                              {% endif %}</td> 
                             <td>{{ nonregular.status }}</td>                             
                             <td>{{ nonregular.role }}</td>  
                             <td><a href="/dashboard/member/cancel-booking/{{nonregular.id}}" class="btn btn-danger">Cancel</a></td>
@@ -122,8 +136,13 @@
                             <td>{{ loop.index }}</td>
                             <td>{{ nonregular.mobil }}</td> 
                             <td>{{ nonregular.plat }}</td> 
-                            <td>{{ nonregular.treatment }}</td> 
-                            <td>{{ nonregular.paket }}</td> 
+                            <td>{{ nonregular.treatment }}</td>                             
+                            <td>{{ nonregular.paket }}
+                            {% if nonregular.tambahan != ""%}
+                              ,{{nonregular.tambahan}}
+                              {% else %}
+                              {% endif %}
+                              </td> 
                             <td>{{ nonregular.status }}</td>                             
                             <td>{{ nonregular.role }}</td>  
                          </tr>  
@@ -188,7 +207,12 @@
                             <td>{{ antre.mobil }}</td> 
                             <td>{{ antre.plat }}</td>
                             <td>{{ antre.treatment }}</td>
-                            <td>{{ antre.paket }}</td> 
+                            <td>{{ antre.paket }}
+                              {% if antre.tambahan != ""%}
+                                ,{{antre.tambahan}}
+                                {% else %}
+                                {% endif %}
+                            </td> 
                             <td>{{ antre.status }}</td>                           
                             <td>{{ antre.name }}</td>                            
                             <td>{{ antre.phone }}</td>  
@@ -252,7 +276,13 @@
                             <td>{{ nonregular.mobil }}</td> 
                             <td>{{ nonregular.plat }}</td>
                             <td>{{ nonregular.treatment }}</td> 
-                            <td>{{ nonregular.paket }}</td> 
+                            <td>{{ nonregular.paket }}
+                             {% if nonregular.tambahan != ""%}
+                                ,{{nonregular.tambahan}}
+                                {% else %}
+                                {% endif %}
+
+                            </td> 
                             <td>{{ nonregular.status }}</td>                            
                             <td>{{ nonregular.name }}</td> 
                             <td>{{ nonregular.phone }}</td>  

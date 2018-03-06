@@ -65,7 +65,7 @@
                                 {% if invoice.paket != "Tidak Ada" %}
                                 <tr>                                   
                                     <td>{{ invoice.paket }}</td>
-                                    <td>{{ paket.price  }}</td>
+                                    <td>{{ paket_vip.price  }}</td>
                                     
                                 </tr>
                                 {% else %}
@@ -74,7 +74,7 @@
                                 {% if invoice.tambahan != "" %}
                                 <tr>                                   
                                     <td>{{ invoice.tambahan }}</td>
-                                    <td>{{ tambahan.price }}</td>
+                                    <td>{{ tambahan_vip.price }}</td>
                                     
                                 </tr>
                                 {% else %}
