@@ -1,0 +1,58 @@
+{% extends "layouts/dashboardtemplate.html" %}
+{% block title %} Riwayat {% endblock %}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/member.css')}}" rel="stylesheet"/> 
+<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/> 
+<div class="row">                
+    <div class="col-lg-11 col-md-10">
+        <div class="card">
+        <div class="header">                              
+           <h4 class="title">Cari Data Booking Dari {{ user.username }}  </h4>
+        </div>
+                            
+            <div class="content">
+              <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                <tr>
+                    <td>No</td>
+                    <td>Tanggal</td>                   
+                    <td>Plat</td>                    
+                    <td>Mobil</td> 
+                    <td></td>                  
+                </tr>
+                </thead>
+                
+                  {% for book in books  %}                  
+                      <tbody>
+                          <tr>
+                              <td>{{ loop.index }}</td>
+                              <td>{{ book.date.strftime("%d-%m-%Y") }}</td>
+                              <td>{{ book.plat }}</td>
+                              <td>{{ book.mobil }}</td>
+                              <td><a href="/dashboard/marketing/member/history/detail/{{ book.id }}" class="btn btn-success">Lihat Detail</a></td>
+                             
+                              
+                       </tbody>         
+                       
+                             
+                  {% endfor %}            
+
+
+
+
+                      </table>
+                 </div>     
+               </div>  
+          </div>            
+     </div>       
+</div>
+
+{% endblock %}
+
+
+
+

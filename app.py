@@ -664,6 +664,24 @@ def MarketingMember(id):
 
 
 
+#history bookingan dari member
+@app.route("/dashboard/marketing/member/history/<string:id>",methods=["GET","POST"])
+@login_required
+def BookingHistory(id):
+	user = User.query.filter_by(id=id).first()
+	books = Book.query.filter_by(owner=id).all() 
+	return render_template("member/history.html",books=books,user=user)
+
+
+
+@app.route("/dashboard/marketing/member/history/detail/<string:id>",methods=["GET","POST"])
+@login_required
+def BookingHistoryDetail(id):
+	book = Book.query.filter_by(id=id).first()
+	pakets = BookingPaket.query.filter_by(book_id=book.id).all()
+	return render_template("member/detail.html",pakets=pakets,book=book)
+
+
 
 
 @app.route("/dashboard/marketing/stats/<string:id>",methods=["GET","POST"])
