@@ -42,6 +42,11 @@ class DeleteAntreanForm(FlaskForm):
 	submit = SubmitField("Hapus Antrean")	
 
 
+class SubmitForm(FlaskForm):
+	submit = SubmitField("Hapus")
+
+
+
 class ForgotPasswordForm(FlaskForm):
 	email = StringField("Email",validators=[InputRequired(),Length(max=100)]) 
 

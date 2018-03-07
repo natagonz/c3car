@@ -18,8 +18,7 @@
                     <td>No</td>
                     <td>Tanggal</td>
                     <td>Mobil</td>
-                    <td>Plat</td>
-                    <td>Paket</td>   
+                    <td>Plat</td> 
                     {% if current_user.role == "member" %}
                     {% else %}
                     <td>Status</td>
@@ -35,8 +34,7 @@
                               <td>{{ loop.index }}</td>
                               <td>{{ invoice.date.strftime("%d-%m-%Y") }}</td>
                               <td>{{ invoice.mobil }}</td>
-                              <td>{{ invoice.plat }}</td>
-                              <td>{{ invoice.paket }}</td>                            
+                              <td>{{ invoice.plat }}</td>                         
                               <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Print</a></td>
                               </tr>
                        </tbody>           
@@ -50,7 +48,6 @@
                               <td>{{ invoice.date.strftime("%d-%m-%Y") }}</td>
                               <td>{{ invoice.mobil }}</td>
                               <td>{{ invoice.plat }}</td>
-                              <td>{{ invoice.paket }}</td>
                               <td>{{ invoice.payment }}</td>                             
                               <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Print</a></td>
                               <td><a href="/dashboard/admin/delete-invoice/{{ invoice.id }}" class="btn btn-danger">Delete</a></td>
@@ -66,8 +63,7 @@
                               <td>{{ loop.index }}</td>
                               <td>{{ invoice.date.strftime("%d-%m-%Y") }}</td>
                               <td>{{ invoice.mobil }}</td>
-                              <td>{{ invoice.plat }}</td>
-                              <td>{{ invoice.paket }}</td>
+                              <td>{{ invoice.plat }}</td>                     
                               <td>{{ invoice.payment }}</td>                             
                               <td><a href="/dashboard/invoice/{{ invoice.id }}" class="btn btn-success">Print</a></td>
                               </tr>

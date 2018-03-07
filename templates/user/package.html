@@ -4,14 +4,14 @@
 
 {% block content %}
 <ul id="social_side_links">
-  <li><a href="/dashboard/add-package"><img class="icon-float" src="https://cdn0.iconfinder.com/data/icons/round-ui-icons/512/add_blue.png" alt="" /></a></li>
+  <li><a href="/dashboard/add-package/{{status}}"><img class="icon-float" src="https://cdn0.iconfinder.com/data/icons/round-ui-icons/512/add_blue.png" alt="" /></a></li>
 </ul>
 <link href="{{url_for ('static',filename='css/member.css')}}" rel="stylesheet"/> 
 <div class="row">                
     <div class="col-lg-11 col-md-10">
         <div class="card">
          <div class="header">                              
-          <h4 class="title">Treatment untuk Paket 1 & Paket 2 </h4>
+          <h4 class="title">Paket Treatment </h4>
         </div>
             <div class="content">
               <div class="table-responsive"> 
@@ -34,23 +34,11 @@
                             <td>{{ loop.index }}</td>
                             <td>{{ paket.name }}</td>
                             <td>Rp {{ "{:,}".format(paket.price).replace(",",".") }}</td>                      
-                            <td><a href="/dashboard/edit-package/{{ paket.id }}" class="btn btn-success">Edit</a></td>
-                            <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
-                            <td><a href="/dashboard/history-package/{{ paket.id }}" class="btn btn-success">History</a></td>
+                            <td><a href="/dashboard/edit-package/{{status}}/{{ paket.id }}" class="btn btn-success">Edit</a></td>
+                            <td><a href="/dashboard/delete-package/{{status}}/{{ paket.id }}" class="btn btn-success">Delete</a></td>
                             </tr>
                      </tbody>           
-                            <script>
-                            function myFunction() {
-                                 var x = window.confirm("Are You Sure ?");
-                                    if(x){
-                                           window.location = '/dashboard/delete-package/{{ paket.id}}' ;
-                                            }
-                                     else {
-                                           return false;
-                                          }
-                                    }    
-                            </script>
-
+                            
 
 
                 {% endfor %}
