@@ -21,9 +21,10 @@
                             <p>Treatment : {% for paket in pakets %} {{paket.paket_name}}, {% endfor %}</p>                           
                             <hr>                                                   
                             <a href="/dashboard/edit-antrean/{{book.id}}" class="btn btn-success">Edit</a>
+                            {% if current_user.role == "superuser" %}
                             <button type="button" class="btn btn-danger" onclick="myFunction()">Cancel</button>
-
-
+                            {% else %} 
+                            {% endif %}  
                             <script>
                             function myFunction() {
                                  var x = window.confirm("Anda Yakin Membatalkan Booking Ini ?");
