@@ -14,6 +14,10 @@
             <table class="table"> 
                 <thead>
                 <button onclick="myFunction()" class="btn btn-success">Refresh</button>
+                {% if current_user.role == "superuser" %}
+                <a href="/dashboard/location/invoice/lunas/{{locations.id}}" class="btn btn-info">Invoice Lunas </a>
+                {% else %}
+                {% endif %}
                 <tr>
                     <td>No</td>
                     <td>Tanggal</td>

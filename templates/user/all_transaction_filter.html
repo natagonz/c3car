@@ -8,10 +8,10 @@
 <div class="row">                
     <div class="col-lg-11 col-md-10">
         <div class="card">
-        <div class="header">       
-        <a href="/dashboard/location/transaction/print/{{location.id}}" class="btn btn-info">Print </a> 
+        <div class="header"> 
+        <a href="/dashboard/location/transaction/print/{{start}}/{{end}}/{{location.id}}" class="btn btn-info">Print </a> 
         <br>
-        <br>                    
+        <br>                                    
                   <h4 class="title">Cari Data Transaksi di Cabang {{ name }}  </h4>
                             </div>
                             <div class="content">
@@ -52,7 +52,7 @@
                     <td>Keterangan</td>
                     <td>Plat</td>
                     <td>Paket</td>
-                    <td>Treatment</td>
+                    <td>Treatment</td>                   
                     <td>Debet</td>                    
                     <td>Kredit</td>
                     {% if current_user.role == "superuser" %}
@@ -70,7 +70,7 @@
                               <td>{{ trans.description }}</td>
                               <td>{{ trans.customer }}</td>
                               <td>{{ trans.member }}</td>
-                              <td>{{ ",".join(trans.pakets) }}</td>
+                              <td>{{ ",".join(trans.pakets) }}</td>                              
                               {% if trans.status == "Income" %}
                               <td> Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>
                               <td></td>

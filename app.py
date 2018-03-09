@@ -160,6 +160,9 @@ class Accounting(db.Model):
 	status = db.Column(db.String(200))
 	date = db.Column(db.DateTime())
 	cashier = db.Column(db.String(200))
+	pakets = db.Column(db.PickleType())
+	customer = db.Column(db.String(200))
+	member = db.Column(db.String(200))
 
 
 class MemberPayment(db.Model):
@@ -1186,10 +1189,18 @@ def InvoiceLocation():
 def AllInvoice(id):
 	locations = Location.query.filter_by(id=id).first()
 	locname = locations.location
-	invoices = Book.query.filter_by(location=locname).order_by(Book.date.desc()).all()
+	invoices = Book.query.filter_by(location=locname,payment="Belum Lunas").order_by(Book.date.desc()).all()
 	userinvoice = Book.query.filter_by(owner=current_user.id).all()
-	return render_template("user/all_invoice.html",invoices=invoices,userinvoice=userinvoice)	
+	return render_template("user/all_invoice.html",invoices=invoices,userinvoice=userinvoice,locations=locations)	
 
+
+@app.route("/dashboard/location/invoice/lunas/<string:id>",methods=["GET","POST"])
+@login_required
+def AllInvoiceLunas(id):
+	locations = Location.query.filter_by(id=id).first()
+	locname = locations.location
+	invoices = Book.query.filter_by(location=locname,payment="Lunas").order_by(Book.date.desc()).all()
+	return render_template("user/all_invoice_lunas.html",invoices=invoices,locations=locations)
 
 
 
@@ -1206,12 +1217,16 @@ def UserInvoice(id):
 			today = datetime.today()
 			location = invoice.location
 			invoice.payment = "Lunas"		
-			total = invoice.price				
-			harga = "{:,}".format(total).replace(",",".") 				
-			trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=location,status="Income",cashier=current_user.username)
+			total = invoice.price
+			result = []
+			pakets = BookingPaket.query.filter_by(book_id=invoice.id).all()
+			for x in pakets :
+				result.append(x.paket_name)
+			harga = "{:,}".format(total).replace(",",".") 													
+			trans = Accounting(description="Pembayaran dari customer",amount=total,date=today,location=location,status="Income",cashier=current_user.username,pakets=result,customer=invoice.plat,member=invoice.treatment)
 			db.session.add(trans)
 			db.session.commit()				
-				
+					
 			return render_template("paket/invoice.html",invoice=invoice,pakets=pakets,harga=harga,user=user,membership=membership)		
 	else :								
 		total = invoice.price				
@@ -1379,9 +1394,44 @@ def Transaction(id):
 	if form.validate_on_submit():
 		start = form.start.data
 		end = form.end.data
-		transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
-		return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name)
-	return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name)
+		return redirect(url_for("TransactionFilter",start=start,end=end,id=id))
+	return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name,location=location)
+
+
+@app.route("/dashboard/location/transaction/filter/<start>/<end>/<string:id>",methods=["GET","POST"])
+@login_required
+def TransactionFilter(start,end,id):
+	location = Location.query.filter_by(id=id).first()
+	name = location.location
+	id=location.id
+	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
+	form = AccountingSearchForm()
+	if form.validate_on_submit():
+		start = form.start.data
+		end = form.end.data		
+		return redirect(url_for("TransactionFilter",start=start,end=end,id=id))
+	return render_template("user/all_transaction_filter.html",transactions=transactions,form=form,name=name,location=location,start=start,end=end)
+
+
+
+
+#printing all transaction
+@app.route("/dashboard/location/transaction/print/<string:id>",methods=["GET","POST"])
+@login_required
+def PrintAllTransaction(id):
+	location = Location.query.filter_by(id=id).first()
+	name = location.location
+	transactions = Accounting.query.filter_by(location=name).all()
+	return render_template("transaction/print_all.html",transactions=transactions,name=name)
+
+#printing all transaction after filter
+@app.route("/dashboard/location/transaction/print/<start>/<end>/<string:id>",methods=["GET","POST"])
+@login_required
+def PrintAllFilterTransaction(start,end,id):
+	location = Location.query.filter_by(id=id).first()
+	name = location.location
+	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
+	return render_template("transaction/print_all.html",transactions=transactions,name=name)
 
 
 

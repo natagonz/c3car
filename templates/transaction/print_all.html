@@ -1,0 +1,66 @@
+{% extends "layouts/layout.html" %}
+{% block title %} Trasaction {% endblock %}
+
+
+{% block content %}
+<link href="{{url_for ('static',filename='css/member.css')}}" rel="stylesheet"/> 
+<link href="{{url_for ('static',filename='css/search.css')}}" rel="stylesheet"/> 
+<div class="row">                
+<br>
+<br>
+    <div class="col-lg-11 col-md-10">       
+        <div class="header">                              
+           <h4 class="title">Data Transaksi di Cabang {{ name }}  </h4>
+        </div>
+                          
+            <div class="content">
+              <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>Keterangan</td>
+                    <td>Plat</td>
+                    <td>Paket</td>
+                    <td>Treatment</td>
+                    <td>Debet</td>                    
+                    <td>Kredit</td>                   
+                </tr>
+                </thead>
+                
+                  {% for trans in transactions  %}                  
+                      <tbody>
+                          <tr>
+                              <td>{{ trans.date.strftime("%d-%m-%Y") }}</td>
+                              <td>{{ trans.description }}</td>
+                              <td>{{ trans.customer }}</td>
+                              <td>{{ trans.member }}</td>
+                              <td>{{ ",".join(trans.pakets) }}</td>    
+                              {% if trans.status == "Income" %}
+                              <td> Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>
+                              <td></td>
+                              {% else %}
+                              <td> </td>
+                              <td>Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>  
+                              {% endif %}  
+                                             
+                       </tbody>         
+                      
+                  {% endfor %}            
+
+
+
+
+                      </table>
+                 </div>     
+               </div>  
+              
+     </div>       
+</div>
+
+{% endblock %}
+
+
+
+
