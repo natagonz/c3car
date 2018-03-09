@@ -68,9 +68,19 @@
                           <tr>
                               <td>{{ trans.date.strftime("%d-%m-%Y") }}</td>
                               <td>{{ trans.description }}</td>
+                              {% if trans.customer == None %}
+                              <td></td>
+                              <td></td>
+                              {% else %}                              
                               <td>{{ trans.customer }}</td>
                               <td>{{ trans.member }}</td>
+                              {% endif %}
+
+                              {% if trans.paket == NULL %}
+                              <td></td>
+                              {% else %}
                               <td>{{ ",".join(trans.pakets) }}</td>
+                             {% endif %}
                               {% if trans.status == "Income" %}
                               <td> Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>
                               <td></td>
