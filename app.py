@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
 from form import UserRegisterForm,UserLoginForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm,InvoicePaymentForm,SubmitForm
 from datetime import datetime,timedelta 
-from pytz import timezone
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
 from config import secret,databases
