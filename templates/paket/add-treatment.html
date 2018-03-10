@@ -4,6 +4,8 @@
 
 
 {% block content %}
+ <link href="{{url_for ('static',filename='css/icon.css')}}" rel="stylesheet"/>
+
 <div class="row">                
                   <div class="col-md-6">
                         <div class="card">
@@ -13,7 +15,7 @@
                             <div class="content">
                             <ul>
                                 {% for paket in pakets %}
-                                <li>{{ paket.name }} <a href="/dashboard/test/insert-treatment/{{book.id}}/{{status}}/{{paket.name}}"><i class="ti-plus"></i></a></li>
+                                <li>{{ paket.name }} - Rp {{paket.price}} <a href="/dashboard/test/insert-treatment/{{book.id}}/{{status}}/{{paket.name}}"><i class="ti-plus" style="font-size: 1.5em;" ></i></a></li>
                                 {% endfor%}
                             </ul>
 

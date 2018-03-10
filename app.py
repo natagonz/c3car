@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager , UserMixin, login_user, login_required, logout_user, current_user
 from form import UserRegisterForm,UserLoginForm,EditMemberForm,BookingStatusForm,DeleteAntreanForm,ForgotPasswordForm,ResetPasswordForm,AddPackageForm,AddGalleryForm,InvoicePaymentForm,SubmitForm
 from datetime import datetime,timedelta 
+from pytz import timezone
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer,SignatureExpired
 from config import secret,databases
@@ -265,6 +266,12 @@ class EditMarketingStatusForm(FlaskForm):
 
 class LocationSearchForm(FlaskForm):
 	search = StringField("Nama Lokasi",validators=[InputRequired(),Length(max=200)])	
+
+
+
+
+
+
 
 
 ##############################################
@@ -848,11 +855,11 @@ def AdminBooking():
 
 @app.route("/dashboard/admin-booking/regular",methods=["GET","POST"])
 @login_required
-def AdminBookingRegular():
+def AdminBookingRegular():	
 	if current_user.role == "superuser":
 		form = YudiBookingRegularForm()
-		if form.validate_on_submit():			
-			today = datetime.today()					
+		if form.validate_on_submit():							
+			today = datetime.today()				
 			book = Book(name=form.name.data,email=form.email.data,phone=form.phone.data,date=today,mobil=form.mobil.data,plat=form.plat.data,status="Belum Cuci",role="regular",owner=current_user.id,payment="Belum Lunas",treatment="-",location=form.location.data,price=0)			
 			db.session.add(book)
 			db.session.commit()			
@@ -1076,7 +1083,7 @@ def CancelAntrean(id):
 def DeleteAllBooking():
 	form = DeleteAntreanForm()
 	if form.validate_on_submit():
-		db.session.query(Book).delete()
+		books = Book.query.filter(Book.status != "Out").update({Book.status : "Out" })	
 		db.session.commit()
 		flash("Antrean berhasil di hapus","success")
 		return redirect(url_for("AntreanLocation"))
@@ -1199,8 +1206,25 @@ def AllInvoice(id):
 def AllInvoiceLunas(id):
 	locations = Location.query.filter_by(id=id).first()
 	locname = locations.location
-	invoices = Book.query.filter_by(location=locname,payment="Lunas").order_by(Book.date.desc()).all()
+	invoices = Book.query.filter(Book.location==locname,Book.payment=="Lunas").order_by(Book.date.desc()).all()
 	return render_template("user/all_invoice_lunas.html",invoices=invoices,locations=locations)
+
+
+@app.route("/dashboard/location/invoice/history/<string:id>",methods=["GET","POST"])
+@login_required
+def AllInvoiceHistory(id):
+	locations = Location.query.filter_by(id=id).first()
+	locname = locations.location
+	invoices = Book.query.filter(Book.location==locname,Book.payment=="History").order_by(Book.date.desc()).all()
+	form = AccountingSearchForm()
+	if form.validate_on_submit():
+		end = form.end.data 
+		start = form.start.data
+		invoices = Book.query.filter(Book.date.between(start,end)).filter(Book.payment != "Belum Lunas").all()
+		return render_template("user/all_invoice_history.html",invoices=invoices,locations=locations,form=form)
+	return render_template("user/all_invoice_history.html",invoices=invoices,locations=locations,form=form)
+
+
 
 
 
@@ -1242,6 +1266,9 @@ def UserInvoice(id):
 def AllMemberInvoice():
 	invoices = Book.query.filter_by(owner=current_user.id,payment="Belum Lunas").all()
 	return render_template("user/member_invoice.html",invoices=invoices)
+
+
+
 
 
 @app.route("/dashboard/admin/delete-invoice/<string:id>",methods=["GET","POST"])

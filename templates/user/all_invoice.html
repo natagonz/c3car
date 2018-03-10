@@ -16,6 +16,7 @@
                 <button onclick="myFunction()" class="btn btn-success">Refresh</button>
                 {% if current_user.role == "superuser" %}
                 <a href="/dashboard/location/invoice/lunas/{{locations.id}}" class="btn btn-info">Invoice Lunas </a>
+                <a href="/dashboard/location/invoice/history/{{locations.id}}" class="btn btn-info">History </a>
                 {% else %}
                 {% endif %}
                 <tr>
