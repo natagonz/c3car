@@ -20,7 +20,7 @@
                 {% if current_user.role == "user" or current_user.role == "sa" %}
                   {% for location in userlocations  %}
                       <tbody>
-                              <tr>
+                              <tr> 
                                   <td>{{ location.location }}</td>                            
                                   <td><a href="/dashboard/antrean/{{ location.id }}" class="btn btn-success">Lihat</a></td>
                                   </tr>
