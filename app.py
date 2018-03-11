@@ -173,6 +173,11 @@ class MemberPayment(db.Model):
 	date = db.Column(db.DateTime())
 
 
+def InvoiceHistory():
+        book = Book.query.filter(Book.payment == "Lunas").update({Book.payment : "History"})
+        db.session.commit()
+
+
 
 
 ############## form ################
@@ -1522,3 +1527,4 @@ def DeleteGallery(id):
 
 if __name__ == "__main__":	
 	app.run(debug=True)
+	InvoiceHistory()
