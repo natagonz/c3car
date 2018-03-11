@@ -267,7 +267,8 @@ class LocationSearchForm(FlaskForm):
 	search = StringField("Nama Lokasi",validators=[InputRequired(),Length(max=200)])	
 
 
-
+class BookingStatusFormSa(FlaskForm):
+	status = SelectField("",choices= [("Dalam Perjalanan","Dalam Perjalanan"),("Belum Cuci","Belum Cuci")])	
 
 
 
@@ -1044,11 +1045,14 @@ def DetailAntrean(id):
 
 @app.route("/dashboard/edit-antrean/<string:id>",methods=["GET","POST"])
 @login_required
-def EditAntrean(id):
-	form = BookingStatusForm()
+def EditAntrean(id):	
 	antre = Book.query.filter_by(id=id).first()
 	location = Location.query.filter_by(location=antre.location).first()
 	id = location.id 
+	if current_user.role == "sa":
+		form = BookingStatusFormSa()
+	else :	
+		form = BookingStatusForm()
 	form.status.data = antre.status	
 	if form.validate_on_submit():
 		antre.status = request.form["status"]
@@ -1416,12 +1420,14 @@ def Transaction(id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
 	transactions = Accounting.query.filter_by(location=name).all()	
+	income =  Accounting.query.filter_by(location=name,status="Income").all()	
+	expense = Accounting.query.filter_by(location=name,status="Expense").all()	
 	form = AccountingSearchForm()
 	if form.validate_on_submit():
 		start = form.start.data
 		end = form.end.data
 		return redirect(url_for("TransactionFilter",start=start,end=end,id=id))
-	return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name,location=location)
+	return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name,location=location,income=income,expense=expense)
 
 
 @app.route("/dashboard/location/transaction/filter/<start>/<end>/<string:id>",methods=["GET","POST"])
@@ -1431,12 +1437,14 @@ def TransactionFilter(start,end,id):
 	name = location.location
 	id=location.id
 	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
+	income =  Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Income").all()
+	expense = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Expense").all()
 	form = AccountingSearchForm()
 	if form.validate_on_submit():
 		start = form.start.data
 		end = form.end.data		
 		return redirect(url_for("TransactionFilter",start=start,end=end,id=id))
-	return render_template("user/all_transaction_filter.html",transactions=transactions,form=form,name=name,location=location,start=start,end=end)
+	return render_template("user/all_transaction_filter.html",transactions=transactions,form=form,name=name,location=location,start=start,end=end,income=income,expense=expense)
 
 
 
@@ -1448,7 +1456,9 @@ def PrintAllTransaction(id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
 	transactions = Accounting.query.filter_by(location=name).all()
-	return render_template("transaction/print_all.html",transactions=transactions,name=name)
+	income =  Accounting.query.filter_by(location=name,status="Income").all()	
+	expense = Accounting.query.filter_by(location=name,status="Expense").all()	
+	return render_template("transaction/print_all.html",transactions=transactions,name=name,income=income,expense=expense)
 
 #printing all transaction after filter
 @app.route("/dashboard/location/transaction/print/<start>/<end>/<string:id>",methods=["GET","POST"])
@@ -1457,7 +1467,9 @@ def PrintAllFilterTransaction(start,end,id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
 	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
-	return render_template("transaction/print_all.html",transactions=transactions,name=name)
+	income =  Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Income").all()
+	expense = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Expense").all()
+	return render_template("transaction/print_all.html",transactions=transactions,name=name,income=income,expense=expense)
 
 
 

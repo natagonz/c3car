@@ -94,7 +94,9 @@
                               <td><a href="/dashboard/edit-transaction/{{trans.id}}"><i class="ti-pencil"></i></a></td>
                               {% else %}
                               {% endif %}                   
-                       </tbody>         
+                       </tbody>    
+                            
+
                        <script>
                             function myFunction() {
                                  var x = window.confirm("Are You Sure ?");
@@ -107,7 +109,19 @@
                                     }    
                             </script>  
                              
-                  {% endfor %}            
+                  {% endfor %}       
+                   <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>Rp {{ "{:,}".format(income | sum(attribute='amount')).replace(",",".")}}</td>
+                      <td>Rp {{ "{:,}".format(expense | sum(attribute='amount')).replace(",",".") }} </td>
+                      <td></td>
+                      <td></td>                    
+                      
+                    </tr>     
 
 
 
