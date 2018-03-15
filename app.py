@@ -1021,7 +1021,12 @@ def Booking():
 def AntreanLocation():
 	locations = Location.query.all()
 	userlocations = Location.query.filter_by(location=current_user.location).all() 
-	return render_template("user/antrean_location.html",locations=locations,userlocations=userlocations)
+	book = Book.query.filter(Book.status != "Out",Book.owner == current_user.id).first()
+	if book:
+		loc = Location.query.filter_by(location=book.location).all()
+	else :
+		loc = Location.query.all()		
+	return render_template("user/antrean_location.html",userlocations=userlocations,locations=locations,book=book,loc=loc)
 
 
 

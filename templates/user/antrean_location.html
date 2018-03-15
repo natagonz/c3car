@@ -27,21 +27,37 @@
                       </tbody>      
 
 
-                   {% endfor %}     
+                   {% endfor %}  
+                    
+                {% elif current_user.role == "member" %}                  
+                 
+                      {% for location in loc  %}
+
+                      <tbody>
+                          <tr>
+                              <td>{{ location.location }}</td>                            
+                              <td><a href="/dashboard/antrean/{{ location.id }}" class="btn btn-success">Lihat</a></td>
+                              </tr>
+                       </tbody>           
+                             
+
+                      {% endfor %}
+                    
+                     
                 
                 {% else %}    
-                {% for location in locations  %}
+                    {% for location in locations  %}
 
-                    <tbody>
-                        <tr>
-                            <td>{{ location.location }}</td>                            
-                            <td><a href="/dashboard/antrean/{{ location.id }}" class="btn btn-success">Lihat</a></td>
-                            </tr>
-                     </tbody>           
-                           
+                        <tbody>
+                            <tr>
+                                <td>{{ location.location }}</td>                            
+                                <td><a href="/dashboard/antrean/{{ location.id }}" class="btn btn-success">Lihat</a></td>
+                                </tr>
+                         </tbody>           
+                               
 
-                {% endfor %}
-                {% endif %}
+                    {% endfor %}
+                    {% endif %}
 
 
 
