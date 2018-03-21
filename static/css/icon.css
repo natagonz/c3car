@@ -2,3 +2,12 @@
 	width: 3cm;
 	height: 20px;
 }
+.btn-success {
+	margin: 10px;
+	background-color: green;
+	border-color: green;
+}
+
+li{
+	color: white;
+}
