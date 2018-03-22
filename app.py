@@ -1249,6 +1249,7 @@ def UserInvoice(id):
 	user = User.query.filter_by(id=invoice.owner).first()
 	membership = user.renew
 	pakets = BookingPaket.query.filter_by(book_id=invoice.id).all()	
+	locationx = Location.query.filter_by(location=invoice.location).first()
 	if current_user.role == "cashier":
 		if invoice.payment == "Belum Lunas":
 			today = datetime.today()
@@ -1264,11 +1265,11 @@ def UserInvoice(id):
 			db.session.add(trans)
 			db.session.commit()				
 					
-			return render_template("paket/invoice.html",invoice=invoice,pakets=pakets,harga=harga,user=user,membership=membership)		
+			return render_template("paket/invoice.html",invoice=invoice,pakets=pakets,harga=harga,user=user,membership=membership,locationx=locationx)		
 	else :								
 		total = invoice.price				
 		harga = "{:,}".format(total).replace(",",".") 							
-		return render_template("paket/invoice.html",invoice=invoice,pakets=pakets,harga=harga,user=user,membership=membership) 
+		return render_template("paket/invoice.html",invoice=invoice,pakets=pakets,harga=harga,user=user,membership=membership,locationx=locationx) 
 					
 
 

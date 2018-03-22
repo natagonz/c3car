@@ -19,7 +19,12 @@
                             <p>Paket : {{ book.treatment }} </p>                           
                             <hr>
                             <p>Apakah Anda Ingin Treatment Tambahan ? </p>
+                            {% if current_user.role == "member" %}
+                            <a href="/dashboard/invoice/{{book.id}}" class="btn btn-info">Tidak Ada</a>
+                            {% else %}
                             <a href="/dashboard" class="btn btn-info">Tidak Ada</a>
+                            {% endif %}     
+                           
                             <a href="/dashboard/test/add-treatment/{{ book.id }}" class="btn btn-success">Saya Ingin Menambah Treatment</a>
 
 

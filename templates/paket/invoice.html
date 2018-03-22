@@ -5,7 +5,10 @@
  <link href="{{url_for ('static',filename='css/invoice_baru.css')}}" rel="stylesheet"/>    
       <div class="row pad-top-botm ">
          <div class="col-lg-6 col-md-6 col-sm-6 ">
-            <img src="" style="padding-bottom:20px;" /> 
+           {% if current_user.role =="member" %}
+           <a href="/dashboard/antrean/{{locationx.id}}" class="btn btn-success">Antrean</a>
+           {% else %}
+           {% endif %}
          </div>
           <div class="col-lg-6 col-md-6 col-sm-6">
             

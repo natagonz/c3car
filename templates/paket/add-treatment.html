@@ -15,7 +15,7 @@
                             <div class="content">
                             <ul>
                                 {% for paket in pakets %}
-                                <li>{{ paket.name }} - Rp {{paket.price}} <a href="/dashboard/test/insert-treatment/{{book.id}}/{{status}}/{{paket.name}}"><i class="ti-plus" style="font-size: 1.5em;" ></i></a></li>
+                                <li><a href="/dashboard/test/insert-treatment/{{book.id}}/{{status}}/{{paket.name}}" class="btn btn-success">{{ paket.name }} - Rp {{paket.price}}</a></li>
                                 {% endfor%}
                             </ul>
 
@@ -37,7 +37,11 @@
                             <p>Paket : {{ book.treatment }} </p>
                             <p>Treatment : {% for paket in paketsaya %} {{paket.paket_name}}, {% endfor %}</p>                           
                             <hr>
-                            <a href="/dashboard" class="btn btn-info">Kembali</a>
+                            {% if current_user.role == "member" %}
+                            <a href="/dashboard/invoice/{{book.id}}" class="btn btn-info">Ok</a>
+                            {% else %}
+                            <a href="/dashboard" class="btn btn-info">Ok</a>
+                            {% endif %}
      
                             </div>
                         </div>
@@ -52,3 +56,8 @@
 
 
 {% endblock %}
+<!--
+  {% for paket in pakets %}
+                                <li>{{ paket.name }} - Rp {{paket.price}} <a href="/dashboard/test/insert-treatment/{{book.id}}/{{status}}/{{paket.name}}"><i class="ti-plus" style="font-size: 1.5em;" ></i></a></li>
+                                {% endfor%}
+                                -->
