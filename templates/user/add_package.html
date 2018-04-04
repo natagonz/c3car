@@ -16,14 +16,19 @@
                                <form method="POST" enctype="multipart/form-data">
                				   {{ form.hidden_tag() }}
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 {{ render_field(form.name, class="form-control",placeholder="Paket")}}
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 {{ render_field(form.price, class="form-control",placeholder="Harga")}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ render_field(form.discount, class="form-control",placeholder="Isi 0 jika tidak ada ")}}
                                             </div>
                                         </div>
                                         

@@ -61,6 +61,8 @@
                                 <tr>                                    
                                     <th>Paket</th>                                    
                                     <th>Harga</th>
+                                    <th>Discount</th>
+                                    <th>Harga Setelah Diskon </th>
                                     
                                 </tr>
                             </thead>
@@ -71,6 +73,8 @@
                                  <tr>                              
                                     <td>{{ paket.paket_name }}</td>
                                     <td>{{ paket.paket_price  }}</td>
+                                    <td>{{ paket.paket_discount  }}</td>
+                                    <td>{{ paket.paket_after }}</td>
                                  </tr>   
                                 {% endfor %}
                                    

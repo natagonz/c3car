@@ -21,10 +21,12 @@
                 <tr>
                     <td>No</td>
                     <td>Nama</td>
-                    <td>Harga</td>                   
+                    <td>Harga</td>
+                    <td>Discount</td>
+                    <td>Hasil</td>                   
                     <td></td>                    
                     <td></td>
-                    <td></td>
+                    
                 </tr>
                 </thead>
 
@@ -33,7 +35,9 @@
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ paket.name }}</td>
-                            <td>Rp {{ "{:,}".format(paket.price).replace(",",".") }}</td>                      
+                            <td>Rp {{ "{:,}".format(paket.price).replace(",",".") }}</td>  
+                            <td>{{ paket.discount }} %</td> 
+                            <td>Rp {{ "{:,}".format(paket.after).replace(",",".") }}</td>                   
                             <td><a href="/dashboard/edit-package/{{status}}/{{ paket.id }}" class="btn btn-success">Edit</a></td>
                             <td><a href="/dashboard/delete-package/{{status}}/{{ paket.id }}" class="btn btn-success">Delete</a></td>
                             </tr>
