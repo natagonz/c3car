@@ -111,6 +111,8 @@ class Paket(db.Model):
 	name = db.Column(db.String(100))
 	price = db.Column(db.Integer())
 	status = db.Column(db.String(200))	
+	discount = db.Column(db.Integer())
+	after = db.Column(db.Integer())
 
 	def __repr__(self):
 		return '{}'.format(self.name)
@@ -122,7 +124,8 @@ class BookingPaket(db.Model):
 	paket_id = db.Column(db.Integer())
 	paket_name = db.Column(db.String(200))
 	paket_price = db.Column(db.Integer())
-
+	paket_discount = db.Column(db.Integer())
+	paket_after = db.Column(db.Integer())
 
 class Location(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
@@ -966,11 +969,11 @@ def TestIntsertTreatment(id,status,name):
 		flash("Anda Tidak Bisa Memilih Treatment Yang Sama","danger")
 		return redirect(url_for("TestAddTreatment",id=id))
 	else :	
-		booking = BookingPaket(book_id=book.id,paket_id=paket.id,paket_name=paket.name,paket_price=paket.price)
+		booking = BookingPaket(book_id=book.id,paket_id=paket.id,paket_name=paket.name,paket_price=paket.price,paket_discount=paket.discount,paket_after=paket.after)
 		db.session.add(booking)
 		db.session.commit()
 
-		book.price = book.price + paket.price
+		book.price = book.price + paket.after
 		db.session.commit()
 		flash("Tambahan Treatment Berhasil Di Tambah","success")
 		return redirect(url_for("TestAddTreatment",id=id))
@@ -1133,19 +1136,31 @@ def AddPackage(status):
 	form = AddPackageForm()
 	if form.validate_on_submit():
 		if status == "regular" :
-			paket = Paket(name=form.name.data,price=form.price.data,status="regular")
+			discount = form.discount.data 			
+			price = form.price.data
+			x = discount * price / 100
+			after = price - x			  				 
+			paket = Paket(name=form.name.data,price=form.price.data,status="regular",discount=discount,after=after)
 			db.session.add(paket)
 			db.session.commit()
 			flash("Paket berhasil di tambahkan","success")
 			return redirect(url_for("AllPackage",status=status))
 		elif status == "vip" :
-			paket = Paket(name=form.name.data,price=form.price.data,status="vip")
+			discount = form.discount.data 
+			price = form.price.data 			
+			x = discount * price / 100
+			after = price - x			
+			paket = Paket(name=form.name.data,price=form.price.data,status="vip",discount=discount,after=after)
 			db.session.add(paket)
 			db.session.commit()
 			flash("Paket berhasil di tambahkan","success")
 			return redirect(url_for("AllPackage",status=status))
 		else :
-			paket = Paket(name=form.name.data,price=form.price.data,status="umum")
+			discount = form.discount.data 			
+			price = form.price.data						
+			x = discount * price / 100
+			after = price - x			
+			paket = Paket(name=form.name.data,price=form.price.data,status="umum",discount=discount,after=after)
 			db.session.add(paket)
 			db.session.commit()
 			flash("Paket berhasil di tambahkan","success")
@@ -1167,9 +1182,17 @@ def EditPackage(status,id):
 	form = AddPackageForm()
 	form.name.data = paket.name
 	form.price.data = paket.price 
+	form.discount.data = paket.discount
 	if form.validate_on_submit():
+		discount = int(request.form["discount"])
+		price = int(request.form["price"])
+		x = discount * price / 100
+		after = price - x	
 		paket.name = request.form["name"]
-		paket.price = request.form["price"]
+		paket.price = price
+		paket.discount = discount
+		paket.after = after
+
 		db.session.commit()
 		flash("Paket Berhasil Di Edit","success")
 		return redirect(url_for("AllPackage",status=status))
