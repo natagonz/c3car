@@ -332,11 +332,14 @@ def CashierTransaction(id):
 @app.route("/dashboard/delete-transaction/<string:id>",methods=["GET","POST"])
 @login_required
 def DeleteTransaction(id):
-	trans = Accounting.query.filter_by(id=id).first()
-	db.session.delete(trans)
-	db.session.commit()
-	flash("Transaksi berhasil di hapus","success")
-	return redirect(url_for("AllLocationTransaction"))
+	form = SubmitForm()
+	if form.validate_on_submit():
+		trans = Accounting.query.filter_by(id=id).first()
+		db.session.delete(trans)
+		db.session.commit()
+		flash("Transaksi berhasil di hapus","success")
+		return redirect(url_for("AllLocationTransaction"))
+	return render_template("transaction/delete.html",form=form)	
 
 
 
@@ -522,11 +525,23 @@ def AdminAddUser():
 @app.route("/dashboard/delete-user/<string:id>",methods=["GET","POST"])
 @login_required
 def DeleteUser(id):
+	form = SubmitForm()
 	user = User.query.filter_by(id=id).first()
-	db.session.delete(user)
-	db.session.commit()
-	flash("User telah di hapus","success")	
-	return redirect(url_for("AllUser"))		
+	if form.validate_on_submit():		
+		db.session.delete(user)
+		db.session.commit()
+		flash("User telah di hapus","success")	
+		if user.role == "user":
+			return redirect(url_for("AllUser"))	
+		elif user.role == "sa":
+			return redirect(url_for("AllSa"))
+		elif user.role == "marketing":
+			return redirect(url_for("AllMarketing"))	
+		elif user.role == "cashier":
+			return redirect(url_for("AllCashier"))
+		else :
+			return redirect(url_for("AllAccountant"))
+	return render_template("user/confirm_delete_user.html",form=form)						
 
 
 ######################### SA #########################

@@ -76,7 +76,7 @@
                               <td>{{ trans.member }}</td>
                               {% endif %}
 
-                              {% if trans.paket == NULL %}
+                              {% if trans.pakets == NULL %}
                               <td></td>
                               {% else %}
                               <td>{{ ",".join(trans.pakets) }}</td>
@@ -90,24 +90,14 @@
                               <td>Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>  
                               {% endif %}  
                               {% if current_user.role == "superuser" %}
-                              <td><i class="ti-close" onclick="myFunction()"></i></td> 
+                              <td><a href="/dashboard/delete-transaction/{{ trans.id}}"><i class="ti-close"></i></a></td> 
                               <td><a href="/dashboard/edit-transaction/{{trans.id}}"><i class="ti-pencil"></i></a></td>
                               {% else %}
                               {% endif %}                   
                        </tbody>    
                             
 
-                       <script>
-                            function myFunction() {
-                                 var x = window.confirm("Are You Sure ?");
-                                    if(x){
-                                           window.location = '/dashboard/delete-transaction/{{ trans.id}}' ;
-                                            }
-                                     else {
-                                           return false;
-                                          }
-                                    }    
-                            </script>  
+                      
                              
                   {% endfor %}       
                    <tr>

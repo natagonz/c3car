@@ -29,21 +29,10 @@
                             <td>{{ user.username }}</td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.location }}</td>                            
-                            <td><button type="button" class="btn btn-danger" onclick="myFunction()">Delete</button></td>
+                            <td><a href="/dashboard/delete-user/{{user.id}}" class="btn btn-danger">Delete</a></td>
                             </tr>
                      </tbody>           
-                            <script>
-                            function myFunction() {
-                                 var x = window.confirm("Are You Sure ?");
-                                    if(x){
-                                           window.location = '/dashboard/delete-user/{{ user.id}}' ;
-                                            }
-                                     else {
-                                           return false;
-                                          }
-                                    }    
-                            </script>
-
+                            
 
 
                 {% endfor %}

@@ -27,7 +27,7 @@
                     <td>Debet</td>                    
                     <td>Kredit</td>                   
                 </tr>
-                </thead>
+                </thead>l
                 
                   {% for trans in transactions  %}                  
                       <tbody>
@@ -42,7 +42,7 @@
                               <td>{{ trans.member }}</td>
                               {% endif %}
 
-                              {% if trans.paket == NULL %}
+                              {% if trans.pakets == NULL %}
                               <td></td>
                               {% else %}
                               <td>{{ ",".join(trans.pakets) }}</td>
