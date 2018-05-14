@@ -1468,13 +1468,13 @@ def AllLocationTransaction():
 def Transaction(id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
-	transactions = Accounting.query.filter_by(location=name).all()	
+	transactions = Accounting.query.filter_by(location=name).order_by(Accounting.date.desc()).all()	
 	income =  Accounting.query.filter_by(location=name,status="Income").all()	
 	expense = Accounting.query.filter_by(location=name,status="Expense").all()	
 	form = AccountingSearchForm()
 	if form.validate_on_submit():
 		start = form.start.data
-		end = form.end.data
+		end = form.end.data + timedelta(days=1)
 		return redirect(url_for("TransactionFilter",start=start,end=end,id=id))
 	return render_template("user/all_transaction.html",transactions=transactions,form=form,name=name,location=location,income=income,expense=expense)
 
@@ -1485,7 +1485,7 @@ def TransactionFilter(start,end,id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
 	id=location.id
-	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
+	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).order_by(Accounting.date.desc()).all()
 	income =  Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Income").all()
 	expense = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Expense").all()
 	form = AccountingSearchForm()
@@ -1504,7 +1504,7 @@ def TransactionFilter(start,end,id):
 def PrintAllTransaction(id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
-	transactions = Accounting.query.filter_by(location=name).all()
+	transactions = Accounting.query.filter_by(location=name).order_by(Accounting.date.desc().all()
 	income =  Accounting.query.filter_by(location=name,status="Income").all()	
 	expense = Accounting.query.filter_by(location=name,status="Expense").all()	
 	return render_template("transaction/print_all.html",transactions=transactions,name=name,income=income,expense=expense)

@@ -1624,3 +1624,758 @@ ImportError: No module named pytz
 [2018-03-10 13:20:47 +0000] [708] [INFO] Worker exiting (pid: 708)
 [2018-03-10 13:20:47 +0000] [703] [INFO] Shutting down: Master
 [2018-03-10 13:20:47 +0000] [703] [INFO] Reason: Worker failed to boot.
+[2018-04-08 14:19:36 +0000] [313] [INFO] Starting gunicorn 19.7.1
+[2018-04-08 14:19:36 +0000] [313] [INFO] Listening at: unix:/tmp/natagon.sock (313)
+[2018-04-08 14:19:36 +0000] [313] [INFO] Using worker: sync
+[2018-04-08 14:19:36 +0000] [393] [INFO] Booting worker with pid: 393
+[2018-04-08 14:19:36 +0000] [396] [INFO] Booting worker with pid: 396
+[2018-04-08 14:19:36 +0000] [397] [INFO] Booting worker with pid: 397
+[2018-04-11 19:02:45 +0000] [396] [ERROR] Error handling request /dashboard/invoice/24
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1725, in make_response
+    raise ValueError('View function did not return a response')
+ValueError: View function did not return a response
+[2018-04-11 21:42:05 +0000] [397] [ERROR] Error handling request /dashboard/delete-transaction/12
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 338, in DeleteTransaction
+    db.session.delete(trans)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/sqlalchemy/orm/scoping.py", line 153, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 1810, in delete
+    raise exc.UnmappedInstanceError(instance)
+UnmappedInstanceError: Class '__builtin__.NoneType' is not mapped
+[2018-04-11 21:42:23 +0000] [396] [ERROR] Error handling request /dashboard/delete-transaction/12
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 338, in DeleteTransaction
+    db.session.delete(trans)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/sqlalchemy/orm/scoping.py", line 153, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 1810, in delete
+    raise exc.UnmappedInstanceError(instance)
+UnmappedInstanceError: Class '__builtin__.NoneType' is not mapped
+[2018-04-11 22:01:29 +0000] [393] [ERROR] Error handling request /dashboard/delete-transaction/12
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/var/www/html/c3car/app.py", line 338, in DeleteTransaction
+    db.session.delete(trans)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/sqlalchemy/orm/scoping.py", line 153, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 1810, in delete
+    raise exc.UnmappedInstanceError(instance)
+UnmappedInstanceError: Class '__builtin__.NoneType' is not mapped
+[2018-04-27 09:16:47 +0000] [397] [ERROR] Error handling request /dashboard/invoice/62
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1725, in make_response
+    raise ValueError('View function did not return a response')
+ValueError: View function did not return a response
+[2018-05-03 09:39:18 +0000] [393] [ERROR] Error handling request /dashboard/invoice/70
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1725, in make_response
+    raise ValueError('View function did not return a response')
+ValueError: View function did not return a response
+[2018-05-03 09:39:35 +0000] [397] [ERROR] Error handling request /dashboard/invoice/70
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1725, in make_response
+    raise ValueError('View function did not return a response')
+ValueError: View function did not return a response
+[2018-05-07 15:47:48 +0000] [396] [ERROR] Error handling request /dashboard/invoice/81
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1725, in make_response
+    raise ValueError('View function did not return a response')
+ValueError: View function did not return a response
+[2018-05-14 14:28:57 +0000] [397] [ERROR] Error handling request /dashboard/invoice/118
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/flask/app.py", line 1725, in make_response
+    raise ValueError('View function did not return a response')
+ValueError: View function did not return a response
+[2018-05-14 22:24:49 +0000] [397] [INFO] Worker exiting (pid: 397)
+[2018-05-14 22:24:49 +0000] [396] [INFO] Worker exiting (pid: 396)
+[2018-05-14 22:24:49 +0000] [393] [INFO] Worker exiting (pid: 393)
+[2018-05-14 22:24:49 +0000] [313] [INFO] Handling signal: term
+[2018-05-14 22:24:50 +0000] [313] [INFO] Shutting down: Master
+[2018-05-14 22:25:05 +0000] [320] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:25:05 +0000] [320] [INFO] Listening at: unix:/tmp/natagon.sock (320)
+[2018-05-14 22:25:05 +0000] [320] [INFO] Using worker: sync
+[2018-05-14 22:25:05 +0000] [399] [INFO] Booting worker with pid: 399
+[2018-05-14 22:25:05 +0000] [404] [INFO] Booting worker with pid: 404
+[2018-05-14 22:25:05 +0000] [407] [INFO] Booting worker with pid: 407
+[2018-05-14 22:33:57 +0000] [399] [INFO] Worker exiting (pid: 399)
+[2018-05-14 22:33:57 +0000] [404] [INFO] Worker exiting (pid: 404)
+[2018-05-14 22:33:57 +0000] [407] [INFO] Worker exiting (pid: 407)
+[2018-05-14 22:33:57 +0000] [320] [INFO] Handling signal: term
+[2018-05-14 22:33:57 +0000] [320] [INFO] Shutting down: Master
+[2018-05-14 22:34:10 +0000] [312] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:34:10 +0000] [312] [INFO] Listening at: unix:/tmp/natagon.sock (312)
+[2018-05-14 22:34:10 +0000] [312] [INFO] Using worker: sync
+[2018-05-14 22:34:10 +0000] [396] [INFO] Booting worker with pid: 396
+[2018-05-14 22:34:10 +0000] [397] [INFO] Booting worker with pid: 397
+[2018-05-14 22:34:10 +0000] [396] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:34:10 +0000] [396] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:34:10 +0000] [396] [INFO] Worker exiting (pid: 396)
+[2018-05-14 22:34:10 +0000] [397] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:34:10 +0000] [397] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:34:10 +0000] [397] [INFO] Worker exiting (pid: 397)
+[2018-05-14 22:34:10 +0000] [398] [INFO] Booting worker with pid: 398
+[2018-05-14 22:34:10 +0000] [398] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:34:10 +0000] [398] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:34:10 +0000] [398] [INFO] Worker exiting (pid: 398)
+[2018-05-14 22:39:03 +0000] [572] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:39:03 +0000] [572] [INFO] Listening at: unix:/tmp/natagon.sock (572)
+[2018-05-14 22:39:03 +0000] [572] [INFO] Using worker: sync
+[2018-05-14 22:39:03 +0000] [575] [INFO] Booting worker with pid: 575
+[2018-05-14 22:39:03 +0000] [575] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:39:03 +0000] [575] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:39:03 +0000] [575] [INFO] Worker exiting (pid: 575)
+[2018-05-14 22:39:03 +0000] [576] [INFO] Booting worker with pid: 576
+[2018-05-14 22:39:03 +0000] [576] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:39:03 +0000] [576] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:39:03 +0000] [576] [INFO] Worker exiting (pid: 576)
+[2018-05-14 22:39:25 +0000] [581] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:39:25 +0000] [581] [INFO] Listening at: unix:/tmp/natagon.sock (581)
+[2018-05-14 22:39:25 +0000] [581] [INFO] Using worker: sync
+[2018-05-14 22:39:25 +0000] [584] [INFO] Booting worker with pid: 584
+[2018-05-14 22:39:25 +0000] [585] [INFO] Booting worker with pid: 585
+[2018-05-14 22:39:25 +0000] [584] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:39:25 +0000] [584] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:39:25 +0000] [584] [INFO] Worker exiting (pid: 584)
+[2018-05-14 22:39:25 +0000] [585] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:39:25 +0000] [585] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:39:25 +0000] [585] [INFO] Worker exiting (pid: 585)
+[2018-05-14 22:39:25 +0000] [586] [INFO] Booting worker with pid: 586
+[2018-05-14 22:39:25 +0000] [586] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:39:25 +0000] [586] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:39:25 +0000] [586] [INFO] Worker exiting (pid: 586)
+[2018-05-14 22:41:33 +0000] [595] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:41:33 +0000] [595] [INFO] Listening at: unix:/tmp/natagon.sock (595)
+[2018-05-14 22:41:33 +0000] [595] [INFO] Using worker: sync
+[2018-05-14 22:41:33 +0000] [598] [INFO] Booting worker with pid: 598
+[2018-05-14 22:41:33 +0000] [598] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:41:33 +0000] [598] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:41:33 +0000] [598] [INFO] Worker exiting (pid: 598)
+[2018-05-14 22:41:33 +0000] [599] [INFO] Booting worker with pid: 599
+[2018-05-14 22:41:34 +0000] [600] [INFO] Booting worker with pid: 600
+[2018-05-14 22:41:34 +0000] [599] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:41:34 +0000] [599] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:41:34 +0000] [599] [INFO] Worker exiting (pid: 599)
+[2018-05-14 22:41:34 +0000] [600] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:41:34 +0000] [600] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:41:34 +0000] [600] [INFO] Worker exiting (pid: 600)
+[2018-05-14 22:44:51 +0000] [647] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:44:51 +0000] [647] [INFO] Listening at: unix:/tmp/natagon.sock (647)
+[2018-05-14 22:44:51 +0000] [647] [INFO] Using worker: sync
+[2018-05-14 22:44:51 +0000] [650] [INFO] Booting worker with pid: 650
+[2018-05-14 22:44:51 +0000] [650] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:44:51 +0000] [650] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:44:51 +0000] [650] [INFO] Worker exiting (pid: 650)
+[2018-05-14 22:44:51 +0000] [651] [INFO] Booting worker with pid: 651
+[2018-05-14 22:44:51 +0000] [651] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:44:51 +0000] [651] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:44:51 +0000] [651] [INFO] Worker exiting (pid: 651)
+[2018-05-14 22:58:10 +0000] [764] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 22:58:10 +0000] [764] [INFO] Listening at: unix:c3.sock (764)
+[2018-05-14 22:58:10 +0000] [764] [INFO] Using worker: sync
+[2018-05-14 22:58:10 +0000] [767] [INFO] Booting worker with pid: 767
+[2018-05-14 22:58:10 +0000] [767] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:58:10 +0000] [767] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:58:10 +0000] [767] [INFO] Worker exiting (pid: 767)
+[2018-05-14 22:58:11 +0000] [768] [INFO] Booting worker with pid: 768
+[2018-05-14 22:58:11 +0000] [768] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 22:58:11 +0000] [768] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 22:58:11 +0000] [768] [INFO] Worker exiting (pid: 768)
+[2018-05-14 23:01:16 +0000] [805] [INFO] Starting gunicorn 19.7.1
+[2018-05-14 23:01:16 +0000] [805] [INFO] Listening at: unix:c3.sock (805)
+[2018-05-14 23:01:16 +0000] [805] [INFO] Using worker: sync
+[2018-05-14 23:01:16 +0000] [808] [INFO] Booting worker with pid: 808
+[2018-05-14 23:01:16 +0000] [808] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 23:01:16 +0000] [808] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 23:01:16 +0000] [808] [INFO] Worker exiting (pid: 808)
+[2018-05-14 23:01:16 +0000] [809] [INFO] Booting worker with pid: 809
+[2018-05-14 23:01:16 +0000] [809] [ERROR] invalid syntax (app.py, line 1508)
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 135, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/util.py", line 352, in import_app
+    __import__(module)
+  File "/var/www/html/c3car/wsgi.py", line 1, in <module>
+    from app import app
+  File "/var/www/html/c3car/app.py", line 1508
+    income =  Accounting.query.filter_by(location=name,status="Income").all()
+         ^
+SyntaxError: invalid syntax
+[2018-05-14 23:01:16 +0000] [809] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/arbiter.py", line 578, in spawn_worker
+    worker.init_process()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/var/www/html/env/local/lib/python2.7/site-packages/gunicorn/workers/base.py", line 148, in load_wsgi
+    self.reloader.add_extra_file(exc_val.filename)
+AttributeError: 'NoneType' object has no attribute 'add_extra_file'
+[2018-05-14 23:01:16 +0000] [809] [INFO] Worker exiting (pid: 809)
