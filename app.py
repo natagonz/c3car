@@ -1504,7 +1504,7 @@ def TransactionFilter(start,end,id):
 def PrintAllTransaction(id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
-	transactions = Accounting.query.filter_by(location=name).order_by(Accounting.date.desc().all()
+	transactions = Accounting.query.filter_by(location=name).order_by(Accounting.date.desc()).all()
 	income =  Accounting.query.filter_by(location=name,status="Income").all()	
 	expense = Accounting.query.filter_by(location=name,status="Expense").all()	
 	return render_template("transaction/print_all.html",transactions=transactions,name=name,income=income,expense=expense)
@@ -1515,7 +1515,7 @@ def PrintAllTransaction(id):
 def PrintAllFilterTransaction(start,end,id):
 	location = Location.query.filter_by(id=id).first()
 	name = location.location
-	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).all()
+	transactions = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name).order_by(Accounting.date.desc()).all()
 	income =  Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Income").all()
 	expense = Accounting.query.filter(Accounting.date.between(start,end)).filter(Accounting.location == name,Accounting.status=="Expense").all()
 	return render_template("transaction/print_all.html",transactions=transactions,name=name,income=income,expense=expense)
@@ -1581,5 +1581,5 @@ def DeleteGallery(id):
 
 
 if __name__ == "__main__":	
-	app.run(debug=True)
+	app.run(host='0.0.0.0')
 	InvoiceHistory()
