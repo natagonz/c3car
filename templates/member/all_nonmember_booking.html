@@ -1,0 +1,61 @@
+{% extends "layouts/dashboardtemplate.html" %}
+
+{% block title %} Antrean {% endblock %}
+
+
+{% block content %}
+
+<div class="row">                
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+        
+            <div class="content">
+            <button onclick="myFunction()" class="btn btn-success">Refresh</button>               
+               <h5> Data Booking Dari Non Member </h5>  
+
+
+              <div class="table-responsive"> 
+
+            <table class="table"> 
+                <thead>
+                
+                <tr>
+                    <td>No</td>                    
+                    <td>Mobil</td>
+                    <td>Plat</td>
+                    <td>Lokasi</td>
+                    <td>Tanggal</td>                                                         
+                                    
+                   
+                </tr>
+                </thead>
+
+               
+                   
+                     {% for antre in bookings %} 
+                    <tbody>                               
+                              <tr> 
+                                <td>{{ loop.index }}</td>
+                                <td>{{ antre.mobil }}</td> 
+                                <td>{{ antre.plat }}</td> 
+                                <td>{{ antre.location }} </td>                                
+                                <td>{{ antre.date }}</td>                               
+                                <td><a href="/dashboard/booking/history/detail/{{antre.id}}" class="btn btn-success">Lihat Detail</a></td> 
+                             </tr>  
+                                                  
+                      
+                     </tbody>  
+                      {% endfor %}
+                    
+
+
+
+
+
+                      </table>
+                 </div>     
+               </div>  
+          </div>            
+     </div>       
+</div>
+{% endblock %}

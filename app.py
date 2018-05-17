@@ -1397,6 +1397,70 @@ def DeleteLocation(id):
 	return redirect(url_for("AllLocation"))	
 
 
+@app.route("/dashboard/booking/history/all",methods=["GET","POST"])
+@login_required
+def AllBookingHistory():
+	return render_template("member/all.html")
+
+
+@app.route("/dashboard/booking/history/all/<paket>",methods=["GET","POST"])
+@login_required
+def BookingHistoryStatus(paket):
+	members = User.query.filter_by(paket=paket).all()
+	return render_template("member/all_member.html",members=members)
+
+
+@app.route("/dashboard/booking/history/<id>",methods=["GET","POST"])
+@login_required
+def HistoryBookingDetail(id):
+	user = User.query.filter_by(id=id).first()
+	bookings = Book.query.filter_by(owner=user.id).all()
+	total = len(bookings)
+	return render_template("member/all_booking.html",bookings=bookings,user=user,total=total)
+
+
+@app.route("/dashboard/booking/history/detail/<id>",methods=["GET","POST"])
+@login_required
+def DetailHistoryBooking(id):	
+	book = Book.query.filter_by(id=id).first()
+	pakets = BookingPaket.query.filter_by(book_id=book.id).all()
+	return render_template("member/detail_booking.html",book=book,pakets=pakets)
+
+
+## non mmeber 
+@app.route("/dashboard/booking/history/non/member",methods=["GET","POST"])
+@login_required
+def HistoryBookingNonMember():	
+	bookings = Book.query.filter_by(treatment="-").all()
+	return render_template("member/all_nonmember_booking.html",bookings=bookings)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
