@@ -253,6 +253,7 @@ class SuperUserAddAccountingForm(FlaskForm):
 	description = StringField("Description",validators=[InputRequired(),Length(max=300)])
 	amount = IntegerField("Jumlah",validators=[InputRequired()])
 	location = QuerySelectField(query_factory=location_query)
+	date = DateField("Tanggal",format="%m/%d/%Y")
 
 
 
@@ -1475,9 +1476,8 @@ def HistoryBookingNonMember():
 def AddIncome():
 	if current_user.role == "superuser" or current_user.role == "accountant" :
 		form = SuperUserAddAccountingForm()
-		if form.validate_on_submit():
-			today = datetime.today()
-			income = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Income",cashier=current_user.username)
+		if form.validate_on_submit():			
+			income = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=form.date.data,status="Income",cashier=current_user.username)
 			db.session.add(income)
 			db.session.commit()
 			flash("Pendapatan berhasil di input","success")
@@ -1500,9 +1500,8 @@ def AddIncome():
 def AddExpense():
 	if current_user.role == "superuser" or current_user.role == "accountant":
 		form = SuperUserAddAccountingForm()
-		if form.validate_on_submit():
-			today = datetime.today()
-			expense = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=today,status="Expense",cashier=current_user.username)
+		if form.validate_on_submit():			
+			expense = Accounting(description=form.description.data,location=form.location.data,amount=form.amount.data,date=form.date.data,status="Expense",cashier=current_user.username)
 			db.session.add(expense)
 			db.session.commit()
 			flash("Pengeluaran berhasil di input","success")
