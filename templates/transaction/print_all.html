@@ -21,8 +21,7 @@
                 <tr>
                     <td>Tanggal</td>
                     <td>Keterangan</td>
-                    <td>Plat</td>
-                    <td>Paket</td>
+                    <td>Plat</td>                   
                     <td>Treatment</td>
                     <td>Debet</td>                    
                     <td>Kredit</td>                   
@@ -41,12 +40,7 @@
                               <td>{{ trans.customer }}</td>
                               <td>{{ trans.member }}</td>
                               {% endif %}
-
-                              {% if trans.pakets == NULL %}
-                              <td></td>
-                              {% else %}
-                              <td>{{ ",".join(trans.pakets) }}</td>
-                             {% endif %}
+                             
                                 
                               {% if trans.status == "Income" %}
                               <td> Rp {{ "{:,}".format(trans.amount).replace(",",".") }}</td>

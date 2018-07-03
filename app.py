@@ -193,14 +193,14 @@ class BookingForm(FlaskForm):
 	email = StringField("Email",validators=[Length(max=100)])
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])	
-	plat =  StringField("Plat",validators=[Length(max=100)])	
+	plat =  StringField("Plat",validators=[InputRequired(),Length(max=100)])	
 
 class YudiBookingRegularForm(FlaskForm):
 	name = StringField("Nama",validators=[Length(max=100)])
 	email = StringField("Email",validators=[Length(max=100)])
 	phone = StringField("Telepon",validators=[Length(max=100)])
 	mobil = StringField("Mobil",validators=[Length(max=100)])	
-	plat =  StringField("Plat",validators=[Length(max=100)])
+	plat =  StringField("Plat",validators=[InputRequired(),Length(max=100)])
 	location = QuerySelectField("Lokasi",query_factory=location_query)
 
 class YudiBookingMemberForm(FlaskForm):
@@ -1572,7 +1572,7 @@ def PrintAllTransaction(id):
 	expense = Accounting.query.filter_by(location=name,status="Expense").all()	
 	return render_template("transaction/print_all.html",transactions=transactions,name=name,income=income,expense=expense)
 
-#printing all transaction after filter
+#printing all transaction after filterd
 @app.route("/dashboard/location/transaction/print/<start>/<end>/<string:id>",methods=["GET","POST"])
 @login_required
 def PrintAllFilterTransaction(start,end,id):
